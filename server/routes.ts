@@ -18,16 +18,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.get("/data/projects.json", (req, res) => {
-    try {
-      const projectsPath = path.resolve(import.meta.dirname, "..", "public", "data", "projects.json");
-      const projects = JSON.parse(fs.readFileSync(projectsPath, "utf-8"));
-      res.json(projects);
-    } catch (error) {
-      console.error("Error loading projects:", error);
-      res.status(404).json({ error: "Projects not found" });
-    }
-  });
   
   app.get("/data/papers.json", (req, res) => {
     try {
