@@ -1,16 +1,32 @@
 import ProjectCard from "./ProjectCard";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { PlusCircle, Search } from "lucide-react";
 import { getProjects } from "@/lib/staticDataLoader";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Project } from "@shared/schema";
 
 export default function ProjectShowcase() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   
   useEffect(() => {
     getProjects().then(setProjects);
-  }, []); 
+  }, []);
+
+  const filteredProjects = useMemo(() => {
+    if (!searchQuery.trim()) return projects;
+    
+    const query = searchQuery.toLowerCase();
+    return projects.filter((project) => {
+      return (
+        project.title.toLowerCase().includes(query) ||
+        project.description.toLowerCase().includes(query) ||
+        project.technologies.some(tech => tech.toLowerCase().includes(query)) ||
+        project.status.toLowerCase().includes(query)
+      );
+    });
+  }, [projects, searchQuery]);
   
   const handleAddProject = () => {
     console.log('Add new project triggered');
@@ -31,8 +47,23 @@ export default function ProjectShowcase() {
           </p>
         </div>
         
+        {/* Search bar */}
+        <div className="max-w-md mx-auto mb-8">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search projects by name, description, or technology..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+              data-testid="input-project-search"
+            />
+          </div>
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {projects.map((project) => (
+          {filteredProjects.map((project) => (
             <ProjectCard
               key={project.id}
               {...project}
