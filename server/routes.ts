@@ -78,6 +78,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Health check endpoint for Replit platform monitoring
+  app.get("/api", (req, res) => {
+    res.status(200).json({ status: "healthy" });
+  });
+
   // put application routes here
   // prefix all routes with /api
 
