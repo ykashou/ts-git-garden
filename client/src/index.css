@@ -1,0 +1,203 @@
+/* Import Poppins font first */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Arcane Blue Theme - Locked in according to design_guidelines.md */
+:root {
+  --button-outline: rgba(255,255,255, .10);
+  --badge-outline: rgba(255,255,255, .05);
+
+  /* Automatic computation of border around primary / danger buttons */
+  --opaque-button-border-intensity: -8; /* In terms of percentages */
+
+  /* Backgrounds applied on top of other backgrounds when hovered/active */
+  --elevate-1: rgba(255,255,255, .03);
+  --elevate-2: rgba(255,255,255, .08);
+
+  /* Light Mode Colors */
+  --background: 0 0% 97%;        /* light background */
+  --foreground: 227 30% 20%;     /* dark arcane blue text */
+  --border: 227 20% 85%;         /* light arcane blue border */
+  --card: 0 0% 100%;             /* white cards */
+  --card-foreground: 227 30% 20%; /* dark arcane blue text */
+  --card-border: 227 20% 85%;    /* light arcane blue border */
+
+  --sidebar: 0 0% 98%;
+  --sidebar-foreground: 227 30% 20%;
+  --sidebar-border: 227 20% 85%;
+  --sidebar-primary: 227 65% 45%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 227 20% 90%;
+  --sidebar-accent-foreground: 227 30% 20%;
+  --sidebar-ring: 227 65% 45%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 227 30% 20%;
+  --popover-border: 227 20% 85%;
+
+  --primary: 227 65% 45%;       /* arcane blue buttons */
+  --primary-foreground: 0 0% 100%; /* white text */
+
+  --secondary: 227 20% 90%;      /* light arcane blue */
+  --secondary-foreground: 227 30% 20%; /* dark text */
+
+  --muted: 227 15% 95%;          /* very light arcane blue */
+  --muted-foreground: 227 30% 40%; /* medium blue text */
+
+  --accent: 227 60% 50%;         /* medium arcane blue accent */
+  --accent-foreground: 0 0% 100%; /* white text on accent */
+
+  --destructive: 0 72% 51%;      /* red for errors */
+  --destructive-foreground: 0 0% 100%; /* white text */
+
+  --input: 0 0% 100%;            /* white input background */
+  --ring: 227 65% 45%;           /* arcane blue focus ring */
+  
+  --chart-1: 203.8863 88.2845% 53.1373%;
+  --chart-2: 159.7826 100% 36.0784%;
+  --chart-3: 42.0290 92.8251% 56.2745%;
+  --chart-4: 147.1429 78.5047% 41.9608%;
+  --chart-5: 341.4894 75.2000% 50.9804%;
+
+  /* Typography - Poppins font family */
+  --font-sans: 'Poppins', sans-serif;
+  --font-serif: 'Poppins', sans-serif;
+  --font-mono: Menlo, monospace;
+  
+  /* Layout */
+  --radius: 0.8rem;
+  --spacing: 0.25rem;
+
+  /* Shadows for dark theme */
+  --shadow-2xs: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00);
+  --shadow-xs: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00);
+  --shadow-sm: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 1px 2px -1px hsl(9, 75%, 61% / 0.00);
+  --shadow: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 1px 2px -1px hsl(9, 75%, 61% / 0.00);
+  --shadow-md: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 2px 4px -1px hsl(9, 75%, 61% / 0.00);
+  --shadow-lg: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 4px 6px -1px hsl(9, 75%, 61% / 0.00);
+  --shadow-xl: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 8px 10px -1px hsl(9, 75%, 61% / 0.00);
+  --shadow-2xl: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00);
+
+  /* Automatically computed borders */
+  --sidebar-primary-border: hsl(var(--sidebar-primary));
+  --sidebar-accent-border: hsl(var(--sidebar-accent));
+  --primary-border: hsl(var(--primary));
+  --secondary-border: hsl(var(--secondary));
+  --muted-border: hsl(var(--muted));
+  --accent-border: hsl(var(--accent));
+  --destructive-border: hsl(var(--destructive));
+  --tracking-normal: 0em;
+}
+
+/* Dark Mode - Arcane Blue with white buttons */
+.dark {
+  /* Dark mode with arcane blue background */
+  --background: 227 45% 12%;
+  --foreground: 0 0% 95%;
+  --border: 227 40% 20%;
+  --card: 227 40% 15%;
+  --card-foreground: 0 0% 95%;
+  --primary: 0 0% 100%;          /* white buttons in dark mode */
+  --primary-foreground: 227 45% 12%; /* dark text on white */
+  --secondary: 227 30% 25%;
+  --secondary-foreground: 0 0% 95%;
+  --muted: 227 35% 18%;
+  --muted-foreground: 227 20% 70%;
+  --accent: 227 70% 55%;
+  --accent-foreground: 0 0% 100%;
+  --ring: 0 0% 100%;
+  --input: 227 35% 18%;
+  --chart-1: 203.8863 88.2845% 53.1373%;
+  --chart-2: 159.7826 100% 36.0784%;
+  --chart-3: 42.0290 92.8251% 56.2745%;
+  --chart-4: 147.1429 78.5047% 41.9608%;
+  --chart-5: 341.4894 75.2000% 50.9804%;
+  --popover: 227 40% 18%;
+  --sidebar: 227 40% 20%;
+  --destructive: 0 72% 51%;
+  --sidebar-ring: 227 85% 65%;
+  --sidebar-accent: 227 60% 45%;
+  --sidebar-border: 227 40% 30%;
+  --sidebar-primary: 227 85% 65%;
+  --popover-foreground: 45 25% 91%;
+  --sidebar-foreground: 45 25% 85%;
+  --destructive-foreground: 0 0% 100%;
+  --sidebar-accent-foreground: 45 25% 85%;
+  --sidebar-primary-foreground: 0 0% 100%;
+}
+
+/* Base styles */
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-sans);
+}
+
+
+/* Custom hover elevation utilities */
+.hover-elevate {
+  transition: all 0.2s ease-in-out;
+}
+
+.hover-elevate:hover {
+  background-color: hsl(var(--elevate-1));
+  transform: translateY(-1px);
+}
+
+.active-elevate-2 {
+  transition: all 0.1s ease-in-out;
+}
+
+.active-elevate-2:active {
+  background-color: hsl(var(--elevate-2));
+  transform: translateY(0px);
+}
+
+/* Remove default hover states to prevent conflicts */
+.no-default-hover-elevate:hover {
+  background-color: transparent !important;
+  transform: none !important;
+}
+
+.no-default-active-elevate:active {
+  background-color: transparent !important;
+  transform: none !important;
+}
+
+/* Toggle elevation utility */
+.toggle-elevate {
+  transition: all 0.2s ease-in-out;
+}
+
+.toggle-elevated {
+  background-color: hsl(var(--elevate-1));
+  transform: translateY(-1px);
+}
+
+/* Scrollbar styling for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground));
+}
+
+/* Selection styling */
+::selection {
+  background-color: hsl(var(--accent) / 0.3);
+  color: hsl(var(--foreground));
+}

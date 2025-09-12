@@ -1,0 +1,10 @@
+{
+  "name": "Digital Garden",
+  "tagline": "A place where ideas grow, projects bloom, and knowledge is cultivated",
+  "bio": "I'm a passionate developer and researcher who believes in the power of open source and continuous learning. Like a gardener tending to plants, I nurture ideas from concept to completion, always seeking to grow and share knowledge with the community.",
+  "skills": ["React", "TypeScript", "Python", "Node.js", "Machine Learning", "Web3", "DevOps", "Research"],
+  "location": "Based in the Cloud",
+  "bitcoinAddress": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+  "githubUsername": "yourusername",
+  "email": "your.email@example.com"
+}
