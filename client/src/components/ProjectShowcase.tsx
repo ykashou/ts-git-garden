@@ -14,8 +14,8 @@ export default function ProjectShowcase() {
   
   const handleAddProject = () => {
     console.log('Add new project triggered');
-    // For static site - projects are managed via JSON files
-    alert('This is a static site. To add projects, edit the projects.json file in the public/data directory.');
+    // Projects are now pulled from GitHub repositories
+    alert('Projects are automatically pulled from your GitHub repositories. Create a new repository on GitHub to add it to your portfolio!');
   };
 
   return (
