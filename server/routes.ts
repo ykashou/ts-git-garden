@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import fs from "fs";
 import path from "path";
+import { fetchGitHubProjects, getGitHubUser } from "../client/src/lib/githubApi";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Static data endpoints for GitHub Pages compatibility
@@ -36,6 +37,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error loading papers:", error);
       res.status(404).json({ error: "Papers not found" });
+    }
+  });
+
+  // GitHub API integration routes
+  app.get("/api/github/projects", async (req, res) => {
+    try {
+      const token = process.env.GITHUB_TOKEN;
+      if (!token) {
+        return res.status(500).json({ error: "GitHub token not configured" });
+      }
+
+      // Get username from config
+      const configPath = path.resolve(import.meta.dirname, "..", "public", "data", "config.json");
+      const config = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+      const username = config.githubUsername;
+      
+      if (!username) {
+        return res.status(500).json({ error: "GitHub username not configured in config.json" });
+      }
+
+      console.log(`Fetching GitHub projects for user: ${username}`);
+      const projects = await fetchGitHubProjects(username, token);
+      
+      res.json(projects);
+    } catch (error) {
+      console.error("Error fetching GitHub projects:", error);
+      res.status(500).json({ 
+        error: "Failed to fetch GitHub projects",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.get("/api/github/user", async (req, res) => {
+    try {
+      const token = process.env.GITHUB_TOKEN;
+      if (!token) {
+        return res.status(500).json({ error: "GitHub token not configured" });
+      }
+
+      const user = await getGitHubUser(token);
+      res.json(user);
+    } catch (error) {
+      console.error("Error fetching GitHub user:", error);
+      res.status(500).json({ 
+        error: "Failed to fetch GitHub user",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
     }
   });
 
