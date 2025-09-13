@@ -11,47 +11,7 @@ import { getProjects } from "@/lib/staticDataLoader";
 import { createKnowledgeGraph, GroupingMode } from "@/lib/githubApi";
 import { Project } from "@shared/schema";
 import KnowledgeGraph3D from "../components/KnowledgeGraph3D";
-import SimpleNetworkVisualization from "../components/SimpleNetworkVisualization";
-import { isWebGLAvailable } from "../lib/webglDetection";
 
-// WebGL error boundary component
-interface WebGLErrorBoundaryProps {
-  children: React.ReactNode;
-  fallbackData: any;
-  fallbackOnNodeClick?: (node: any) => void;
-}
-
-interface WebGLErrorBoundaryState {
-  hasError: boolean;
-}
-
-class WebGLErrorBoundary extends React.Component<WebGLErrorBoundaryProps, WebGLErrorBoundaryState> {
-  constructor(props: WebGLErrorBoundaryProps) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error: any): WebGLErrorBoundaryState {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error: any, errorInfo: any) {
-    console.error('WebGL Error:', error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <SimpleNetworkVisualization 
-          data={this.props.fallbackData}
-          onNodeClick={this.props.fallbackOnNodeClick}
-        />
-      );
-    }
-
-    return this.props.children;
-  }
-}
 
 export default function KnowledgeGraph() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -59,11 +19,6 @@ export default function KnowledgeGraph() {
   const [grouping, setGrouping] = useState<GroupingMode>("topic");
   const [researchOnly, setResearchOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  
-  // Check WebGL availability upfront
-  const webglSupported = useMemo(() => {
-    return isWebGLAvailable();
-  }, []);
 
   // SEO enhancement - update document title and meta description
   useEffect(() => {
@@ -186,26 +141,8 @@ export default function KnowledgeGraph() {
               </p>
             </div>
           </div>
-        ) : webglSupported ? (
-          <WebGLErrorBoundary 
-            fallbackData={graphData}
-            fallbackOnNodeClick={(node: any) => {
-              if (node.url) {
-                window.open(node.url, '_blank');
-              }
-            }}
-          >
-            <KnowledgeGraph3D
-              data={graphData}
-              onNodeClick={(node: any) => {
-                if (node.url) {
-                  window.open(node.url, '_blank');
-                }
-              }}
-            />
-          </WebGLErrorBoundary>
         ) : (
-          <SimpleNetworkVisualization 
+          <KnowledgeGraph3D
             data={graphData}
             onNodeClick={(node: any) => {
               if (node.url) {
