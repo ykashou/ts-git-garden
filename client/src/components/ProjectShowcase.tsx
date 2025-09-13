@@ -148,10 +148,7 @@ export default function ProjectShowcase() {
           {/* Topic filters */}
           {allTopics.length > 0 && (
             <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Tag className="h-4 w-4" />
-                <span>Filter by Technologies:</span>
-              </div>
+              
               <div className="flex flex-wrap gap-2">
                 {allTopics.map((topic) => (
                   <div key={topic} className="flex items-center space-x-2">
