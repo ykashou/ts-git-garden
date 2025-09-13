@@ -201,12 +201,7 @@ export default function KnowledgeGraph3D({
         </div>
       )}
       
-      {/* Navigation hint */}
-      <div className="absolute bottom-4 right-4 bg-background/90 border border-border rounded-lg p-3 text-xs text-muted-foreground max-w-48">
-        <p className="font-medium mb-1">Navigation:</p>
-        <p>Drag to rotate • Scroll to zoom</p>
-        <p>Click projects to open links</p>
-      </div>
+      
     </div>
   );
 }
