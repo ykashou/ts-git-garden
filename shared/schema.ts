@@ -40,10 +40,20 @@ export const PortfolioConfigSchema = z.object({
   email: z.string().optional(),
 });
 
+export const SponsorshipTierSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  amount: z.number(),
+  description: z.string(),
+  benefits: z.array(z.string()),
+  githubSponsorsUrl: z.string().optional(),
+});
+
 // Types
 export type Project = z.infer<typeof ProjectSchema>;
 export type ResearchPaper = z.infer<typeof ResearchPaperSchema>;
 export type PortfolioConfig = z.infer<typeof PortfolioConfigSchema>;
+export type SponsorshipTier = z.infer<typeof SponsorshipTierSchema>;
 
 // Insert types (same as regular types for static site)
 export type InsertProject = Omit<Project, "id" | "createdAt" | "lastUpdated">;
