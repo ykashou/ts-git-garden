@@ -1,16 +1,75 @@
-# Research Page Upgrade
+# Interactive 3D Knowledge Graph Page
 
-## What We'll Display
+## Overview
 
-- Your research repositories filtered by topics ("Research", "Thesis", "Theory", "Article")
-- PDF Button → Links to the compiled PDF from GitHub Actions
-- View Repository → Links to the GitHub repo for source/version history
-- Repository description as the "abstract"
-- GitHub topics as research tags
-- Status based on repository state
+Create a new separate page featuring an interactive 3D visualization of GitHub repositories with dual viewing modes: Repository View (all projects) and Research View (filtered research papers).
+
+## The Vision: Interactive 3D Knowledge Graph
+
+### 🎯 3D Visualization Features
+
+- **Nodes**: Repositories as spheres, topics as larger nodes
+- **Connections**: Lines showing which projects belong to which topics
+- **Clustering**: Projects automatically group around related topics
+- **Interactive**: Click nodes to open PDFs or repositories
+- **Grouping Modes**: Switch between Topic/Status/Year groupings
+
+### 🔧 Technical Implementation
+
+- **react-force-graph-3d** for WebGL-powered 3D physics simulation
+- **GitHub Integration** to fetch your repositories
+- **PDF Resolution** via GitHub Actions artifacts/releases
+- **Smart Filtering** by topics and project types
+
+### 🎨 User Experience
+
+```
+Page Layout:
+┌─ [📊 List View] [🌐 3D Graph] ────┐
+│                                  │
+│  🎮 Controls: [🔍 Search]       │
+│               [📋 Group by Topic] │  
+│               [📅 Group by Year] │
+│                                  │
+│  🌌 3D Space:                   │
+│     ● Projects floating in space │
+│     ⬢ Topic clusters            │
+│     ─ Connections between them   │
+│                                  │
+└──────────────────────────────────┘
+```
+
+## Dual View Modes
+
+### Repository View (All Projects)
+- Display all GitHub repositories
+- Standard project cards with live demos, GitHub links
+- Topics from all repository types
+- Project status: blooming/growing/mature
+
+### Research View (Research Papers)
+- Filter repositories by research topics ("Research", "Thesis", "Theory", "Article")
+- Academic-style cards with PDF links
+- Repository description as "abstract"
+- Research status: draft/active/stable
 
 ## Card Structure Adaptation
 
+### Repository View Cards
+```
+┌─────────────────────────────────────┐
+│ Project Title                       │ Status Badge
+├─────────────────────────────────────┤
+│ Technologies: [React] [TypeScript]  │
+│ Topics: [Web Dev] [Tools]           │
+├─────────────────────────────────────┤
+│ Description: Project description    │
+├─────────────────────────────────────┤
+│ [🚀 Live Demo] [📂 Repository]     │
+└─────────────────────────────────────┘
+```
+
+### Research View Cards  
 ```
 ┌─────────────────────────────────────┐
 │ Paper Title (repo name cleaned up) │ Status Badge
@@ -25,19 +84,19 @@
 └─────────────────────────────────────┘
 ```
 
-## Status System Options
-
-- **"Draft"** - Recently created or low activity
-- **"Active"** - Recent commits and activity
-- **"Stable"** - Mature research, less frequent updates
-
 ## PDF Detection Strategy
 
-We can look for PDF files in common locations:
-
+Look for PDF files in common locations:
 - GitHub Actions artifacts
-- /build/ or /dist/ folders
+- /build/ or /dist/ folders  
 - Direct PDF files in repo
 - GitHub Pages deployment for PDFs
 
-This keeps the beautiful academic presentation while being authentic to your GitHub-based research workflow. The version history stays in Git, PDFs are automatically compiled, and everything is properly showcased.
+## 📊 Data Flow
+
+1. **GitHub API** → Filter repositories by view mode
+2. **PDF Detection** → Find compiled papers automatically  
+3. **Graph Builder** → Create nodes and links
+4. **3D Render** → Beautiful interactive visualization
+
+This transforms repository exploration from a simple list into an immersive, explorable knowledge landscape where visitors can discover connections between different project areas and research topics.
