@@ -14,12 +14,13 @@ export default function KnowledgeGraph3D({
   data, 
   onNodeClick, 
   width, 
-  height = 600 
+  height 
 }: KnowledgeGraph3DProps) {
   const fgRef = useRef<any>();
 
-  // Calculate responsive width
-  const graphWidth = width || (typeof window !== 'undefined' ? window.innerWidth - 64 : 1200);
+  // Calculate responsive dimensions for fullscreen
+  const graphWidth = width || (typeof window !== 'undefined' ? window.innerWidth : 1200);
+  const graphHeight = height || (typeof window !== 'undefined' ? window.innerHeight : 800);
 
   // Node styling based on type
   const nodeVal = useCallback((node: GraphNode) => {
@@ -123,8 +124,10 @@ export default function KnowledgeGraph3D({
   useEffect(() => {
     const handleResize = () => {
       if (fgRef.current) {
-        const newWidth = window.innerWidth - 64;
+        const newWidth = window.innerWidth;
+        const newHeight = window.innerHeight;
         fgRef.current.width(newWidth);
+        fgRef.current.height(newHeight);
       }
     };
 
@@ -136,13 +139,12 @@ export default function KnowledgeGraph3D({
     <div 
       className="w-full h-full bg-background relative"
       data-testid="knowledge-graph-3d"
-      style={{ height: `${height}px` }}
     >
       <ForceGraph3D
         ref={fgRef}
         graphData={data}
         width={graphWidth}
-        height={height}
+        height={graphHeight}
         backgroundColor="rgba(0,0,0,0)"
         showNavInfo={false}
         
