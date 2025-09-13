@@ -1,7 +1,9 @@
 import ProjectCard from "./ProjectCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PlusCircle, Search } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { PlusCircle, Search, Tag } from "lucide-react";
 import { getProjects } from "@/lib/staticDataLoader";
 import { useState, useEffect, useMemo } from "react";
 import { Project } from "@shared/schema";
@@ -9,24 +11,57 @@ import { Project } from "@shared/schema";
 export default function ProjectShowcase() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   
   useEffect(() => {
     getProjects().then(setProjects);
   }, []);
 
-  const filteredProjects = useMemo(() => {
-    if (!searchQuery.trim()) return projects;
-    
-    const query = searchQuery.toLowerCase();
-    return projects.filter((project) => {
-      return (
-        project.title.toLowerCase().includes(query) ||
-        project.description.toLowerCase().includes(query) ||
-        project.technologies.some(tech => tech.toLowerCase().includes(query)) ||
-        project.status.toLowerCase().includes(query)
-      );
+  // Get all unique topics from all projects
+  const allTopics = useMemo(() => {
+    const topics = new Set<string>();
+    projects.forEach(project => {
+      project.topics?.forEach(topic => topics.add(topic));
     });
-  }, [projects, searchQuery]);
+    return Array.from(topics).sort();
+  }, [projects]);
+
+  const filteredProjects = useMemo(() => {
+    let filtered = projects;
+    
+    // Apply search query filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((project) => {
+        return (
+          project.title.toLowerCase().includes(query) ||
+          project.description.toLowerCase().includes(query) ||
+          project.technologies.some(tech => tech.toLowerCase().includes(query)) ||
+          project.topics?.some(topic => topic.toLowerCase().includes(query)) ||
+          project.status.toLowerCase().includes(query)
+        );
+      });
+    }
+    
+    // Apply topic filter
+    if (selectedTopics.length > 0) {
+      filtered = filtered.filter((project) => {
+        return selectedTopics.some(selectedTopic => 
+          project.topics?.includes(selectedTopic)
+        );
+      });
+    }
+    
+    return filtered;
+  }, [projects, searchQuery, selectedTopics]);
+
+  const handleTopicToggle = (topic: string) => {
+    setSelectedTopics(prev => 
+      prev.includes(topic) 
+        ? prev.filter(t => t !== topic)
+        : [...prev, topic]
+    );
+  };
   
   const handleAddProject = () => {
     console.log('Add new project triggered');
@@ -48,7 +83,7 @@ export default function ProjectShowcase() {
         </div>
         
         {/* Search bar */}
-        <div className="max-w-md mx-auto mb-8">
+        <div className="max-w-2xl mx-auto mb-8 space-y-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -60,6 +95,53 @@ export default function ProjectShowcase() {
               data-testid="input-project-search"
             />
           </div>
+          
+          {/* Topic filters */}
+          {allTopics.length > 0 && (
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Tag className="h-4 w-4" />
+                <span>Filter by GitHub Topics:</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {allTopics.map((topic) => (
+                  <div key={topic} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`topic-${topic}`}
+                      checked={selectedTopics.includes(topic)}
+                      onCheckedChange={() => handleTopicToggle(topic)}
+                      data-testid={`checkbox-topic-${topic}`}
+                    />
+                    <label 
+                      htmlFor={`topic-${topic}`} 
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                      data-testid={`label-topic-${topic}`}
+                    >
+                      <Badge 
+                        variant="outline" 
+                        className="text-xs hover-elevate"
+                      >
+                        {topic}
+                      </Badge>
+                    </label>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Clear filters button */}
+              {selectedTopics.length > 0 && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setSelectedTopics([])}
+                  className="text-xs"
+                  data-testid="button-clear-topic-filters"
+                >
+                  Clear Topic Filters ({selectedTopics.length})
+                </Button>
+              )}
+            </div>
+          )}
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
