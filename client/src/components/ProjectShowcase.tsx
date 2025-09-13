@@ -116,7 +116,7 @@ export default function ProjectShowcase() {
                 placeholder="Search projects by name, description, or technology..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-10 border-2 border-border"
                 data-testid="input-project-search"
               />
             </div>
