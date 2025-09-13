@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Sprout, FileText } from "lucide-react";
+import { Sprout, FileText, Heart } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Navigation() {
@@ -37,6 +37,18 @@ export default function Navigation() {
               >
                 <FileText className="h-4 w-4 mr-2" />
                 Research
+              </Button>
+            </Link>
+            
+            <Link href="/sponsor">
+              <Button 
+                variant={location === "/sponsor" ? "default" : "ghost"}
+                size="sm"
+                className="hover-elevate"
+                data-testid="nav-sponsor"
+              >
+                <Heart className="h-4 w-4 mr-2" />
+                Sponsor
               </Button>
             </Link>
             

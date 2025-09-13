@@ -336,7 +336,13 @@ export default function Sponsorships() {
                             Scan QR code or copy address for one-time payment
                           </p>
                         </div>
-                        <BitcoinDonation />
+                        <BitcoinDonation 
+                          suggestedAmount={selectedTier?.amount}
+                          label={sponsorshipType === "project" && selectedProject 
+                            ? `Digital Garden - ${selectedProject.title}` 
+                            : "Digital Garden Sponsorship"
+                          }
+                        />
                       </CardContent>
                     </Card>
                     <Button 
