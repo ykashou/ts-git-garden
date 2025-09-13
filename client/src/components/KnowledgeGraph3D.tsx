@@ -120,14 +120,12 @@ export default function KnowledgeGraph3D({
     }
   }, [data]);
 
-  // Handle window resize
+  // Handle window resize - ForceGraph3D handles dimensions via props, not ref methods
   useEffect(() => {
     const handleResize = () => {
-      if (fgRef.current) {
-        const newWidth = window.innerWidth;
-        const newHeight = window.innerHeight;
-        fgRef.current.width(newWidth);
-        fgRef.current.height(newHeight);
+      // Force re-render by triggering a resize event on the ForceGraph3D component
+      if (fgRef.current && fgRef.current.refresh) {
+        fgRef.current.refresh();
       }
     };
 
