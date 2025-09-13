@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -6,11 +6,56 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Network, Search, Filter, RotateCcw, Mouse, Link, ZoomIn, Settings } from "lucide-react";
+import { Network, Search, Filter, RotateCcw, Mouse, Link, ZoomIn, AlertTriangle } from "lucide-react";
 import { getProjects } from "@/lib/staticDataLoader";
 import { createKnowledgeGraph, GroupingMode } from "@/lib/githubApi";
 import { Project } from "@shared/schema";
 import KnowledgeGraph3D from "../components/KnowledgeGraph3D";
+
+// WebGL error boundary component
+interface WebGLErrorBoundaryProps {
+  children: React.ReactNode;
+}
+
+interface WebGLErrorBoundaryState {
+  hasError: boolean;
+}
+
+class WebGLErrorBoundary extends React.Component<WebGLErrorBoundaryProps, WebGLErrorBoundaryState> {
+  constructor(props: WebGLErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: any): WebGLErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: any, errorInfo: any) {
+    console.error('WebGL Error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex items-center justify-center h-full">
+          <div className="text-center space-y-4 max-w-md">
+            <AlertTriangle className="h-16 w-16 text-yellow-500 mx-auto" />
+            <h3 className="text-lg font-medium text-foreground">3D Visualization Unavailable</h3>
+            <p className="text-muted-foreground text-sm">
+              WebGL is not available in this environment. The 3D knowledge graph requires WebGL support to render properly.
+            </p>
+            <p className="text-muted-foreground text-xs">
+              Please try using a different browser or enable hardware acceleration.
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 export default function KnowledgeGraph() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -119,14 +164,16 @@ export default function KnowledgeGraph() {
             </div>
           </div>
         ) : (
-          <KnowledgeGraph3D
-            data={graphData}
-            onNodeClick={(node: any) => {
-              if (node.url) {
-                window.open(node.url, '_blank');
-              }
-            }}
-          />
+          <WebGLErrorBoundary>
+            <KnowledgeGraph3D
+              data={graphData}
+              onNodeClick={(node: any) => {
+                if (node.url) {
+                  window.open(node.url, '_blank');
+                }
+              }}
+            />
+          </WebGLErrorBoundary>
         )}
         
         {/* Controls Overlay - Top Left */}
