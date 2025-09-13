@@ -99,9 +99,9 @@ export default function KnowledgeGraph() {
   }, [graphData]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-screen bg-background">
       {/* Graph Visualization */}
-      <div className="w-full h-[600px] relative overflow-hidden">
+      <div className="w-full h-full relative overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center space-y-4">
