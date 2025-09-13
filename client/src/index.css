@@ -141,20 +141,42 @@ body {
 /* Custom hover elevation utilities */
 .hover-elevate {
   transition: all 0.2s ease-in-out;
+  position: relative;
 }
 
 .hover-elevate:hover {
-  background-color: hsl(var(--elevate-1));
   transform: translateY(-1px);
+}
+
+/* Create overlay effect that preserves text readability */
+.hover-elevate:hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--elevate-1);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
 }
 
 .active-elevate-2 {
   transition: all 0.1s ease-in-out;
+  position: relative;
 }
 
 .active-elevate-2:active {
-  background-color: hsl(var(--elevate-2));
   transform: translateY(0px);
+}
+
+/* Create overlay effect for active state */
+.active-elevate-2:active::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--elevate-2);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Remove default hover states to prevent conflicts */
