@@ -103,8 +103,8 @@ export default function Sponsorships() {
         </div>
 
         {/* Wizard Content */}
-        <Card className="min-h-[400px] relative overflow-hidden">
-          <CardContent className="p-8">
+        <Card className="flex flex-col min-h-[500px]">
+          <CardContent className="flex-1 p-8">
             {/* Step 1: Sponsorship Intent */}
             {wizardStep === 1 && (
               <div className="space-y-6">
@@ -359,7 +359,7 @@ export default function Sponsorships() {
           </CardContent>
 
           {/* Navigation */}
-          <div className="absolute bottom-0 left-0 right-0 p-6 bg-background border-t">
+          <div className="border-t p-6 bg-background">
             <div className="flex justify-between items-center">
               <div>
                 {wizardStep > 1 ? (
