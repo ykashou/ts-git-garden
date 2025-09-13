@@ -1,54 +1,43 @@
 # Research Page Upgrade
 
-## Goal
-Display GitHub research repositories using the existing beautiful ResearchPaper card design, adapted for GitHub repos with compiled PDFs.
+## What We'll Display
 
-## What We're Building
-Take the current research page's elegant cards and populate them with:
-- GitHub repos tagged with "Research", "Thesis", "Theory", "Article"
-- Repository descriptions as abstracts
-- GitHub topics as tags
-- PDF links from compiled GitHub Actions outputs
+- Your research repositories filtered by topics ("Research", "Thesis", "Theory", "Article")
+- PDF Button → Links to the compiled PDF from GitHub Actions
+- View Repository → Links to the GitHub repo for source/version history
+- Repository description as the "abstract"
+- GitHub topics as research tags
+- Status based on repository state
 
-## Changes Needed
+## Card Structure Adaptation
 
-### 1. New API Endpoint
 ```
-GET /api/github/research-repos
-```
-Returns GitHub repos filtered by research topics with PDF detection.
-
-### 2. Schema Update
-```typescript
-type ResearchRepo = {
-  id: string;
-  title: string;        // cleaned repo name
-  description: string;  // repo description  
-  topics: string[];     // GitHub topics
-  repoUrl: string;
-  pdfUrl?: string;      // compiled PDF URL
-  year: number;         // from created date
-  status: "draft" | "active" | "stable";
-}
+┌─────────────────────────────────────┐
+│ Paper Title (repo name cleaned up) │ Status Badge
+├─────────────────────────────────────┤
+│ Author: Your Name                   │
+│ Topics: [Research] [Machine Learning] [Theory]
+├─────────────────────────────────────┤
+│ Abstract: Repository description    │
+│ + README excerpt if needed          │
+├─────────────────────────────────────┤
+│ [📄 View PDF] [📂 Repository]      │
+└─────────────────────────────────────┘
 ```
 
-### 3. PDF Detection
-Look for PDFs in:
-1. Latest GitHub release assets (*.pdf)
-2. Common paths: `/docs/paper.pdf`, `/build/paper.pdf`
-3. GitHub Actions artifacts (if accessible)
+## Status System Options
 
-### 4. Status Logic
-- **Draft**: New repos or low activity
-- **Active**: Recent commits (< 45 days)  
-- **Stable**: Established repos with infrequent updates
+- **"Draft"** - Recently created or low activity
+- **"Active"** - Recent commits and activity
+- **"Stable"** - Mature research, less frequent updates
 
-### 5. Card Adaptation
-Keep the existing ResearchPaper component, just change:
-- **Authors** → Repository owner
-- **Venue** → "GitHub Repository"
-- **Abstract** → Repository description
-- **PDF Button** → Links to compiled PDF
-- **DOI Button** → "Repository" button to GitHub
+## PDF Detection Strategy
 
-That's it. Same beautiful design, GitHub data instead of academic papers.
+We can look for PDF files in common locations:
+
+- GitHub Actions artifacts
+- /build/ or /dist/ folders
+- Direct PDF files in repo
+- GitHub Pages deployment for PDFs
+
+This keeps the beautiful academic presentation while being authentic to your GitHub-based research workflow. The version history stays in Git, PDFs are automatically compiled, and everything is properly showcased.
