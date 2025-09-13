@@ -18,13 +18,58 @@ export default function Sponsorships() {
 
   useEffect(() => {
     // Load projects and sponsorship tiers
-    Promise.all([
-      getProjects(),
-      fetch('/data/sponsorships.json').then(res => res.json())
-    ]).then(([projectsData, sponsorshipData]) => {
-      setProjects(projectsData);
-      setTiers(sponsorshipData.tiers);
-    });
+    getProjects().then(setProjects);
+    
+    fetch('/data/sponsorships.json')
+      .then(res => {
+        console.log('Sponsorships response:', res.status, res.statusText);
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then(data => {
+        console.log('Sponsorships data loaded:', data);
+        setTiers(data.tiers);
+      })
+      .catch(error => {
+        console.error('Failed to load sponsorships:', error);
+        // Fallback to hardcoded tiers
+        setTiers([
+          {
+            id: "seedling",
+            name: "🌱 Seedling",
+            amount: 5,
+            description: "Plant seeds for future growth",
+            benefits: ["Supporter badge on GitHub", "Early access to updates", "Community Discord access"],
+            githubSponsorsUrl: "https://github.com/sponsors/ykashou?tier_id=seedling"
+          },
+          {
+            id: "growing", 
+            name: "🌿 Growing",
+            amount: 15,
+            description: "Nurture ongoing development",
+            benefits: ["Priority issue responses", "Name in project credits", "Monthly progress reports", "All Seedling benefits"],
+            githubSponsorsUrl: "https://github.com/sponsors/ykashou?tier_id=growing"
+          },
+          {
+            id: "mature",
+            name: "🌳 Mature", 
+            amount: 25,
+            description: "Support established projects",
+            benefits: ["Feature request priority", "1-on-1 monthly calls", "Logo/link on project pages", "All previous benefits"],
+            githubSponsorsUrl: "https://github.com/sponsors/ykashou?tier_id=mature"
+          },
+          {
+            id: "bespoke",
+            name: "🌺 Bespoke",
+            amount: 50,
+            description: "Custom sponsorship arrangement", 
+            benefits: ["Custom sponsorship terms", "Direct collaboration opportunities", "Dedicated support channel", "All previous benefits"],
+            githubSponsorsUrl: "https://github.com/sponsors/ykashou?tier_id=bespoke"
+          }
+        ]);
+      });
   }, []);
 
   const nextStep = () => {
