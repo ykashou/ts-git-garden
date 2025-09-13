@@ -90,6 +90,7 @@ const transformRepoToProject = async (repo: GitHubRepo, token: string): Promise<
     title: repo.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
     description: repo.description || 'A GitHub repository project',
     technologies: languages.length > 0 ? languages : [repo.language || 'Code'].filter(Boolean),
+    topics: repo.topics || [],
     githubUrl: repo.html_url,
     liveUrl: repo.homepage || undefined,
     status: determineProjectStatus(repo, languages),

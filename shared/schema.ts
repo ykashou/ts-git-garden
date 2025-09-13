@@ -6,6 +6,7 @@ export const ProjectSchema = z.object({
   title: z.string(),
   description: z.string(),
   technologies: z.array(z.string()),
+  topics: z.array(z.string()).default([]),
   githubUrl: z.string().optional(),
   liveUrl: z.string().optional(),
   status: z.enum(["blooming", "growing", "mature"]).default("growing"),
