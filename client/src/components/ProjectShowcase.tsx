@@ -67,10 +67,10 @@ export default function ProjectShowcase() {
       });
     }
     
-    // Apply topic filter (check both GitHub topics and technologies)
+    // Apply topic filter (check both GitHub topics and technologies) - INTERSECTION (AND)
     if (selectedTopics.length > 0) {
       filtered = filtered.filter((project) => {
-        return selectedTopics.some(selectedTopic => 
+        return selectedTopics.every(selectedTopic => 
           project.topics?.includes(selectedTopic) ||
           project.technologies?.includes(selectedTopic)
         );
