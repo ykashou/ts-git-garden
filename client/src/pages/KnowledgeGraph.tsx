@@ -100,28 +100,6 @@ export default function KnowledgeGraph() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header Section */}
-      <section className="py-8 px-4 bg-gradient-to-br from-background to-muted/20">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12">
-            <div className="flex justify-center mb-6">
-              <div className="p-4 rounded-full bg-primary/10">
-                <Network className="h-12 w-12 text-primary" />
-              </div>
-            </div>
-            
-            <h1 className="text-4xl font-bold text-foreground mb-4">
-              Knowledge Graph
-            </h1>
-            
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Explore the interconnected ecosystem of projects, technologies, and research areas. 
-              Navigate through the digital garden as a living network of ideas and implementations.
-            </p>
-          </div>
-        </div>
-      </section>
-
       {/* Graph Visualization */}
       <div className="w-full h-[600px] relative overflow-hidden">
         {isLoading ? (
