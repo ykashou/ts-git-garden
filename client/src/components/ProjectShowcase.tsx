@@ -2,7 +2,6 @@ import ProjectCard from "./ProjectCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlusCircle, Search, Tag, Grid3X3, List, Github, ExternalLink, Calendar } from "lucide-react";
 import { getProjects } from "@/lib/staticDataLoader";
@@ -148,29 +147,17 @@ export default function ProjectShowcase() {
           {/* Topic filters */}
           {allTopics.length > 0 && (
             <div className="space-y-3">
-              
               <div className="flex flex-wrap gap-2">
                 {allTopics.map((topic) => (
-                  <div key={topic} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`topic-${topic}`}
-                      checked={selectedTopics.includes(topic)}
-                      onCheckedChange={() => handleTopicToggle(topic)}
-                      data-testid={`checkbox-topic-${topic}`}
-                    />
-                    <label 
-                      htmlFor={`topic-${topic}`} 
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                      data-testid={`label-topic-${topic}`}
-                    >
-                      <Badge 
-                        variant="outline" 
-                        className="text-xs hover-elevate"
-                      >
-                        {topic}
-                      </Badge>
-                    </label>
-                  </div>
+                  <Badge 
+                    key={topic}
+                    variant={selectedTopics.includes(topic) ? "default" : "outline"}
+                    className="text-xs hover-elevate cursor-pointer"
+                    onClick={() => handleTopicToggle(topic)}
+                    data-testid={`filter-topic-${topic}`}
+                  >
+                    {topic}
+                  </Badge>
                 ))}
               </div>
               
