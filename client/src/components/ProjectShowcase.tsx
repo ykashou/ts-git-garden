@@ -31,12 +31,22 @@ export default function ProjectShowcase() {
     getProjects().then(setProjects);
   }, []);
 
-  // Get all unique topics from all projects
+  // Get all unique technologies as filterable topics (since GitHub topics are empty)
   const allTopics = useMemo(() => {
     const topics = new Set<string>();
+    
+    // First try to get actual GitHub topics
     projects.forEach(project => {
       project.topics?.forEach(topic => topics.add(topic));
     });
+    
+    // If no GitHub topics exist, use technologies as filterable topics
+    if (topics.size === 0) {
+      projects.forEach(project => {
+        project.technologies?.forEach(tech => topics.add(tech));
+      });
+    }
+    
     return Array.from(topics).sort();
   }, [projects]);
 
@@ -57,11 +67,12 @@ export default function ProjectShowcase() {
       });
     }
     
-    // Apply topic filter
+    // Apply topic filter (check both GitHub topics and technologies)
     if (selectedTopics.length > 0) {
       filtered = filtered.filter((project) => {
         return selectedTopics.some(selectedTopic => 
-          project.topics?.includes(selectedTopic)
+          project.topics?.includes(selectedTopic) ||
+          project.technologies?.includes(selectedTopic)
         );
       });
     }
@@ -139,7 +150,7 @@ export default function ProjectShowcase() {
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Tag className="h-4 w-4" />
-                <span>Filter by GitHub Topics:</span>
+                <span>Filter by Technologies:</span>
               </div>
               <div className="flex flex-wrap gap-2">
                 {allTopics.map((topic) => (
