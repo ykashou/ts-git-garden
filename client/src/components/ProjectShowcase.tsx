@@ -94,7 +94,7 @@ export default function ProjectShowcase() {
   };
 
   return (
-    <section className="py-16 px-4">
+    <section className="pt-16 pb-8 px-4">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-foreground mb-4">
