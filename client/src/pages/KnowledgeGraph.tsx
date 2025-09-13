@@ -11,10 +11,14 @@ import { getProjects } from "@/lib/staticDataLoader";
 import { createKnowledgeGraph, GroupingMode } from "@/lib/githubApi";
 import { Project } from "@shared/schema";
 import KnowledgeGraph3D from "../components/KnowledgeGraph3D";
+import SimpleNetworkVisualization from "../components/SimpleNetworkVisualization";
+import { isWebGLAvailable } from "../lib/webglDetection";
 
 // WebGL error boundary component
 interface WebGLErrorBoundaryProps {
   children: React.ReactNode;
+  fallbackData: any;
+  fallbackOnNodeClick?: (node: any) => void;
 }
 
 interface WebGLErrorBoundaryState {
@@ -38,18 +42,10 @@ class WebGLErrorBoundary extends React.Component<WebGLErrorBoundaryProps, WebGLE
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex items-center justify-center h-full">
-          <div className="text-center space-y-4 max-w-md">
-            <AlertTriangle className="h-16 w-16 text-yellow-500 mx-auto" />
-            <h3 className="text-lg font-medium text-foreground">3D Visualization Unavailable</h3>
-            <p className="text-muted-foreground text-sm">
-              WebGL is not available in this environment. The 3D knowledge graph requires WebGL support to render properly.
-            </p>
-            <p className="text-muted-foreground text-xs">
-              Please try using a different browser or enable hardware acceleration.
-            </p>
-          </div>
-        </div>
+        <SimpleNetworkVisualization 
+          data={this.props.fallbackData}
+          onNodeClick={this.props.fallbackOnNodeClick}
+        />
       );
     }
 
@@ -63,6 +59,11 @@ export default function KnowledgeGraph() {
   const [grouping, setGrouping] = useState<GroupingMode>("topic");
   const [researchOnly, setResearchOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Check WebGL availability upfront
+  const webglSupported = useMemo(() => {
+    return isWebGLAvailable();
+  }, []);
 
   // SEO enhancement - update document title and meta description
   useEffect(() => {
@@ -143,9 +144,31 @@ export default function KnowledgeGraph() {
   }, [graphData]);
 
   return (
-    <div className="min-h-screen bg-background relative">
+    <div className="min-h-screen bg-background">
+      {/* Header Section */}
+      <section className="py-16 px-4 bg-gradient-to-br from-background to-muted/20">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-8">
+            <div className="flex justify-center mb-6">
+              <div className="p-4 rounded-full bg-primary/10">
+                <Network className="h-12 w-12 text-primary" />
+              </div>
+            </div>
+            
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              Knowledge Graph
+            </h1>
+            
+            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+              Explore the interconnected ecosystem of projects, technologies, and research areas. 
+              Navigate through the digital garden as a living network of ideas and implementations.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Graph Visualization */}
-      <div className="w-full h-screen relative overflow-hidden">
+      <div className="w-full h-[600px] relative overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center space-y-4">
@@ -163,8 +186,15 @@ export default function KnowledgeGraph() {
               </p>
             </div>
           </div>
-        ) : (
-          <WebGLErrorBoundary>
+        ) : webglSupported ? (
+          <WebGLErrorBoundary 
+            fallbackData={graphData}
+            fallbackOnNodeClick={(node: any) => {
+              if (node.url) {
+                window.open(node.url, '_blank');
+              }
+            }}
+          >
             <KnowledgeGraph3D
               data={graphData}
               onNodeClick={(node: any) => {
@@ -174,6 +204,15 @@ export default function KnowledgeGraph() {
               }}
             />
           </WebGLErrorBoundary>
+        ) : (
+          <SimpleNetworkVisualization 
+            data={graphData}
+            onNodeClick={(node: any) => {
+              if (node.url) {
+                window.open(node.url, '_blank');
+              }
+            }}
+          />
         )}
         
         {/* Controls Overlay - Top Left */}
