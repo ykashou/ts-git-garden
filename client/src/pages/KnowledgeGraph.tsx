@@ -19,6 +19,7 @@ export default function KnowledgeGraph() {
   const [grouping, setGrouping] = useState<GroupingMode>("topic");
   const [researchOnly, setResearchOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [navHeight, setNavHeight] = useState(0);
 
   // SEO enhancement - update document title and meta description
   useEffect(() => {
@@ -54,6 +55,23 @@ export default function KnowledgeGraph() {
     };
 
     loadProjects();
+  }, []);
+
+  // Measure navbar height for fullscreen layout
+  useEffect(() => {
+    const measureNavHeight = () => {
+      const navElement = document.getElementById('site-nav');
+      if (navElement) {
+        setNavHeight(navElement.getBoundingClientRect().height);
+      }
+    };
+
+    // Initial measurement
+    measureNavHeight();
+
+    // Measure on window resize
+    window.addEventListener('resize', measureNavHeight);
+    return () => window.removeEventListener('resize', measureNavHeight);
   }, []);
 
   // Filter projects based on search query
@@ -99,7 +117,10 @@ export default function KnowledgeGraph() {
   }, [graphData]);
 
   return (
-    <div className="w-full h-full bg-background">
+    <div 
+      className="w-full bg-background overflow-hidden"
+      style={{ height: navHeight > 0 ? `calc(100vh - ${navHeight}px)` : '100vh' }}
+    >
       {/* Graph Visualization */}
       <div className="w-full h-full relative overflow-hidden">
         {isLoading ? (
