@@ -186,37 +186,6 @@ export const getGitHubUser = async (token: string): Promise<{ login: string; nam
   }
 };
 
-// Classify repository as research or development
-const classifyRepository = (repo: GitHubRepo): 'research' | 'development' => {
-  const researchKeywords = ['research', 'thesis', 'theory', 'article', 'paper', 'study', 'analysis', 'academic', 'science'];
-  const devKeywords = ['app', 'web', 'api', 'tool', 'framework', 'library', 'project', 'application'];
-  
-  const text = `${repo.name} ${repo.description || ''} ${repo.topics.join(' ')}`.toLowerCase();
-  
-  // Check for research indicators
-  const hasResearchKeywords = researchKeywords.some(keyword => text.includes(keyword));
-  
-  // Research files patterns (README, etc could contain these)
-  const researchIndicators = [
-    text.includes('latex'),
-    text.includes('bibtex'),
-    text.includes('arxiv'),
-    text.includes('doi'),
-    text.includes('citation'),
-    text.includes('experiment'),
-    text.includes('dataset'),
-    text.includes('algorithm'),
-    text.includes('mathematical'),
-    text.includes('statistical')
-  ];
-  
-  // If has research keywords or multiple research indicators
-  if (hasResearchKeywords || researchIndicators.filter(Boolean).length >= 2) {
-    return 'research';
-  }
-  
-  return 'development';
-};
 
 // Generate color based on node type and content
 const getNodeColor = (type: GraphNode['type'], name: string, group?: string): string => {
@@ -282,36 +251,56 @@ export const createKnowledgeGraph = (
 
     switch (grouping) {
       case 'topic':
-        groupItems = project.topics.length > 0 ? project.topics : project.technologies;
+        groupItems = project.topics?.length > 0 ? project.topics : project.technologies || [];
         groupType = 'topic';
         break;
       case 'technology':
-        groupItems = project.technologies;
+        groupItems = project.technologies || [];
         groupType = 'technology';
         break;
       case 'status':
-        groupItems = [project.status];
+        // Provide fallback for missing status values
+        const status = project.status || 'unknown';
+        groupItems = [status];
         groupType = 'status';
         break;
       case 'year':
-        const year = new Date(project.createdAt).getFullYear().toString();
-        groupItems = [year];
+        // Check if createdAt exists, use lastUpdated as fallback, skip if both missing
+        let yearString: string | null = null;
+        if (project.createdAt) {
+          const year = new Date(project.createdAt).getFullYear();
+          if (!isNaN(year)) {
+            yearString = year.toString();
+          }
+        }
+        if (!yearString && project.lastUpdated) {
+          const year = new Date(project.lastUpdated).getFullYear();
+          if (!isNaN(year)) {
+            yearString = year.toString();
+          }
+        }
+        // Use current year as ultimate fallback
+        if (!yearString) {
+          yearString = new Date().getFullYear().toString();
+        }
+        groupItems = [yearString];
         groupType = 'year';
         break;
     }
 
-    // Create group nodes and links
-    groupItems.forEach(item => {
-      const groupNodeId = `${grouping}_${item}`;
+    // Create group nodes and links - filter out undefined/empty items
+    groupItems.filter(item => item && typeof item === 'string' && item.trim().length > 0).forEach(item => {
+      const sanitizedItem = item.trim();
+      const groupNodeId = `${grouping}_${sanitizedItem}`;
       
       if (!nodeIds.has(groupNodeId)) {
         nodes.push({
           id: groupNodeId,
-          name: item,
+          name: sanitizedItem,
           val: 15, // Larger than repo nodes
-          color: getNodeColor(groupType, item),
+          color: getNodeColor(groupType, sanitizedItem),
           type: groupType,
-          description: `${groupType.charAt(0).toUpperCase() + groupType.slice(1)}: ${item}`
+          description: `${groupType.charAt(0).toUpperCase() + groupType.slice(1)}: ${sanitizedItem}`
         });
         nodeIds.add(groupNodeId);
       }
