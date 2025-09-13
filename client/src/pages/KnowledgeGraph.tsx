@@ -168,14 +168,14 @@ export default function KnowledgeGraph() {
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-8 text-sm"
+                className="pl-10 h-9 text-sm border-2 border-border hover:border-primary/50 focus:border-primary transition-colors bg-background"
                 data-testid="input-graph-search"
               />
             </div>
             
             {/* Research Only Toggle */}
-            <div className="flex items-center justify-between">
-              <Label htmlFor="research-only" className="text-sm">
+            <div className="flex items-center justify-between p-2 rounded-lg border border-border/50 hover:border-border transition-colors hover:bg-muted/20">
+              <Label htmlFor="research-only" className="text-sm font-medium cursor-pointer">
                 Research Only
               </Label>
               <Switch
@@ -183,14 +183,15 @@ export default function KnowledgeGraph() {
                 checked={researchOnly}
                 onCheckedChange={setResearchOnly}
                 data-testid="switch-research-only"
+                className="data-[state=checked]:bg-primary"
               />
             </div>
             
             {/* Grouping */}
-            <div className="flex items-center justify-between">
-              <Label className="text-sm">Group by:</Label>
+            <div className="flex items-center justify-between p-2 rounded-lg border border-border/50 hover:border-border transition-colors hover:bg-muted/20">
+              <Label className="text-sm font-medium">Group by:</Label>
               <Select value={grouping} onValueChange={(value: GroupingMode) => setGrouping(value)}>
-                <SelectTrigger className="w-28 h-8 text-xs" data-testid="select-grouping">
+                <SelectTrigger className="w-32 h-8 text-xs border-border hover:border-primary/50 bg-background hover:bg-muted/10 transition-colors" data-testid="select-grouping">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -207,26 +208,26 @@ export default function KnowledgeGraph() {
               variant="outline"
               size="sm"
               onClick={handleReset}
-              className="w-full h-8 text-xs"
+              className="w-full h-9 text-sm font-medium border-2 border-border hover:border-primary/50 hover:bg-primary/5 transition-all duration-200 hover-elevate"
               data-testid="button-reset-filters"
             >
-              <RotateCcw className="h-3 w-3 mr-2" />
-              Reset
+              <RotateCcw className="h-4 w-4 mr-2" />
+              Reset Filters
             </Button>
             
             {/* Stats */}
-            <div className="text-xs text-muted-foreground space-y-1 border-t pt-3">
+            <div className="text-xs text-muted-foreground space-y-1.5 border-t border-border/50 pt-3 bg-muted/10 -mx-4 -mb-4 px-4 pb-4 rounded-b-lg">
               <div className="flex justify-between">
-                <span>Nodes:</span>
-                <span data-testid="stat-total-nodes">{stats.totalNodes}</span>
+                <span className="font-medium">Nodes:</span>
+                <span data-testid="stat-total-nodes" className="text-foreground font-semibold">{stats.totalNodes}</span>
               </div>
               <div className="flex justify-between">
-                <span>Projects:</span>
-                <span data-testid="stat-repo-nodes">{stats.repositoryNodes}</span>
+                <span className="font-medium">Projects:</span>
+                <span data-testid="stat-repo-nodes" className="text-foreground font-semibold">{stats.repositoryNodes}</span>
               </div>
               <div className="flex justify-between">
-                <span>Connections:</span>
-                <span data-testid="stat-total-links">{stats.totalLinks}</span>
+                <span className="font-medium">Connections:</span>
+                <span data-testid="stat-total-links" className="text-foreground font-semibold">{stats.totalLinks}</span>
               </div>
             </div>
           </CardContent>
