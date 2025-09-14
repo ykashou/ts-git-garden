@@ -110,6 +110,17 @@ export default function Sponsorships() {
   return (
     <section className="py-16 px-4 min-h-screen bg-background">
       <div className="container mx-auto max-w-2xl">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-foreground mb-4 flex items-center justify-center gap-2">
+            <Heart className="h-8 w-8 text-primary" />
+            Support the Digital Garden
+          </h1>
+          <p className="text-muted-foreground">
+            Help cultivate open source projects and research initiatives
+          </p>
+        </div>
+
         {/* Progress Indicator */}
         <div className="flex justify-center mb-8">
           <div className="flex items-center space-x-2">
@@ -134,17 +145,6 @@ export default function Sponsorships() {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-4 flex items-center justify-center gap-2">
-            <Heart className="h-8 w-8 text-primary" />
-            Support the Digital Garden
-          </h1>
-          <p className="text-muted-foreground">
-            Help cultivate open source projects and research initiatives
-          </p>
         </div>
 
         {/* Wizard Content */}
