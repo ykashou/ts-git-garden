@@ -30,7 +30,7 @@ export default function Research() {
             </div>
           </div>
           
-          <h1 className="text-4xl font-bold text-foreground mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             Research Papers
           </h1>
           
