@@ -11,7 +11,7 @@ export default function Navigation() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Sprout className="h-6 w-6 text-primary" />
+            <Sprout className="h-6 w-6 text-green-500" />
             <h1 className="text-xl font-semibold text-foreground">Digital Garden</h1>
           </div>
           
@@ -23,7 +23,7 @@ export default function Navigation() {
                 className="hover-elevate"
                 data-testid="nav-portfolio"
               >
-                <Sprout className="h-4 w-4 mr-2" />
+                <Sprout className="h-4 w-4 mr-2 text-green-500" />
                 Portfolio
               </Button>
             </Link>
@@ -59,7 +59,7 @@ export default function Navigation() {
                 className="hover-elevate"
                 data-testid="nav-sponsor"
               >
-                <Heart className="h-4 w-4 mr-2" />
+                <Heart className="h-4 w-4 mr-2 text-pink-500" />
                 Sponsor
               </Button>
             </Link>
