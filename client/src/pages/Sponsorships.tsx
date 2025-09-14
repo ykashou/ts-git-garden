@@ -114,7 +114,7 @@ export default function Sponsorships() {
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
             <div className="p-4 rounded-full bg-primary/10">
-              <Heart className="h-12 w-12 text-primary" />
+              <Heart className="h-12 w-12 text-pink-500" />
             </div>
           </div>
           

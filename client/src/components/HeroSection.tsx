@@ -19,7 +19,7 @@ export default function HeroSection() {
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
             <div className="p-4 rounded-full bg-primary/10">
-              <Sprout className="h-12 w-12 text-primary" />
+              <Sprout className="h-12 w-12 text-green-500" />
             </div>
           </div>
           
