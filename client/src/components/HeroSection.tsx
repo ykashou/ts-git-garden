@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Github, Mail, MapPin, Sprout, Send, User, UserX, ChevronDown, Zap } from "lucide-react";
+import { Github, Mail, MapPin, Sprout, Send, User, UserX, ChevronDown, Zap, Calendar } from "lucide-react";
 import { SiDiscord } from "react-icons/si";
 import { getConfig, getProjects } from "@/lib/staticDataLoader";
 import { useState, useEffect } from "react";
@@ -217,12 +218,68 @@ export default function HeroSection() {
                       <SelectTrigger data-testid="select-project" className="bg-secondary">
                         <SelectValue placeholder="Select a project to discuss" />
                       </SelectTrigger>
-                      <SelectContent>
-                        {projects.map((project) => (
-                          <SelectItem key={project.id} value={project.id}>
-                            {project.title}
-                          </SelectItem>
-                        ))}
+                      <SelectContent className="max-h-80 overflow-y-auto">
+                        {projects.map((project) => {
+                          const statusColors = {
+                            blooming: "bg-green-100 text-green-800",
+                            growing: "bg-yellow-100 text-yellow-800", 
+                            mature: "bg-blue-100 text-blue-800"
+                          };
+                          
+                          const statusLabels = {
+                            blooming: "🌱 Blooming",
+                            growing: "🌿 Growing", 
+                            mature: "🌳 Mature"
+                          };
+                          
+                          return (
+                            <SelectItem key={project.id} value={project.id} className="p-3 cursor-pointer hover:bg-muted/50">
+                              <div className="flex flex-col space-y-2 w-full">
+                                {/* Title and Status */}
+                                <div className="flex items-start justify-between gap-2">
+                                  <h4 className="font-medium text-sm text-foreground leading-tight">
+                                    {project.title}
+                                  </h4>
+                                  <Badge 
+                                    className={`${statusColors[project.status]} text-xs whitespace-nowrap flex-shrink-0`}
+                                  >
+                                    {statusLabels[project.status]}
+                                  </Badge>
+                                </div>
+                                
+                                {/* Description */}
+                                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
+                                  {project.description}
+                                </p>
+                                
+                                {/* Technologies and Date */}
+                                <div className="flex items-center justify-between gap-2">
+                                  <div className="flex flex-wrap gap-1">
+                                    {project.technologies.slice(0, 3).map((tech) => (
+                                      <Badge 
+                                        key={tech} 
+                                        variant="secondary" 
+                                        className="text-xs px-1.5 py-0.5"
+                                      >
+                                        {tech}
+                                      </Badge>
+                                    ))}
+                                    {project.technologies.length > 3 && (
+                                      <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
+                                        +{project.technologies.length - 3}
+                                      </Badge>
+                                    )}
+                                  </div>
+                                  
+                                  <div className="flex items-center text-xs text-muted-foreground flex-shrink-0">
+                                    <Calendar className="h-3 w-3 mr-1" />
+                                    {project.lastUpdated}
+                                  </div>
+                                </div>
+                              </div>
+                            </SelectItem>
+                          );
+                        })}
                       </SelectContent>
                     </Select>
                   </div>
