@@ -21,7 +21,6 @@ export default function KnowledgeGraph3D({
 }: KnowledgeGraph3DProps) {
   const fgRef = useRef<any>();
   const [, navigate] = useLocation();
-  const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
   const [contextMenu, setContextMenu] = useState<{
     visible: boolean;
     x: number;
@@ -109,19 +108,6 @@ export default function KnowledgeGraph3D({
     return mesh;
   }, []);
 
-  // Handle node click
-  const handleNodeClick = useCallback((node: any) => {
-    const graphNode = node as GraphNode;
-    
-    // Toggle selection - if same node clicked, deselect it
-    setSelectedNode(prevSelected => 
-      prevSelected?.id === graphNode.id ? null : graphNode
-    );
-    
-    if (onNodeClick) {
-      onNodeClick(graphNode);
-    }
-  }, [onNodeClick]);
 
   // Handle node right-click for context menu
   const handleNodeRightClick = useCallback((node: any, event: MouseEvent) => {
@@ -286,25 +272,12 @@ export default function KnowledgeGraph3D({
         nodeVal={nodeVal}
         nodeColor={nodeColor}
         nodeThreeObject={nodeThreeObject}
-        onNodeClick={handleNodeClick}
         onNodeHover={handleNodeHover}
         onNodeRightClick={handleNodeRightClick}
         nodeLabel={(node: any) => {
           const graphNode = node as GraphNode;
           
-          // Show label for selected node (clicked) OR research project nodes on hover
-          const isSelected = selectedNode && selectedNode.id === graphNode.id;
-          const isResearchProject = graphNode.type === 'repository' && graphNode.group === 'research';
-          
-          if (!isSelected && !isResearchProject) {
-            return '';
-          }
-          
-          // Different styling for selected vs hover states
-          const isHoverOnly = isResearchProject && !isSelected;
-          const borderColor = isHoverOnly ? '#10b981' : '#3b82f6'; // Green for research, blue for selected
-          const dismissText = isSelected ? 'Click to dismiss' : 'Click to pin details';
-          
+          // Show label on hover for all nodes
           return `
             <div style="
               background: rgba(0, 0, 0, 0.9); 
@@ -314,13 +287,13 @@ export default function KnowledgeGraph3D({
               font-size: 13px;
               max-width: 220px;
               line-height: 1.4;
-              border: 2px solid ${borderColor};
+              border: 2px solid ${graphNode.type === 'repository' && graphNode.group === 'research' ? '#10b981' : '#3b82f6'};
               box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
             ">
               <strong style="font-size: 14px;">${graphNode.name}</strong>
               ${graphNode.description ? `<br/><span style="opacity: 0.85; margin-top: 4px; display: block;">${graphNode.description}</span>` : ''}
               ${graphNode.group === 'research' ? '<br/><span style="opacity: 0.8; font-size: 11px; color: #10b981; margin-top: 4px; display: block;">📚 Research Project</span>' : ''}
-              <br/><span style="opacity: 0.7; font-size: 11px; margin-top: 6px; display: block;">Type: ${graphNode.type} • ${dismissText}</span>
+              <br/><span style="opacity: 0.7; font-size: 11px; margin-top: 6px; display: block;">Type: ${graphNode.type} • Right-click for options</span>
             </div>
           `;
         }}
