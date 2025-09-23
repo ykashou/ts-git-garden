@@ -4,9 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlusCircle, Search, Tag, Grid3X3, List, Github, ExternalLink, Calendar } from "lucide-react";
-import { getProjects } from "@/lib/staticDataLoader";
+import { getProjects, getConfig } from "@/lib/staticDataLoader";
 import { useState, useEffect, useMemo } from "react";
-import { Project } from "@shared/schema";
+import { Project, PortfolioConfig } from "@shared/schema";
 
 const statusColors = {
   blooming: "bg-green-100 text-green-800",
@@ -22,12 +22,14 @@ const statusLabels = {
 
 export default function ProjectShowcase() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [config, setConfig] = useState<PortfolioConfig | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   
   useEffect(() => {
     getProjects().then(setProjects);
+    getConfig().then(setConfig);
   }, []);
 
   // Get all unique technologies as filterable topics (since GitHub topics are empty)
@@ -91,6 +93,12 @@ export default function ProjectShowcase() {
     console.log('Add new project triggered');
     // Projects are now pulled from GitHub repositories
     alert('Projects are automatically pulled from your GitHub repositories. Create a new repository on GitHub to add it to your portfolio!');
+  };
+
+  const handleViewAllOnGitHub = () => {
+    if (config?.githubUsername) {
+      window.open(`https://github.com/${config.githubUsername}?tab=repositories`, '_blank');
+    }
   };
 
   return (
@@ -310,8 +318,10 @@ export default function ProjectShowcase() {
             variant="outline" 
             size="lg" 
             className="hover-elevate"
+            onClick={handleViewAllOnGitHub}
             data-testid="button-view-all"
           >
+            <Github className="h-4 w-4 mr-2" />
             View All Projects on GitHub
           </Button>
         </div>
