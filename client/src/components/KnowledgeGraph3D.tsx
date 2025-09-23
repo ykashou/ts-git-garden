@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback, useState } from "react";
 import ForceGraph3D from "react-force-graph-3d";
 import { KnowledgeGraphData, GraphNode } from "@/lib/githubApi";
 import * as THREE from "three";
@@ -17,6 +17,7 @@ export default function KnowledgeGraph3D({
   height 
 }: KnowledgeGraph3DProps) {
   const fgRef = useRef<any>();
+  const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
 
   // Calculate responsive dimensions for fullscreen
   const graphWidth = width || (typeof window !== 'undefined' ? window.innerWidth : 1200);
@@ -77,8 +78,15 @@ export default function KnowledgeGraph3D({
 
   // Handle node click
   const handleNodeClick = useCallback((node: any) => {
+    const graphNode = node as GraphNode;
+    
+    // Toggle selection - if same node clicked, deselect it
+    setSelectedNode(prevSelected => 
+      prevSelected?.id === graphNode.id ? null : graphNode
+    );
+    
     if (onNodeClick) {
-      onNodeClick(node as GraphNode);
+      onNodeClick(graphNode);
     }
   }, [onNodeClick]);
 
@@ -186,19 +194,27 @@ export default function KnowledgeGraph3D({
         onNodeHover={handleNodeHover}
         nodeLabel={(node: any) => {
           const graphNode = node as GraphNode;
+          
+          // Only show label for selected node
+          if (!selectedNode || selectedNode.id !== graphNode.id) {
+            return '';
+          }
+          
           return `
             <div style="
-              background: rgba(0, 0, 0, 0.8); 
+              background: rgba(0, 0, 0, 0.9); 
               color: white; 
-              padding: 8px 12px; 
-              border-radius: 6px; 
-              font-size: 12px;
-              max-width: 200px;
+              padding: 10px 14px; 
+              border-radius: 8px; 
+              font-size: 13px;
+              max-width: 220px;
               line-height: 1.4;
+              border: 2px solid #3b82f6;
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
             ">
-              <strong>${graphNode.name}</strong>
-              ${graphNode.description ? `<br/><span style="opacity: 0.8;">${graphNode.description}</span>` : ''}
-              <br/><span style="opacity: 0.6;">Type: ${graphNode.type}</span>
+              <strong style="font-size: 14px;">${graphNode.name}</strong>
+              ${graphNode.description ? `<br/><span style="opacity: 0.85; margin-top: 4px; display: block;">${graphNode.description}</span>` : ''}
+              <br/><span style="opacity: 0.7; font-size: 11px; margin-top: 6px; display: block;">Type: ${graphNode.type} • Click to dismiss</span>
             </div>
           `;
         }}
