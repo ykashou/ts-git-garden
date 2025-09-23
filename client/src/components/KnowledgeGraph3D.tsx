@@ -120,6 +120,38 @@ export default function KnowledgeGraph3D({
     }
   }, [data]);
 
+  // Set up zoom and pan limits
+  useEffect(() => {
+    if (fgRef.current) {
+      const controls = fgRef.current.controls();
+      
+      if (controls) {
+        // Set zoom limits to prevent getting too close or too far
+        controls.minDistance = 50;   // Minimum zoom distance (closer view)
+        controls.maxDistance = 1500; // Maximum zoom distance (farther view)
+        
+        // Set up pan limits to keep the graph centered and usable
+        const handleControlsChange = () => {
+          const target = controls.target;
+          const maxPanDistance = 400; // Maximum distance from center
+          
+          // Constrain target position to prevent losing the graph
+          target.x = Math.max(-maxPanDistance, Math.min(maxPanDistance, target.x));
+          target.y = Math.max(-maxPanDistance, Math.min(maxPanDistance, target.y));
+          target.z = Math.max(-maxPanDistance, Math.min(maxPanDistance, target.z));
+        };
+        
+        // Listen for control changes to enforce limits
+        controls.addEventListener('change', handleControlsChange);
+        
+        // Cleanup event listener
+        return () => {
+          controls.removeEventListener('change', handleControlsChange);
+        };
+      }
+    }
+  }, []);
+
   // Handle window resize - ForceGraph3D handles dimensions via props, not ref methods
   useEffect(() => {
     const handleResize = () => {
