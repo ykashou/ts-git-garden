@@ -89,6 +89,7 @@ export default function HeroSection() {
                       placeholder="Your name"
                       required
                       data-testid="input-name"
+                      className="bg-secondary"
                     />
                   </div>
                   
@@ -102,6 +103,7 @@ export default function HeroSection() {
                       placeholder="your.email@example.com"
                       required
                       data-testid="input-email"
+                      className="bg-secondary"
                     />
                   </div>
                   
@@ -111,7 +113,7 @@ export default function HeroSection() {
                       value={contactForm.project} 
                       onValueChange={(value) => setContactForm(prev => ({ ...prev, project: value }))}
                     >
-                      <SelectTrigger data-testid="select-project">
+                      <SelectTrigger data-testid="select-project" className="bg-secondary">
                         <SelectValue placeholder="Select a project to discuss" />
                       </SelectTrigger>
                       <SelectContent>
@@ -135,6 +137,7 @@ export default function HeroSection() {
                       rows={4}
                       required
                       data-testid="input-message"
+                      className="bg-secondary"
                     />
                   </div>
                   
