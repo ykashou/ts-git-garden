@@ -411,7 +411,7 @@ export default function Sponsorships() {
 
           {/* Navigation */}
           <div className="border-t p-6 bg-background">
-            <div className="flex justify-between items-center">
+            <div className="relative flex justify-between items-center">
               <div>
                 {wizardStep > 1 ? (
                   <Button 
@@ -427,7 +427,7 @@ export default function Sponsorships() {
                 )}
               </div>
               
-              <div className="text-center">
+              <div className="absolute left-1/2 transform -translate-x-1/2">
                 <Button 
                   variant="ghost" 
                   size="sm" 
