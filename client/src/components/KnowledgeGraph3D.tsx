@@ -80,6 +80,29 @@ export default function KnowledgeGraph3D({
 
     const mesh = new THREE.Mesh(geometry, material);
     
+    // Add borders to cubic nodes (technology type)
+    if (node.type === 'technology') {
+      // Create wireframe edges for better definition
+      const edges = new THREE.EdgesGeometry(geometry);
+      const edgeMaterial = new THREE.LineBasicMaterial({ 
+        color: 0x000000, // Black borders
+        transparent: true,
+        opacity: 0.6,
+        linewidth: 2
+      });
+      const wireframe = new THREE.LineSegments(edges, edgeMaterial);
+      
+      // Create a group to contain both the mesh and wireframe
+      const group = new THREE.Group();
+      group.add(mesh);
+      group.add(wireframe);
+      
+      // Add subtle hover effect through scaling
+      group.userData = { originalScale: 1, node };
+      
+      return group;
+    }
+    
     // Add subtle hover effect through scaling
     mesh.userData = { originalScale: 1, node };
     
