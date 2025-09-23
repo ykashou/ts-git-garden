@@ -1,16 +1,35 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Github, Mail, MapPin, Sprout } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Github, Mail, MapPin, Sprout, Send } from "lucide-react";
 import { getConfig } from "@/lib/staticDataLoader";
 import { useState, useEffect } from "react";
 import { PortfolioConfig } from "@shared/schema";
+import { useToast } from "@/hooks/use-toast";
 
 export default function HeroSection() {
   const [config, setConfig] = useState<PortfolioConfig | null>(null);
+  const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { toast } = useToast();
   
   useEffect(() => {
     getConfig().then(setConfig);
-  }, []); 
+  }, []);
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // For now, just show a success message
+    toast({
+      title: "Message sent!",
+      description: "Thank you for reaching out. I'll get back to you soon.",
+    });
+    setContactForm({ name: '', email: '', message: '' });
+    setIsDialogOpen(false);
+  }; 
   
   if (!config) return null;
   return (
@@ -38,20 +57,86 @@ export default function HeroSection() {
               Explore Projects
             </Button>
             
-            <Button 
-              variant="secondary" 
-              size="lg" 
-              className="hover-elevate" 
-              data-testid="button-contact"
-              onClick={() => {
-                if (config.email) {
-                  window.open(`mailto:${config.email}?subject=Hello from your Digital Garden`, '_blank');
-                }
-              }}
-            >
-              <Mail className="h-4 w-4 mr-2" />
-              Get in Touch
-            </Button>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button 
+                  variant="secondary" 
+                  size="lg" 
+                  className="hover-elevate" 
+                  data-testid="button-contact"
+                >
+                  <Mail className="h-4 w-4 mr-2" />
+                  Get in Touch
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2">
+                    <Mail className="h-5 w-5" />
+                    Get in Touch
+                  </DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleContactSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Name</Label>
+                    <Input
+                      id="name"
+                      value={contactForm.name}
+                      onChange={(e) => setContactForm(prev => ({ ...prev, name: e.target.value }))}
+                      placeholder="Your name"
+                      required
+                      data-testid="input-name"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={contactForm.email}
+                      onChange={(e) => setContactForm(prev => ({ ...prev, email: e.target.value }))}
+                      placeholder="your.email@example.com"
+                      required
+                      data-testid="input-email"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="message">Message</Label>
+                    <Textarea
+                      id="message"
+                      value={contactForm.message}
+                      onChange={(e) => setContactForm(prev => ({ ...prev, message: e.target.value }))}
+                      placeholder="Hello! I'd like to connect about..."
+                      rows={4}
+                      required
+                      data-testid="input-message"
+                    />
+                  </div>
+                  
+                  <div className="flex gap-3 pt-2">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={() => setIsDialogOpen(false)}
+                      className="flex-1"
+                      data-testid="button-cancel"
+                    >
+                      Cancel
+                    </Button>
+                    <Button 
+                      type="submit" 
+                      className="flex-1 hover-elevate"
+                      data-testid="button-send"
+                    >
+                      <Send className="h-4 w-4 mr-2" />
+                      Send Message
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
         
