@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Github, Mail, MapPin, Sprout, Send } from "lucide-react";
+import { Github, Mail, MapPin, Sprout, Send, User, UserX } from "lucide-react";
 import { getConfig, getProjects } from "@/lib/staticDataLoader";
 import { useState, useEffect } from "react";
 import { PortfolioConfig, Project } from "@shared/schema";
@@ -15,6 +15,7 @@ export default function HeroSection() {
   const [config, setConfig] = useState<PortfolioConfig | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '', project: '' });
+  const [contactType, setContactType] = useState<'identified' | 'anonymous' | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
   
@@ -31,6 +32,7 @@ export default function HeroSection() {
       description: "Thank you for reaching out. I'll get back to you soon.",
     });
     setContactForm({ name: '', email: '', message: '', project: '' });
+    setContactType(null);
     setIsDialogOpen(false);
   }; 
   
@@ -79,33 +81,81 @@ export default function HeroSection() {
                     Get in Touch
                   </DialogTitle>
                 </DialogHeader>
-                <form onSubmit={handleContactSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                      id="name"
-                      value={contactForm.name}
-                      onChange={(e) => setContactForm(prev => ({ ...prev, name: e.target.value }))}
-                      placeholder="Your name"
-                      required
-                      data-testid="input-name"
-                      className="bg-secondary"
-                    />
+                
+                {/* Contact Type Selection */}
+                <div className="space-y-4">
+                  <div className="text-sm font-medium text-foreground mb-3">How would you like to get in touch?</div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setContactType('identified')}
+                      className={`p-4 rounded-lg border-2 transition-all hover-elevate ${
+                        contactType === 'identified'
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border bg-secondary hover:border-primary/50'
+                      }`}
+                      data-testid="button-contact-identified"
+                    >
+                      <div className="flex flex-col items-center gap-2">
+                        <User className="h-5 w-5" />
+                        <span className="text-sm font-medium">With Contact Info</span>
+                        <span className="text-xs text-muted-foreground text-center">Share your details for follow-up</span>
+                      </div>
+                    </button>
+                    
+                    <button
+                      type="button"
+                      onClick={() => setContactType('anonymous')}
+                      className={`p-4 rounded-lg border-2 transition-all hover-elevate ${
+                        contactType === 'anonymous'
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border bg-secondary hover:border-primary/50'
+                      }`}
+                      data-testid="button-contact-anonymous"
+                    >
+                      <div className="flex flex-col items-center gap-2">
+                        <UserX className="h-5 w-5" />
+                        <span className="text-sm font-medium">Send Anonymously</span>
+                        <span className="text-xs text-muted-foreground text-center">No contact details required</span>
+                      </div>
+                    </button>
                   </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={contactForm.email}
-                      onChange={(e) => setContactForm(prev => ({ ...prev, email: e.target.value }))}
-                      placeholder="your.email@example.com"
-                      required
-                      data-testid="input-email"
-                      className="bg-secondary"
-                    />
-                  </div>
+                </div>
+                
+                {/* Form appears when contact type is selected */}
+                {contactType && (
+                  <form onSubmit={handleContactSubmit} className="space-y-4">
+                  {/* Name and Email fields - only show for identified contact */}
+                  {contactType === 'identified' && (
+                    <>
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Name</Label>
+                        <Input
+                          id="name"
+                          value={contactForm.name}
+                          onChange={(e) => setContactForm(prev => ({ ...prev, name: e.target.value }))}
+                          placeholder="Your name"
+                          required
+                          data-testid="input-name"
+                          className="bg-secondary"
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={contactForm.email}
+                          onChange={(e) => setContactForm(prev => ({ ...prev, email: e.target.value }))}
+                          placeholder="your.email@example.com"
+                          required
+                          data-testid="input-email"
+                          className="bg-secondary"
+                        />
+                      </div>
+                    </>
+                  )}
                   
                   <div className="space-y-2">
                     <Label htmlFor="project">Project (Optional)</Label>
@@ -160,6 +210,7 @@ export default function HeroSection() {
                     </Button>
                   </div>
                 </form>
+                )}
               </DialogContent>
             </Dialog>
           </div>
