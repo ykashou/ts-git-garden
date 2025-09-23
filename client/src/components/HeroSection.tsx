@@ -85,7 +85,7 @@ export default function HeroSection() {
                     <Button 
                       variant="secondary" 
                       size="lg" 
-                      className="hover-elevate rounded-l-none border-l-2 border-l-primary px-3"
+                      className="hover-elevate rounded-l-none border-l-2 border-l-border px-3"
                       data-testid="button-contact-method"
                     >
                       <ChevronDown className="h-4 w-4" />
