@@ -230,7 +230,7 @@ export default function HeroSection() {
                                   {project.status}
                                 </span>
                               </div>
-                              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                              <div className="flex items-center justify-between text-xs text-muted-foreground data-[highlighted]:text-primary-foreground">
                                 <span className="truncate max-w-[150px]">{project.description}</span>
                                 <span className="shrink-0 ml-2">
                                   {project.technologies.slice(0, 2).join(', ')}
