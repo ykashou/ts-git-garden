@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Github, Mail, MapPin, Sprout, Send, User, UserX, ChevronDown } from "lucide-react";
+import { Github, Mail, MapPin, Sprout, Send, User, UserX, ChevronDown, Zap } from "lucide-react";
+import { SiDiscord } from "react-icons/si";
 import { getConfig, getProjects } from "@/lib/staticDataLoader";
 import { useState, useEffect } from "react";
 import { PortfolioConfig, Project } from "@shared/schema";
@@ -25,6 +26,13 @@ export default function HeroSection() {
     getConfig().then(setConfig);
     getProjects().then(setProjects);
   }, []);
+
+  const scrollToProjects = () => {
+    const element = document.getElementById('projects-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,7 +67,7 @@ export default function HeroSection() {
           </p>
           
           <div className="flex flex-wrap justify-center gap-4">
-            <Button size="lg" className="hover-elevate" data-testid="button-view-projects">
+            <Button size="lg" className="hover-elevate" onClick={scrollToProjects} data-testid="button-view-projects">
               <Sprout className="h-4 w-4 mr-2" />
               Explore Projects
             </Button>
@@ -74,8 +82,8 @@ export default function HeroSection() {
                     data-testid="button-contact"
                   >
                     {contactMethod === 'email' && <Mail className="h-4 w-4 mr-2" />}
-                    {contactMethod === 'nostr' && <Sprout className="h-4 w-4 mr-2" />}
-                    {contactMethod === 'discord' && <Github className="h-4 w-4 mr-2" />}
+                    {contactMethod === 'nostr' && <Zap className="h-4 w-4 mr-2" />}
+                    {contactMethod === 'discord' && <SiDiscord className="h-4 w-4 mr-2" />}
                     Get in Touch
                   </Button>
                 </DialogTrigger>
@@ -103,14 +111,14 @@ export default function HeroSection() {
                       onClick={() => setContactMethod('nostr')}
                       data-testid="method-nostr"
                     >
-                      <Sprout className="h-4 w-4 mr-2" />
+                      <Zap className="h-4 w-4 mr-2" />
                       Nostr
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={() => setContactMethod('discord')}
                       data-testid="method-discord"
                     >
-                      <Github className="h-4 w-4 mr-2" />
+                      <SiDiscord className="h-4 w-4 mr-2" />
                       Discord
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -119,8 +127,8 @@ export default function HeroSection() {
                 <DialogHeader>
                   <DialogTitle className="flex items-center gap-2">
                     {contactMethod === 'email' && <Mail className="h-5 w-5" />}
-                    {contactMethod === 'nostr' && <Sprout className="h-5 w-5" />}
-                    {contactMethod === 'discord' && <Github className="h-5 w-5" />}
+                    {contactMethod === 'nostr' && <Zap className="h-5 w-5" />}
+                    {contactMethod === 'discord' && <SiDiscord className="h-5 w-5" />}
                     Get in Touch via {contactMethod.charAt(0).toUpperCase() + contactMethod.slice(1)}
                   </DialogTitle>
                 </DialogHeader>
