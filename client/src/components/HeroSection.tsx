@@ -219,8 +219,25 @@ export default function HeroSection() {
                       </SelectTrigger>
                       <SelectContent>
                         {projects.map((project) => (
-                          <SelectItem key={project.id} value={project.id}>
-                            {project.title}
+                          <SelectItem key={project.id} value={project.id} className="h-16 p-3">
+                            <div className="flex flex-col gap-1 w-full">
+                              <div className="flex items-center justify-between">
+                                <span className="font-medium text-sm truncate max-w-[180px]">{project.title}</span>
+                                <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground shrink-0 ml-2">
+                                  {project.status === 'blooming' && '🌱'}
+                                  {project.status === 'growing' && '🌿'}
+                                  {project.status === 'mature' && '🌳'}
+                                  {project.status}
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                                <span className="truncate max-w-[150px]">{project.description}</span>
+                                <span className="shrink-0 ml-2">
+                                  {project.technologies.slice(0, 2).join(', ')}
+                                  {project.technologies.length > 2 && ` +${project.technologies.length - 2}`}
+                                </span>
+                              </div>
+                            </div>
                           </SelectItem>
                         ))}
                       </SelectContent>
