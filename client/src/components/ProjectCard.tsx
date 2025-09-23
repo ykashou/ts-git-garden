@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Github, ExternalLink, Calendar } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Github, ExternalLink, Calendar, Heart, ChevronDown, MessageSquare } from "lucide-react";
 
 interface ProjectCardProps {
   title: string;
@@ -42,6 +43,20 @@ export default function ProjectCard({
   const handleLiveClick = () => {
     console.log(`Opening live demo for ${title}`);
     if (liveUrl) window.open(liveUrl, '_blank');
+  };
+  
+  const handleSupportProject = () => {
+    console.log(`Support project: ${title}`);
+    // Navigate to sponsor page - could be enhanced to pass project context
+    window.open('/sponsor', '_blank');
+  };
+  
+  const handleRequestFeature = () => {
+    console.log(`Request feature for: ${title}`);
+    // Could open contact form or GitHub issues - for now, navigate to contact
+    if (githubUrl) {
+      window.open(`${githubUrl}/issues/new`, '_blank');
+    }
   };
 
   return (
@@ -111,6 +126,37 @@ export default function ProjectCard({
               </Button>
             )}
           </div>
+          
+          {/* Bitcoin Orange Sponsor Dropdown Button */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white border-orange-500 hover:border-orange-600 hover-elevate"
+                size="sm"
+                data-testid="button-sponsor"
+              >
+                <Heart className="h-4 w-4 mr-2" />
+                Sponsor
+                <ChevronDown className="h-4 w-4 ml-2" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center">
+              <DropdownMenuItem 
+                onClick={handleSupportProject}
+                data-testid="sponsor-support"
+              >
+                <Heart className="h-4 w-4 mr-2" />
+                Support the Project
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={handleRequestFeature}
+                data-testid="sponsor-feature"
+              >
+                <MessageSquare className="h-4 w-4 mr-2" />
+                Request a Feature
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </CardContent>
     </Card>
