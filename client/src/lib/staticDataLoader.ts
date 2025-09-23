@@ -17,7 +17,7 @@ export const getConfig = async (): Promise<PortfolioConfig> => {
       name: "Digital Garden",
       tagline: "A place where ideas grow, projects bloom, and knowledge is cultivated",
       bio: "I'm a passionate developer and researcher who believes in the power of open source and continuous learning.",
-      skills: ["React", "TypeScript", "Python", "Node.js"],
+      skills: ["HPC", "TypeScript", "Python", "Node.js"],
       location: "Based in the Cloud",
       bitcoinAddress: "",
       githubUsername: "",
