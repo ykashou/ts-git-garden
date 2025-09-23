@@ -292,10 +292,18 @@ export default function KnowledgeGraph3D({
         nodeLabel={(node: any) => {
           const graphNode = node as GraphNode;
           
-          // Only show label for selected node
-          if (!selectedNode || selectedNode.id !== graphNode.id) {
+          // Show label for selected node (clicked) OR research project nodes on hover
+          const isSelected = selectedNode && selectedNode.id === graphNode.id;
+          const isResearchProject = graphNode.type === 'repository' && graphNode.group === 'research';
+          
+          if (!isSelected && !isResearchProject) {
             return '';
           }
+          
+          // Different styling for selected vs hover states
+          const isHoverOnly = isResearchProject && !isSelected;
+          const borderColor = isHoverOnly ? '#10b981' : '#3b82f6'; // Green for research, blue for selected
+          const dismissText = isSelected ? 'Click to dismiss' : 'Click to pin details';
           
           return `
             <div style="
@@ -306,12 +314,13 @@ export default function KnowledgeGraph3D({
               font-size: 13px;
               max-width: 220px;
               line-height: 1.4;
-              border: 2px solid #3b82f6;
+              border: 2px solid ${borderColor};
               box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
             ">
               <strong style="font-size: 14px;">${graphNode.name}</strong>
               ${graphNode.description ? `<br/><span style="opacity: 0.85; margin-top: 4px; display: block;">${graphNode.description}</span>` : ''}
-              <br/><span style="opacity: 0.7; font-size: 11px; margin-top: 6px; display: block;">Type: ${graphNode.type} • Click to dismiss</span>
+              ${graphNode.group === 'research' ? '<br/><span style="opacity: 0.8; font-size: 11px; color: #10b981; margin-top: 4px; display: block;">📚 Research Project</span>' : ''}
+              <br/><span style="opacity: 0.7; font-size: 11px; margin-top: 6px; display: block;">Type: ${graphNode.type} • ${dismissText}</span>
             </div>
           `;
         }}
