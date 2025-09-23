@@ -3,21 +3,24 @@ import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Github, Mail, MapPin, Sprout, Send } from "lucide-react";
-import { getConfig } from "@/lib/staticDataLoader";
+import { getConfig, getProjects } from "@/lib/staticDataLoader";
 import { useState, useEffect } from "react";
-import { PortfolioConfig } from "@shared/schema";
+import { PortfolioConfig, Project } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 
 export default function HeroSection() {
   const [config, setConfig] = useState<PortfolioConfig | null>(null);
-  const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [contactForm, setContactForm] = useState({ name: '', email: '', message: '', project: '' });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
   
   useEffect(() => {
     getConfig().then(setConfig);
+    getProjects().then(setProjects);
   }, []);
 
   const handleContactSubmit = (e: React.FormEvent) => {
@@ -27,7 +30,7 @@ export default function HeroSection() {
       title: "Message sent!",
       description: "Thank you for reaching out. I'll get back to you soon.",
     });
-    setContactForm({ name: '', email: '', message: '' });
+    setContactForm({ name: '', email: '', message: '', project: '' });
     setIsDialogOpen(false);
   }; 
   
@@ -100,6 +103,26 @@ export default function HeroSection() {
                       required
                       data-testid="input-email"
                     />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="project">Project (Optional)</Label>
+                    <Select 
+                      value={contactForm.project} 
+                      onValueChange={(value) => setContactForm(prev => ({ ...prev, project: value }))}
+                    >
+                      <SelectTrigger data-testid="select-project">
+                        <SelectValue placeholder="Select a project to discuss" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="general">General Inquiry</SelectItem>
+                        {projects.map((project) => (
+                          <SelectItem key={project.id} value={project.id}>
+                            {project.title}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   
                   <div className="space-y-2">
