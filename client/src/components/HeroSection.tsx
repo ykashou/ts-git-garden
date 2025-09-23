@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Github, Mail, MapPin, Sprout, Send, User, UserX } from "lucide-react";
+import { Github, Mail, MapPin, Sprout, Send, User, UserX, ChevronDown } from "lucide-react";
 import { getConfig, getProjects } from "@/lib/staticDataLoader";
 import { useState, useEffect } from "react";
 import { PortfolioConfig, Project } from "@shared/schema";
@@ -16,6 +17,7 @@ export default function HeroSection() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '', project: '' });
   const [contactType, setContactType] = useState<'identified' | 'anonymous' | null>(null);
+  const [contactMethod, setContactMethod] = useState<'email' | 'nostr' | 'discord'>('email');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
   
@@ -62,23 +64,64 @@ export default function HeroSection() {
               Explore Projects
             </Button>
             
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button 
-                  variant="secondary" 
-                  size="lg" 
-                  className="hover-elevate" 
-                  data-testid="button-contact"
-                >
-                  <Mail className="h-4 w-4 mr-2" />
-                  Get in Touch
-                </Button>
-              </DialogTrigger>
+            <div className="flex">
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button 
+                    variant="secondary" 
+                    size="lg" 
+                    className="hover-elevate rounded-r-none" 
+                    data-testid="button-contact"
+                  >
+                    {contactMethod === 'email' && <Mail className="h-4 w-4 mr-2" />}
+                    {contactMethod === 'nostr' && <Sprout className="h-4 w-4 mr-2" />}
+                    {contactMethod === 'discord' && <Github className="h-4 w-4 mr-2" />}
+                    Get in Touch
+                  </Button>
+                </DialogTrigger>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button 
+                      variant="secondary" 
+                      size="lg" 
+                      className="hover-elevate rounded-l-none border-l-0 px-3"
+                      data-testid="button-contact-method"
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem 
+                      onClick={() => setContactMethod('email')}
+                      data-testid="method-email"
+                    >
+                      <Mail className="h-4 w-4 mr-2" />
+                      Email
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={() => setContactMethod('nostr')}
+                      data-testid="method-nostr"
+                    >
+                      <Sprout className="h-4 w-4 mr-2" />
+                      Nostr
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={() => setContactMethod('discord')}
+                      data-testid="method-discord"
+                    >
+                      <Github className="h-4 w-4 mr-2" />
+                      Discord
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                   <DialogTitle className="flex items-center gap-2">
-                    <Mail className="h-5 w-5" />
-                    Get in Touch
+                    {contactMethod === 'email' && <Mail className="h-5 w-5" />}
+                    {contactMethod === 'nostr' && <Sprout className="h-5 w-5" />}
+                    {contactMethod === 'discord' && <Github className="h-5 w-5" />}
+                    Get in Touch via {contactMethod.charAt(0).toUpperCase() + contactMethod.slice(1)}
                   </DialogTitle>
                 </DialogHeader>
                 
@@ -213,6 +256,7 @@ export default function HeroSection() {
                 )}
               </DialogContent>
             </Dialog>
+            </div>
           </div>
         </div>
         
