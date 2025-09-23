@@ -143,11 +143,6 @@ export default function KnowledgeGraph() {
         ) : (
           <KnowledgeGraph3D
             data={graphData}
-            onNodeClick={(node: any) => {
-              if (node.url) {
-                window.open(node.url, '_blank');
-              }
-            }}
           />
         )}
         
@@ -273,7 +268,7 @@ export default function KnowledgeGraph() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Link className="h-3 w-3" />
-                  <span>Click projects to open</span>
+                  <span>Click to show details</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <ZoomIn className="h-3 w-3" />
