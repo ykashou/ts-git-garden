@@ -2,6 +2,8 @@ import { useRef, useEffect, useCallback, useState } from "react";
 import ForceGraph3D from "react-force-graph-3d";
 import { KnowledgeGraphData, GraphNode } from "@/lib/githubApi";
 import * as THREE from "three";
+import { Button } from "@/components/ui/button";
+import { Github, Copy, Filter, ExternalLink, Calendar } from "lucide-react";
 
 interface KnowledgeGraph3DProps {
   data: KnowledgeGraphData;
@@ -18,6 +20,12 @@ export default function KnowledgeGraph3D({
 }: KnowledgeGraph3DProps) {
   const fgRef = useRef<any>();
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
+  const [contextMenu, setContextMenu] = useState<{
+    visible: boolean;
+    x: number;
+    y: number;
+    node: GraphNode | null;
+  }>({ visible: false, x: 0, y: 0, node: null });
 
   // Calculate responsive dimensions for fullscreen
   const graphWidth = width || (typeof window !== 'undefined' ? window.innerWidth : 1200);
@@ -89,6 +97,64 @@ export default function KnowledgeGraph3D({
       onNodeClick(graphNode);
     }
   }, [onNodeClick]);
+
+  // Handle node right-click for context menu
+  const handleNodeRightClick = useCallback((node: any, event: MouseEvent) => {
+    event.preventDefault();
+    const graphNode = node as GraphNode;
+    
+    setContextMenu({
+      visible: true,
+      x: event.clientX,
+      y: event.clientY,
+      node: graphNode
+    });
+  }, []);
+
+  // Handle context menu actions
+  const handleContextMenuAction = useCallback((action: string, node: GraphNode) => {
+    switch (action) {
+      case 'viewOnGitHub':
+        if (node.type === 'repository' && node.url) {
+          window.open(node.url, '_blank');
+        }
+        break;
+      case 'copyName':
+        navigator.clipboard.writeText(node.name);
+        break;
+      case 'copyUrl':
+        if (node.url) {
+          navigator.clipboard.writeText(node.url);
+        }
+        break;
+      case 'filter':
+        // For now, just log the filter action - this could be extended to actually filter
+        console.log(`Filter by ${node.type}: ${node.name}`);
+        break;
+    }
+    
+    // Close context menu after action
+    setContextMenu({ visible: false, x: 0, y: 0, node: null });
+  }, []);
+
+  // Close context menu when clicking elsewhere
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (contextMenu.visible) {
+        setContextMenu({ visible: false, x: 0, y: 0, node: null });
+      }
+    };
+
+    if (contextMenu.visible) {
+      document.addEventListener('click', handleClickOutside);
+      document.addEventListener('contextmenu', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('contextmenu', handleClickOutside);
+    };
+  }, [contextMenu.visible]);
 
   // Handle node hover for visual feedback
   const handleNodeHover = useCallback((node: any, prevNode: any) => {
@@ -192,6 +258,7 @@ export default function KnowledgeGraph3D({
         nodeThreeObject={nodeThreeObject}
         onNodeClick={handleNodeClick}
         onNodeHover={handleNodeHover}
+        onNodeRightClick={handleNodeRightClick}
         nodeLabel={(node: any) => {
           const graphNode = node as GraphNode;
           
@@ -249,6 +316,67 @@ export default function KnowledgeGraph3D({
         </div>
       )}
       
+      {/* Context Menu */}
+      {contextMenu.visible && contextMenu.node && (
+        <div 
+          className="fixed bg-card border border-border rounded-lg shadow-lg py-1 z-50 min-w-[160px]"
+          style={{ 
+            left: Math.min(contextMenu.x, window.innerWidth - 200), 
+            top: Math.min(contextMenu.y, window.innerHeight - 200)
+          }}
+          data-testid="context-menu"
+        >
+          {contextMenu.node.type === 'repository' && (
+            <>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start px-3 py-2 h-auto font-normal"
+                onClick={() => handleContextMenuAction('viewOnGitHub', contextMenu.node!)}
+                data-testid="context-menu-github"
+              >
+                <Github className="h-4 w-4 mr-2" />
+                View on GitHub
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start px-3 py-2 h-auto font-normal"
+                onClick={() => handleContextMenuAction('copyUrl', contextMenu.node!)}
+                data-testid="context-menu-copy-url"
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Copy URL
+              </Button>
+            </>
+          )}
+          
+          {(contextMenu.node.type === 'topic' || contextMenu.node.type === 'technology' || 
+            contextMenu.node.type === 'status' || contextMenu.node.type === 'year') && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start px-3 py-2 h-auto font-normal"
+              onClick={() => handleContextMenuAction('filter', contextMenu.node!)}
+              data-testid="context-menu-filter"
+            >
+              <Filter className="h-4 w-4 mr-2" />
+              Filter by {contextMenu.node.type}
+            </Button>
+          )}
+          
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start px-3 py-2 h-auto font-normal"
+            onClick={() => handleContextMenuAction('copyName', contextMenu.node!)}
+            data-testid="context-menu-copy-name"
+          >
+            <Copy className="h-4 w-4 mr-2" />
+            Copy Name
+          </Button>
+        </div>
+      )}
       
     </div>
   );
