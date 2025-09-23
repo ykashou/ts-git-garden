@@ -117,7 +117,6 @@ export default function HeroSection() {
                         <SelectValue placeholder="Select a project to discuss" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="general">General Inquiry</SelectItem>
                         {projects.map((project) => (
                           <SelectItem key={project.id} value={project.id}>
                             {project.title}
