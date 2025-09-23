@@ -3,7 +3,8 @@ import ForceGraph3D from "react-force-graph-3d";
 import { KnowledgeGraphData, GraphNode } from "@/lib/githubApi";
 import * as THREE from "three";
 import { Button } from "@/components/ui/button";
-import { Github, Copy, Filter, ExternalLink, Calendar } from "lucide-react";
+import { Github, Copy, Filter, ExternalLink, Calendar, Eye } from "lucide-react";
+import { useLocation } from "wouter";
 
 interface KnowledgeGraph3DProps {
   data: KnowledgeGraphData;
@@ -19,6 +20,7 @@ export default function KnowledgeGraph3D({
   height 
 }: KnowledgeGraph3DProps) {
   const fgRef = useRef<any>();
+  const [, navigate] = useLocation();
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
   const [contextMenu, setContextMenu] = useState<{
     visible: boolean;
@@ -119,6 +121,11 @@ export default function KnowledgeGraph3D({
           window.open(node.url, '_blank');
         }
         break;
+      case 'viewInPortfolio':
+        if (node.type === 'repository') {
+          navigate('/');
+        }
+        break;
       case 'copyName':
         navigator.clipboard.writeText(node.name);
         break;
@@ -135,7 +142,7 @@ export default function KnowledgeGraph3D({
     
     // Close context menu after action
     setContextMenu({ visible: false, x: 0, y: 0, node: null });
-  }, []);
+  }, [navigate]);
 
   // Close context menu when clicking elsewhere
   useEffect(() => {
@@ -328,6 +335,16 @@ export default function KnowledgeGraph3D({
         >
           {contextMenu.node.type === 'repository' && (
             <>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start px-3 py-2 h-auto font-normal"
+                onClick={() => handleContextMenuAction('viewInPortfolio', contextMenu.node!)}
+                data-testid="context-menu-portfolio"
+              >
+                <Eye className="h-4 w-4 mr-2" />
+                View in Portfolio
+              </Button>
               <Button
                 variant="ghost"
                 size="sm"
