@@ -38,7 +38,17 @@ export default function HeroSection() {
               Explore Projects
             </Button>
             
-            <Button variant="secondary" size="lg" className="hover-elevate" data-testid="button-contact">
+            <Button 
+              variant="secondary" 
+              size="lg" 
+              className="hover-elevate" 
+              data-testid="button-contact"
+              onClick={() => {
+                if (config.email) {
+                  window.open(`mailto:${config.email}?subject=Hello from your Digital Garden`, '_blank');
+                }
+              }}
+            >
               <Mail className="h-4 w-4 mr-2" />
               Get in Touch
             </Button>
