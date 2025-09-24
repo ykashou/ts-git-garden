@@ -6,7 +6,6 @@ import { ArrowLeft, ArrowRight, Heart, Github, Wallet, CheckCircle } from "lucid
 import { getProjects } from "@/lib/staticDataLoader";
 import { Project, SponsorshipTier } from "@shared/schema";
 import BitcoinDonation from "@/components/BitcoinDonation";
-import magicMoneyRaven from "@assets/generated_images/Majestic_adult_Bitcoin_raven_39aaffd1.png";
 
 export default function Sponsorships() {
   const [wizardStep, setWizardStep] = useState(1);
@@ -361,34 +360,32 @@ export default function Sponsorships() {
                       <h3 className="text-xl font-semibold text-primary">Magic Internet Money</h3>
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-4 max-w-lg mx-auto">
+                    <div className="space-y-4 max-w-lg mx-auto">
                       <Card 
-                        className="cursor-pointer transition-all hover-elevate aspect-square"
-                        onClick={() => selectedTier?.githubSponsorsUrl && window.open(selectedTier.githubSponsorsUrl, '_blank')}
-                        data-testid="card-github-sponsors"
+                        className="cursor-pointer transition-all hover-elevate"
+                        onClick={() => setShowBitcoin(true)}
+                        data-testid="card-bitcoin-payment"
                       >
-                        <CardContent className="p-4 h-full flex flex-col items-center justify-center text-center space-y-3">
-                          <Github className="h-8 w-8 text-primary" />
+                        <CardContent className="p-4 flex flex-col items-center justify-center text-center space-y-3">
                           <div className="space-y-1">
-                            <h3 className="text-base font-medium">GitHub Sponsors</h3>
+                            <h3 className="text-base font-medium">Bitcoin</h3>
                             <p className="text-xs text-muted-foreground">
-                              Recurring monthly payments
+                              One-time payment
                             </p>
                           </div>
                         </CardContent>
                       </Card>
 
                       <Card 
-                        className="cursor-pointer transition-all hover-elevate aspect-square"
-                        onClick={() => setShowBitcoin(true)}
-                        data-testid="card-bitcoin-payment"
+                        className="cursor-pointer transition-all hover-elevate"
+                        onClick={() => selectedTier?.githubSponsorsUrl && window.open(selectedTier.githubSponsorsUrl, '_blank')}
+                        data-testid="card-github-sponsors"
                       >
-                        <CardContent className="p-4 h-full flex flex-col items-center justify-center text-center space-y-3">
-                          <img src={magicMoneyRaven} alt="Magic Internet Money" className="h-8 w-8 rounded-sm" />
+                        <CardContent className="p-4 flex flex-col items-center justify-center text-center space-y-3">
                           <div className="space-y-1">
-                            <h3 className="text-base font-medium">Bitcoin</h3>
+                            <h3 className="text-base font-medium">GitHub Sponsors</h3>
                             <p className="text-xs text-muted-foreground">
-                              One-time payment
+                              Recurring monthly payments
                             </p>
                           </div>
                         </CardContent>
