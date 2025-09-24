@@ -399,6 +399,8 @@ export default function Sponsorships() {
                         ? `Digital Garden - ${selectedProject.title}` 
                         : "Digital Garden Sponsorship"
                       }
+                      showTitle={false}
+                      showDescription={false}
                     />
                     <Button 
                       variant="outline" 
