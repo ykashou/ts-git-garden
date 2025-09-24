@@ -1,17 +1,9 @@
-import HeroSection from "@/components/HeroSection";
-import BitcoinDonation from "@/components/BitcoinDonation";
+import ProjectShowcase from "@/components/ProjectShowcase";
 
-export default function Portfolio() {
+export default function Projects() {
   return (
     <div className="min-h-screen bg-background">
-      <HeroSection />
-      
-      {/* Bitcoin Donation Section */}
-      <section className="py-16 px-4 bg-muted/20">
-        <div className="container mx-auto max-w-md">
-          <BitcoinDonation />
-        </div>
-      </section>
+      <ProjectShowcase />
       
       {/* Footer */}
       <footer className="py-8 px-4 border-t border-border">

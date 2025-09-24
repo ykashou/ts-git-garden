@@ -12,6 +12,7 @@ import { getConfig, getProjects } from "@/lib/staticDataLoader";
 import { useState, useEffect } from "react";
 import { PortfolioConfig, Project } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
 
 export default function HeroSection() {
   const [config, setConfig] = useState<PortfolioConfig | null>(null);
@@ -21,17 +22,15 @@ export default function HeroSection() {
   const [contactMethod, setContactMethod] = useState<'email' | 'nostr' | 'discord'>('email');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
   
   useEffect(() => {
     getConfig().then(setConfig);
     getProjects().then(setProjects);
   }, []);
 
-  const scrollToProjects = () => {
-    const element = document.getElementById('projects-section');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+  const navigateToProjects = () => {
+    setLocation('/projects');
   };
 
   const handleContactSubmit = (e: React.FormEvent) => {
@@ -67,7 +66,7 @@ export default function HeroSection() {
           </p>
           
           <div className="flex flex-wrap justify-center gap-4">
-            <Button size="lg" className="hover-elevate" onClick={scrollToProjects} data-testid="button-view-projects">
+            <Button size="lg" className="hover-elevate" onClick={navigateToProjects} data-testid="button-view-projects">
               <Sprout className="h-4 w-4 mr-2" />
               Explore Projects
             </Button>
