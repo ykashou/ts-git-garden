@@ -396,24 +396,20 @@ export default function Sponsorships() {
                     </div>
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    <Card>
-                      <CardContent className="p-6">
-                        <div className="text-center mb-4">
-                          <h3 className="font-medium mb-2">Bitcoin Payment</h3>
-                          <p className="text-sm text-muted-foreground">
-                            Scan QR code or copy address for one-time payment
-                          </p>
-                        </div>
-                        <BitcoinDonation 
-                          suggestedAmount={selectedTier?.amount}
-                          label={sponsorshipType === "project" && selectedProject 
-                            ? `Digital Garden - ${selectedProject.title}` 
-                            : "Digital Garden Sponsorship"
-                          }
-                        />
-                      </CardContent>
-                    </Card>
+                  <div className="space-y-6">
+                    <div className="text-center">
+                      <h3 className="text-xl font-semibold mb-2">Bitcoin Payment</h3>
+                      <p className="text-muted-foreground">
+                        Scan QR code or copy address for one-time payment
+                      </p>
+                    </div>
+                    <BitcoinDonation 
+                      suggestedAmount={selectedTier?.amount}
+                      label={sponsorshipType === "project" && selectedProject 
+                        ? `Digital Garden - ${selectedProject.title}` 
+                        : "Digital Garden Sponsorship"
+                      }
+                    />
                     <Button 
                       variant="outline" 
                       onClick={() => setShowBitcoin(false)}
