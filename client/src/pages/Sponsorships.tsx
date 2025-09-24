@@ -172,15 +172,10 @@ export default function Sponsorships() {
                     onClick={() => setSponsorshipType("general")}
                     data-testid="card-general-support"
                   >
-                    <CardContent className="p-6 h-full flex flex-col items-center justify-center text-center space-y-4">
-                      <div className={`w-6 h-6 rounded-full border-2 transition-colors ${
-                        sponsorshipType === "general" 
-                          ? "bg-primary border-primary" 
-                          : "border-muted-foreground"
-                      }`} />
-                      <div className="space-y-2">
-                        <h3 className="text-lg font-medium">🌱 General Support</h3>
-                        <p className="text-sm text-muted-foreground">
+                    <CardContent className="p-4 h-full flex flex-col items-center justify-center text-center space-y-3">
+                      <div className="space-y-1">
+                        <h3 className="text-base font-medium">🌱 General Support</h3>
+                        <p className="text-xs text-muted-foreground">
                           Support all projects and research initiatives
                         </p>
                       </div>
@@ -194,15 +189,10 @@ export default function Sponsorships() {
                     onClick={() => setSponsorshipType("project")}
                     data-testid="card-project-support"
                   >
-                    <CardContent className="p-6 h-full flex flex-col items-center justify-center text-center space-y-4">
-                      <div className={`w-6 h-6 rounded-full border-2 transition-colors ${
-                        sponsorshipType === "project" 
-                          ? "bg-primary border-primary" 
-                          : "border-muted-foreground"
-                      }`} />
-                      <div className="space-y-2">
-                        <h3 className="text-lg font-medium">🎯 Sponsor a Project</h3>
-                        <p className="text-sm text-muted-foreground">
+                    <CardContent className="p-4 h-full flex flex-col items-center justify-center text-center space-y-3">
+                      <div className="space-y-1">
+                        <h3 className="text-base font-medium">🎯 Sponsor a Project</h3>
+                        <p className="text-xs text-muted-foreground">
                           Focus support on a specific project you care about
                         </p>
                       </div>
@@ -216,15 +206,10 @@ export default function Sponsorships() {
                     onClick={() => setSponsorshipType("feature")}
                     data-testid="card-feature-support"
                   >
-                    <CardContent className="p-6 h-full flex flex-col items-center justify-center text-center space-y-4">
-                      <div className={`w-6 h-6 rounded-full border-2 transition-colors ${
-                        sponsorshipType === "feature" 
-                          ? "bg-primary border-primary" 
-                          : "border-muted-foreground"
-                      }`} />
-                      <div className="space-y-2">
-                        <h3 className="text-lg font-medium">⚡ Sponsor a Feature</h3>
-                        <p className="text-sm text-muted-foreground">
+                    <CardContent className="p-4 h-full flex flex-col items-center justify-center text-center space-y-3">
+                      <div className="space-y-1">
+                        <h3 className="text-base font-medium">⚡ Sponsor a Feature</h3>
+                        <p className="text-xs text-muted-foreground">
                           Fund specific features or enhancements you'd like to see
                         </p>
                       </div>
@@ -238,15 +223,10 @@ export default function Sponsorships() {
                     onClick={() => setSponsorshipType("cause")}
                     data-testid="card-cause-support"
                   >
-                    <CardContent className="p-6 h-full flex flex-col items-center justify-center text-center space-y-4">
-                      <div className={`w-6 h-6 rounded-full border-2 transition-colors ${
-                        sponsorshipType === "cause" 
-                          ? "bg-primary border-primary" 
-                          : "border-muted-foreground"
-                      }`} />
-                      <div className="space-y-2">
-                        <h3 className="text-lg font-medium">🌍 Sponsor a Cause</h3>
-                        <p className="text-sm text-muted-foreground">
+                    <CardContent className="p-4 h-full flex flex-col items-center justify-center text-center space-y-3">
+                      <div className="space-y-1">
+                        <h3 className="text-base font-medium">🌍 Sponsor a Cause</h3>
+                        <p className="text-xs text-muted-foreground">
                           Support initiatives beyond software development
                         </p>
                       </div>
