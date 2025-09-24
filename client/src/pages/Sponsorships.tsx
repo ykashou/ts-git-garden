@@ -166,49 +166,45 @@ export default function Sponsorships() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Card 
-                    className={`cursor-pointer transition-all hover-elevate ${
+                    className={`cursor-pointer transition-all hover-elevate aspect-square ${
                       sponsorshipType === "general" ? "ring-2 ring-primary" : ""
                     }`}
                     onClick={() => setSponsorshipType("general")}
                     data-testid="card-general-support"
                   >
-                    <CardContent className="p-6">
-                      <div className="flex items-center space-x-3">
-                        <div className={`w-4 h-4 rounded-full border-2 transition-colors ${
-                          sponsorshipType === "general" 
-                            ? "bg-primary border-primary" 
-                            : "border-muted-foreground"
-                        }`} />
-                        <div>
-                          <h3 className="text-lg font-medium">🌱 General Support</h3>
-                          <p className="text-sm text-muted-foreground">
-                            Support all projects and research initiatives
-                          </p>
-                        </div>
+                    <CardContent className="p-6 h-full flex flex-col items-center justify-center text-center space-y-4">
+                      <div className={`w-6 h-6 rounded-full border-2 transition-colors ${
+                        sponsorshipType === "general" 
+                          ? "bg-primary border-primary" 
+                          : "border-muted-foreground"
+                      }`} />
+                      <div className="space-y-2">
+                        <h3 className="text-lg font-medium">🌱 General Support</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Support all projects and research initiatives
+                        </p>
                       </div>
                     </CardContent>
                   </Card>
 
                   <Card 
-                    className={`cursor-pointer transition-all hover-elevate ${
+                    className={`cursor-pointer transition-all hover-elevate aspect-square ${
                       sponsorshipType === "project" ? "ring-2 ring-primary" : ""
                     }`}
                     onClick={() => setSponsorshipType("project")}
                     data-testid="card-project-support"
                   >
-                    <CardContent className="p-6">
-                      <div className="flex items-center space-x-3">
-                        <div className={`w-4 h-4 rounded-full border-2 transition-colors ${
-                          sponsorshipType === "project" 
-                            ? "bg-primary border-primary" 
-                            : "border-muted-foreground"
-                        }`} />
-                        <div>
-                          <h3 className="text-lg font-medium">🎯 Sponsor a Project</h3>
-                          <p className="text-sm text-muted-foreground">
-                            Focus support on a specific project you care about
-                          </p>
-                        </div>
+                    <CardContent className="p-6 h-full flex flex-col items-center justify-center text-center space-y-4">
+                      <div className={`w-6 h-6 rounded-full border-2 transition-colors ${
+                        sponsorshipType === "project" 
+                          ? "bg-primary border-primary" 
+                          : "border-muted-foreground"
+                      }`} />
+                      <div className="space-y-2">
+                        <h3 className="text-lg font-medium">🎯 Sponsor a Project</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Focus support on a specific project you care about
+                        </p>
                       </div>
                     </CardContent>
                   </Card>
