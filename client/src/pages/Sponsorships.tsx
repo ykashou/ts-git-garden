@@ -9,7 +9,7 @@ import BitcoinDonation from "@/components/BitcoinDonation";
 
 export default function Sponsorships() {
   const [wizardStep, setWizardStep] = useState(1);
-  const [sponsorshipType, setSponsorshipType] = useState<"general" | "project">("general");
+  const [sponsorshipType, setSponsorshipType] = useState<"general" | "project" | "feature" | "cause">("general");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [selectedTier, setSelectedTier] = useState<SponsorshipTier | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
@@ -164,7 +164,7 @@ export default function Sponsorships() {
                   <p className="text-muted-foreground">Choose your sponsorship focus</p>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                   <Card 
                     className={`cursor-pointer transition-all hover-elevate aspect-square ${
                       sponsorshipType === "general" ? "ring-2 ring-primary" : ""
@@ -204,6 +204,50 @@ export default function Sponsorships() {
                         <h3 className="text-lg font-medium">🎯 Sponsor a Project</h3>
                         <p className="text-sm text-muted-foreground">
                           Focus support on a specific project you care about
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card 
+                    className={`cursor-pointer transition-all hover-elevate aspect-square ${
+                      sponsorshipType === "feature" ? "ring-2 ring-primary" : ""
+                    }`}
+                    onClick={() => setSponsorshipType("feature")}
+                    data-testid="card-feature-support"
+                  >
+                    <CardContent className="p-6 h-full flex flex-col items-center justify-center text-center space-y-4">
+                      <div className={`w-6 h-6 rounded-full border-2 transition-colors ${
+                        sponsorshipType === "feature" 
+                          ? "bg-primary border-primary" 
+                          : "border-muted-foreground"
+                      }`} />
+                      <div className="space-y-2">
+                        <h3 className="text-lg font-medium">⚡ Sponsor a Feature</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Fund specific features or enhancements you'd like to see
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card 
+                    className={`cursor-pointer transition-all hover-elevate aspect-square ${
+                      sponsorshipType === "cause" ? "ring-2 ring-primary" : ""
+                    }`}
+                    onClick={() => setSponsorshipType("cause")}
+                    data-testid="card-cause-support"
+                  >
+                    <CardContent className="p-6 h-full flex flex-col items-center justify-center text-center space-y-4">
+                      <div className={`w-6 h-6 rounded-full border-2 transition-colors ${
+                        sponsorshipType === "cause" 
+                          ? "bg-primary border-primary" 
+                          : "border-muted-foreground"
+                      }`} />
+                      <div className="space-y-2">
+                        <h3 className="text-lg font-medium">🌍 Sponsor a Cause</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Support initiatives beyond software development
                         </p>
                       </div>
                     </CardContent>
