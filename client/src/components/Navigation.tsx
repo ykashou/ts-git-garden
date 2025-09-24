@@ -7,15 +7,16 @@ export default function Navigation() {
   const [location] = useLocation();
 
   return (
-    <nav id="site-nav" className="w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Sprout className="h-6 w-6 text-green-500" />
-            <h1 className="text-xl font-semibold text-foreground">Digital Garden</h1>
-          </div>
-          
-          <div className="flex items-center space-x-2">
+    <div className="w-full flex justify-center pt-4 px-4">
+      <nav id="site-nav" className="w-full max-w-[60%] border border-border rounded-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Sprout className="h-6 w-6 text-green-500" />
+              <h1 className="text-xl font-semibold text-foreground">Digital Garden</h1>
+            </div>
+            
+            <div className="flex items-center space-x-2">
             <Link href="/">
               <Button 
                 variant={location === "/" ? "default" : "ghost"}
@@ -65,9 +66,10 @@ export default function Navigation() {
             </Link>
             
             <ThemeToggle />
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 }
