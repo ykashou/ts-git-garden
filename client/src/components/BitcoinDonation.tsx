@@ -92,12 +92,7 @@ export default function BitcoinDonation({ suggestedAmount, label }: BitcoinDonat
           </div>
         </div>
         
-        <p className="text-sm text-muted-foreground mt-2">
-          {suggestedAmount 
-            ? `Suggested donation: $${suggestedAmount} (≈ ${(suggestedAmount / 45000).toFixed(6)} BTC)`
-            : "Help keep this digital garden growing with a Bitcoin donation"
-          }
-        </p>
+        
       </div>
       
       <div className="text-center space-y-6">
