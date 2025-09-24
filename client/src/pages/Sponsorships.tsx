@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight, Heart, Github, Wallet, CheckCircle } from "lucid
 import { getProjects } from "@/lib/staticDataLoader";
 import { Project, SponsorshipTier } from "@shared/schema";
 import BitcoinDonation from "@/components/BitcoinDonation";
-import magicMoneyWizard from "@assets/generated_images/Magic_Internet_Money_wizard_2b8cf32e.png";
+import magicMoneyWizard from "@assets/generated_images/Cute_kawaii_Bitcoin_wizard_4eab4a51.png";
 
 export default function Sponsorships() {
   const [wizardStep, setWizardStep] = useState(1);
