@@ -154,7 +154,7 @@ export default function Sponsorships() {
         </div>
 
         {/* Wizard Content */}
-        <Card className="flex flex-col h-[600px]">
+        <Card className="flex flex-col h-[800px] w-[800px] mx-auto">
           <CardContent className="flex-1 p-8">
             {/* Step 1: Sponsorship Intent */}
             {wizardStep === 1 && (
