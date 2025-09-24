@@ -1,6 +1,7 @@
 import HeroSection from "@/components/HeroSection";
 import ProjectShowcase from "@/components/ProjectShowcase";
 import BitcoinDonation from "@/components/BitcoinDonation";
+import { Card } from "@/components/ui/card";
 
 export default function Portfolio() {
   return (
@@ -11,7 +12,9 @@ export default function Portfolio() {
       {/* Bitcoin Donation Section */}
       <section className="py-16 px-4 bg-muted/20">
         <div className="container mx-auto max-w-md">
-          <BitcoinDonation />
+          <Card className="p-8">
+            <BitcoinDonation />
+          </Card>
         </div>
       </section>
       
