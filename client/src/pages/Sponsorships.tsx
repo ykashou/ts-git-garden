@@ -357,10 +357,6 @@ export default function Sponsorships() {
                 
                 {!showBitcoin ? (
                   <div className="space-y-6">
-                    <div className="text-center">
-                      <h3 className="text-xl font-semibold text-primary">Magic Internet Money</h3>
-                    </div>
-                    
                     <div className="grid grid-cols-2 gap-6 max-w-2xl mx-auto">
                       <Card 
                         className="cursor-pointer transition-all hover-elevate aspect-square"
