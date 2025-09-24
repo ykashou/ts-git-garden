@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight, Heart, Github, Wallet, CheckCircle } from "lucid
 import { getProjects } from "@/lib/staticDataLoader";
 import { Project, SponsorshipTier } from "@shared/schema";
 import BitcoinDonation from "@/components/BitcoinDonation";
+import wizardImage from "@assets/generated_images/Magic_Internet_Money_wizard_2b8cf32e.png";
 
 export default function Sponsorships() {
   const [wizardStep, setWizardStep] = useState(1);
@@ -367,6 +368,7 @@ export default function Sponsorships() {
                         data-testid="card-bitcoin-payment"
                       >
                         <CardContent className="p-4 flex flex-col items-center justify-center text-center space-y-3">
+                          <img src={wizardImage} alt="Magic Internet Money Wizard" className="h-8 w-8 rounded-sm" />
                           <div className="space-y-1">
                             <h3 className="text-base font-medium">Bitcoin</h3>
                             <p className="text-xs text-muted-foreground">
@@ -382,6 +384,7 @@ export default function Sponsorships() {
                         data-testid="card-github-sponsors"
                       >
                         <CardContent className="p-4 flex flex-col items-center justify-center text-center space-y-3">
+                          <Github className="h-8 w-8 text-primary" />
                           <div className="space-y-1">
                             <h3 className="text-base font-medium">GitHub Sponsors</h3>
                             <p className="text-xs text-muted-foreground">
