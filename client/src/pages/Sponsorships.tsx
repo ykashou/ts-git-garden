@@ -397,12 +397,6 @@ export default function Sponsorships() {
                   </div>
                 ) : (
                   <div className="space-y-6">
-                    <div className="text-center">
-                      <h3 className="text-xl font-semibold mb-2">Bitcoin Payment</h3>
-                      <p className="text-muted-foreground">
-                        Scan QR code or copy address for one-time payment
-                      </p>
-                    </div>
                     <BitcoinDonation 
                       suggestedAmount={selectedTier?.amount}
                       label={sponsorshipType === "project" && selectedProject 
