@@ -356,17 +356,22 @@ export default function Sponsorships() {
                 </div>
                 
                 {!showBitcoin ? (
-                  <div className="space-y-4 max-w-lg mx-auto">
+                  <div className="space-y-6">
+                    <div className="text-center">
+                      <h3 className="text-xl font-semibold text-primary">Magic Internet Money</h3>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-6 max-w-2xl mx-auto">
                       <Card 
-                        className="cursor-pointer transition-all hover-elevate"
+                        className="cursor-pointer transition-all hover-elevate aspect-square"
                         onClick={() => setShowBitcoin(true)}
                         data-testid="card-bitcoin-payment"
                       >
-                        <CardContent className="p-4 flex flex-col items-center justify-center text-center space-y-3">
-                          <img src={wizardImage} alt="Magic Internet Money Wizard" className="h-8 w-8 rounded-sm" />
-                          <div className="space-y-1">
-                            <h3 className="text-base font-medium">Bitcoin</h3>
-                            <p className="text-xs text-muted-foreground">
+                        <CardContent className="p-8 h-full flex flex-col items-center justify-center text-center space-y-6">
+                          <img src={wizardImage} alt="Magic Internet Money Wizard" className="h-16 w-16 rounded-md" />
+                          <div className="space-y-2">
+                            <h3 className="text-xl font-semibold">Bitcoin</h3>
+                            <p className="text-sm text-muted-foreground">
                               One-time payment
                             </p>
                           </div>
@@ -374,21 +379,22 @@ export default function Sponsorships() {
                       </Card>
 
                       <Card 
-                        className="cursor-pointer transition-all hover-elevate"
+                        className="cursor-pointer transition-all hover-elevate aspect-square"
                         onClick={() => selectedTier?.githubSponsorsUrl && window.open(selectedTier.githubSponsorsUrl, '_blank')}
                         data-testid="card-github-sponsors"
                       >
-                        <CardContent className="p-4 flex flex-col items-center justify-center text-center space-y-3">
-                          <Github className="h-8 w-8 text-primary" />
-                          <div className="space-y-1">
-                            <h3 className="text-base font-medium">GitHub Sponsors</h3>
-                            <p className="text-xs text-muted-foreground">
+                        <CardContent className="p-8 h-full flex flex-col items-center justify-center text-center space-y-6">
+                          <Github className="h-16 w-16 text-primary" />
+                          <div className="space-y-2">
+                            <h3 className="text-xl font-semibold">GitHub Sponsors</h3>
+                            <p className="text-sm text-muted-foreground">
                               Recurring monthly payments
                             </p>
                           </div>
                         </CardContent>
                       </Card>
                     </div>
+                  </div>
                 ) : (
                   <div className="space-y-4">
                     <Card>
