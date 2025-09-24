@@ -84,25 +84,25 @@ export default function BitcoinDonation({ suggestedAmount, label }: BitcoinDonat
   }
 
   return (
-    <Card className="hover-elevate" data-testid="card-bitcoin-donation">
-      <CardHeader className="text-center">
+    <div className="space-y-6" data-testid="card-bitcoin-donation">
+      <div className="text-center">
         <div className="flex justify-center mb-3">
           <div className="p-3 rounded-full bg-orange-100">
             <Bitcoin className="h-8 w-8 text-orange-600" />
           </div>
         </div>
-        <CardTitle className="text-xl text-foreground">
+        <h3 className="text-xl font-semibold text-foreground">
           {label || "Support the Garden"}
-        </CardTitle>
-        <p className="text-sm text-muted-foreground">
+        </h3>
+        <p className="text-sm text-muted-foreground mt-2">
           {suggestedAmount 
             ? `Suggested donation: $${suggestedAmount} (≈ ${(suggestedAmount / 45000).toFixed(6)} BTC)`
             : "Help keep this digital garden growing with a Bitcoin donation"
           }
         </p>
-      </CardHeader>
+      </div>
       
-      <CardContent className="text-center space-y-6">
+      <div className="text-center space-y-6">
         {/* QR Code */}
         <div className="flex justify-center">
           <div className="p-4 bg-white rounded-lg border">
@@ -151,8 +151,8 @@ export default function BitcoinDonation({ suggestedAmount, label }: BitcoinDonat
           Your donations help support open source development and research. 
           Every contribution, no matter how small, is greatly appreciated! 🙏
         </p>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
