@@ -368,7 +368,7 @@ export default function Sponsorships() {
                         data-testid="card-bitcoin-payment"
                       >
                         <CardContent className="p-8 h-full flex flex-col items-center justify-center text-center space-y-6">
-                          <img src={wizardImage} alt="Magic Internet Money Wizard" className="h-16 w-16 rounded-md" />
+                          <img src={wizardImage} alt="Magic Internet Money Wizard" className="h-32 w-32 rounded-md" />
                           <div className="space-y-2">
                             <h3 className="text-xl font-semibold">Bitcoin</h3>
                             <p className="text-sm text-muted-foreground">
@@ -384,7 +384,7 @@ export default function Sponsorships() {
                         data-testid="card-github-sponsors"
                       >
                         <CardContent className="p-8 h-full flex flex-col items-center justify-center text-center space-y-6">
-                          <Github className="h-16 w-16 text-primary" />
+                          <Github className="h-32 w-32 text-primary" />
                           <div className="space-y-2">
                             <h3 className="text-xl font-semibold">GitHub Sponsors</h3>
                             <p className="text-sm text-muted-foreground">
