@@ -8,9 +8,16 @@ import QRCode from "qrcode";
 interface BitcoinDonationProps {
   suggestedAmount?: number;
   label?: string;
+  showTitle?: boolean;
+  showDescription?: boolean;
 }
 
-export default function BitcoinDonation({ suggestedAmount, label }: BitcoinDonationProps) {
+export default function BitcoinDonation({ 
+  suggestedAmount, 
+  label, 
+  showTitle = true, 
+  showDescription = true 
+}: BitcoinDonationProps) {
   const [copied, setCopied] = useState(false);
   const [bitcoinAddress, setBitcoinAddress] = useState<string>("");
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -91,8 +98,19 @@ export default function BitcoinDonation({ suggestedAmount, label }: BitcoinDonat
             <Bitcoin className="h-8 w-8 text-orange-600" />
           </div>
         </div>
-        
-        
+        {showTitle && (
+          <h3 className="text-xl font-semibold text-foreground">
+            {label || "Support the Garden"}
+          </h3>
+        )}
+        {showDescription && (
+          <p className="text-sm text-muted-foreground mt-2">
+            {suggestedAmount 
+              ? `Suggested donation: $${suggestedAmount} (≈ ${(suggestedAmount / 45000).toFixed(6)} BTC)`
+              : "Help keep this digital garden growing with a Bitcoin donation"
+            }
+          </p>
+        )}
       </div>
       
       <div className="text-center space-y-6">
