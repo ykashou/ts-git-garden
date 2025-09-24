@@ -164,7 +164,7 @@ export default function Sponsorships() {
                   <p className="text-muted-foreground">Choose your sponsorship focus</p>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4 max-w-lg mx-auto">
                   <Card 
                     className={`cursor-pointer transition-all hover-elevate aspect-square ${
                       sponsorshipType === "general" ? "ring-2 ring-primary" : ""
