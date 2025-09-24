@@ -356,12 +356,7 @@ export default function Sponsorships() {
                 </div>
                 
                 {!showBitcoin ? (
-                  <div className="space-y-6">
-                    <div className="text-center">
-                      <h3 className="text-xl font-semibold text-primary">Magic Internet Money</h3>
-                    </div>
-                    
-                    <div className="space-y-4 max-w-lg mx-auto">
+                  <div className="space-y-4 max-w-lg mx-auto">
                       <Card 
                         className="cursor-pointer transition-all hover-elevate"
                         onClick={() => setShowBitcoin(true)}
@@ -394,7 +389,6 @@ export default function Sponsorships() {
                         </CardContent>
                       </Card>
                     </div>
-                  </div>
                 ) : (
                   <div className="space-y-4">
                     <Card>
