@@ -356,47 +356,44 @@ export default function Sponsorships() {
                 </div>
                 
                 {!showBitcoin ? (
-                  <div className="space-y-4">
-                    <Card className="hover-elevate transition-all">
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <Github className="h-6 w-6" />
-                            <div>
-                              <h3 className="font-medium">GitHub Sponsors</h3>
-                              <p className="text-sm text-muted-foreground">Recurring monthly payments</p>
-                            </div>
+                  <div className="space-y-6">
+                    <div className="text-center">
+                      <h3 className="text-xl font-semibold text-primary">Magic Internet Money</h3>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4 max-w-lg mx-auto">
+                      <Card 
+                        className="cursor-pointer transition-all hover-elevate aspect-square"
+                        onClick={() => selectedTier?.githubSponsorsUrl && window.open(selectedTier.githubSponsorsUrl, '_blank')}
+                        data-testid="card-github-sponsors"
+                      >
+                        <CardContent className="p-4 h-full flex flex-col items-center justify-center text-center space-y-3">
+                          <Github className="h-8 w-8 text-primary" />
+                          <div className="space-y-1">
+                            <h3 className="text-base font-medium">GitHub Sponsors</h3>
+                            <p className="text-xs text-muted-foreground">
+                              Recurring monthly payments
+                            </p>
                           </div>
-                          <Button 
-                            onClick={() => selectedTier?.githubSponsorsUrl && window.open(selectedTier.githubSponsorsUrl, '_blank')}
-                            data-testid="button-github-sponsors"
-                          >
-                            Sponsor via GitHub <ArrowRight className="h-4 w-4 ml-2" />
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
 
-                    <Card className="hover-elevate transition-all">
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <img src={magicMoneyRaven} alt="Magic Internet Money" className="h-6 w-6 rounded-sm" />
-                            <div>
-                              <h3 className="font-medium">Bitcoin</h3>
-                              <p className="text-sm text-muted-foreground">Magic Internet Money</p>
-                            </div>
+                      <Card 
+                        className="cursor-pointer transition-all hover-elevate aspect-square"
+                        onClick={() => setShowBitcoin(true)}
+                        data-testid="card-bitcoin-payment"
+                      >
+                        <CardContent className="p-4 h-full flex flex-col items-center justify-center text-center space-y-3">
+                          <img src={magicMoneyRaven} alt="Magic Internet Money" className="h-8 w-8 rounded-sm" />
+                          <div className="space-y-1">
+                            <h3 className="text-base font-medium">Bitcoin</h3>
+                            <p className="text-xs text-muted-foreground">
+                              One-time payment
+                            </p>
                           </div>
-                          <Button 
-                            variant="outline"
-                            onClick={() => setShowBitcoin(true)}
-                            data-testid="button-show-bitcoin"
-                          >
-                            Show QR Code
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
+                    </div>
                   </div>
                 ) : (
                   <div className="space-y-4">
