@@ -356,7 +356,7 @@ export default function Sponsorships() {
                 </div>
                 
                 {!showBitcoin ? (
-                  <div className="space-y-6">
+                  <div className="flex items-center justify-center h-full">
                     <div className="grid grid-cols-2 gap-6 max-w-2xl mx-auto">
                       <Card 
                         className="cursor-pointer transition-all hover-elevate aspect-square"
