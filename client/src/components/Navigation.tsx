@@ -18,15 +18,15 @@ export default function Navigation() {
             </div>
             
             <div className="flex items-center space-x-1 sm:space-x-2">
-            <Link href="/projects">
+            <Link href="/">
               <Button 
-                variant={location === "/projects" ? "default" : "ghost"}
+                variant={location === "/" ? "default" : "ghost"}
                 size="sm"
                 className="hover-elevate px-2 sm:px-3"
-                data-testid="nav-projects"
+                data-testid="nav-portfolio"
               >
                 <Sprout className="h-4 w-4 sm:mr-2 text-green-500" />
-                <span className="hidden sm:inline">Projects</span>
+                <span className="hidden sm:inline">Portfolio</span>
               </Button>
             </Link>
             

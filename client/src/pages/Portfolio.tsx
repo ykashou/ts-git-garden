@@ -1,10 +1,12 @@
 import HeroSection from "@/components/HeroSection";
+import ProjectShowcase from "@/components/ProjectShowcase";
 import BitcoinDonation from "@/components/BitcoinDonation";
 
 export default function Portfolio() {
   return (
     <div className="min-h-screen bg-background">
       <HeroSection />
+      <ProjectShowcase />
       
       {/* Bitcoin Donation Section */}
       <section className="py-16 px-4 bg-muted/20">
