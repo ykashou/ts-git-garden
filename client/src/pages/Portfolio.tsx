@@ -10,7 +10,7 @@ export default function Portfolio() {
       <ProjectShowcase />
       
       {/* Bitcoin Donation Section */}
-      <section className="py-16 px-4 bg-muted">
+      <section className="py-16 px-4 bg-muted/20">
         <div className="container mx-auto max-w-md">
           <Card className="p-8">
             <BitcoinDonation />
