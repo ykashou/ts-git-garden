@@ -378,7 +378,7 @@ export default function Attestations() {
                               data-testid={`row-version-${version.packageName}-${version.version}`}
                             >
                               <TableCell className="pl-12 text-sm text-muted-foreground">
-                                <span className="text-xs">└ v{version.version}</span>
+                                <span className="text-xs">└ {version.version}</span>
                               </TableCell>
                               
                               <TableCell>
