@@ -8,6 +8,7 @@ import Portfolio from "@/pages/Portfolio";
 import Research from "@/pages/Research";
 import Sponsorships from "@/pages/Sponsorships";
 import KnowledgeGraph from "@/pages/KnowledgeGraph";
+import Attestations from "@/pages/Attestations";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -16,6 +17,7 @@ function Router() {
       <Route path="/" component={Portfolio} />
       <Route path="/research" component={Research} />
       <Route path="/graph" component={KnowledgeGraph} />
+      <Route path="/attestations" component={Attestations} />
       <Route path="/sponsor" component={Sponsorships} />
       <Route component={NotFound} />
     </Switch>
