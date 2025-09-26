@@ -12,6 +12,7 @@ export const ProjectSchema = z.object({
   status: z.enum(["blooming", "growing", "mature"]).default("growing"),
   lastUpdated: z.string(),
   createdAt: z.string(),
+  license: z.string().optional(),
 });
 
 export const ResearchPaperSchema = z.object({

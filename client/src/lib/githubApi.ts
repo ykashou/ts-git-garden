@@ -43,6 +43,7 @@ export interface GitHubRepo {
   archived: boolean;
   fork: boolean;
   private: boolean;
+  license?: { name: string; } | null;
 }
 
 export interface GitHubLanguages {
@@ -121,6 +122,7 @@ const transformRepoToProject = async (repo: GitHubRepo, token: string): Promise<
     status: determineProjectStatus(repo, languages),
     lastUpdated: formatDate(repo.updated_at),
     createdAt: formatDate(repo.created_at),
+    license: repo.license?.name || undefined,
   };
 };
 
