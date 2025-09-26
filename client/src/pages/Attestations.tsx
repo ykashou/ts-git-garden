@@ -16,13 +16,25 @@ import {
   Calendar,
   User
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { PackageAttestation } from "@shared/schema";
+import { ChevronDown, ChevronRight } from "lucide-react";
+
+// Type for grouped packages
+interface PackageGroup {
+  packageName: string;
+  registry: PackageAttestation['registry'];
+  description: string;
+  maintainers: string[];
+  latestPublishedAt: string;
+  versions: PackageAttestation[];
+}
 
 export default function Attestations() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRegistry, setSelectedRegistry] = useState<string>("all");
+  const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
   
   // Fetch packages and attestations data
   const { data: packages = [], isLoading, error } = useQuery<PackageAttestation[]>({
@@ -30,16 +42,71 @@ export default function Attestations() {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  const filteredPackages = packages.filter((pkg: PackageAttestation) => {
-    const matchesSearch = 
-      pkg.packageName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      pkg.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      pkg.maintainers.some(maintainer => maintainer.toLowerCase().includes(searchTerm.toLowerCase()));
+  // Group packages by name + registry
+  const groupedPackages = useMemo(() => {
+    const groups = new Map<string, PackageGroup>();
     
-    const matchesRegistry = selectedRegistry === "all" || pkg.registry === selectedRegistry;
+    packages.forEach((pkg: PackageAttestation) => {
+      const groupKey = `${pkg.registry}|${pkg.packageName}`;
+      
+      if (!groups.has(groupKey)) {
+        groups.set(groupKey, {
+          packageName: pkg.packageName,
+          registry: pkg.registry,
+          description: pkg.description || "",
+          maintainers: pkg.maintainers,
+          latestPublishedAt: pkg.publishedAt,
+          versions: []
+        });
+      }
+      
+      const group = groups.get(groupKey)!;
+      group.versions.push(pkg);
+      
+      // Update group metadata with latest version info
+      if (new Date(pkg.publishedAt) > new Date(group.latestPublishedAt)) {
+        group.latestPublishedAt = pkg.publishedAt;
+        group.description = pkg.description || group.description;
+        group.maintainers = pkg.maintainers.length > 0 ? pkg.maintainers : group.maintainers;
+      }
+    });
     
-    return matchesSearch && matchesRegistry;
-  });
+    // Sort versions within each group by publishedAt (newest first)
+    groups.forEach(group => {
+      group.versions.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+    });
+    
+    // Convert to array and sort by latest published date
+    return Array.from(groups.values())
+      .sort((a, b) => new Date(b.latestPublishedAt).getTime() - new Date(a.latestPublishedAt).getTime());
+  }, [packages]);
+
+  // Apply filtering to groups
+  const filteredGroups = useMemo(() => {
+    return groupedPackages.filter((group: PackageGroup) => {
+      const matchesSearch = 
+        group.packageName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        group.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        group.maintainers.some(maintainer => maintainer.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        group.versions.some(version => 
+          version.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          version.version.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      
+      const matchesRegistry = selectedRegistry === "all" || group.registry === selectedRegistry;
+      
+      return matchesSearch && matchesRegistry;
+    });
+  }, [groupedPackages, searchTerm, selectedRegistry]);
+
+  // Reset expanded group when filters change
+  useEffect(() => {
+    setExpandedGroup(null);
+  }, [searchTerm, selectedRegistry]);
+
+  const toggleGroup = (groupKey: string) => {
+    setExpandedGroup(expandedGroup === groupKey ? null : groupKey);
+  };
 
   const getStatusIcon = (status: PackageAttestation['attestationStatus']) => {
     switch (status) {
@@ -176,7 +243,7 @@ export default function Attestations() {
         {/* Packages Table */}
         {!isLoading && !error && (
           <>
-            {filteredPackages.length === 0 ? (
+            {filteredGroups.length === 0 ? (
               <div className="text-center py-12">
                 <Package className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-foreground mb-2">
@@ -202,82 +269,184 @@ export default function Attestations() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredPackages.map((pkg: PackageAttestation) => (
-                      <TableRow 
-                        key={pkg.id} 
-                        className="hover:bg-muted/50 transition-colors" 
-                        data-testid={`package-${pkg.packageName}`}
-                      >
-                        <TableCell className="font-medium">
-                          <span className="text-foreground">{pkg.packageName}</span>
-                        </TableCell>
-                        
-                        <TableCell>
-                          <Badge variant="outline" className="text-xs">
-                            {pkg.version}
-                          </Badge>
-                        </TableCell>
-                        
-                        <TableCell>
-                          <Badge 
-                            className={`text-xs ${getRegistryColor(pkg.registry)}`}
-                            data-testid={`registry-${pkg.registry}`}
+                    {filteredGroups.map((group: PackageGroup) => {
+                      const groupKey = `${group.registry}|${group.packageName}`;
+                      const isExpanded = expandedGroup === groupKey;
+                      const latestVersion = group.versions[0]; // First version is the latest due to sorting
+                      
+                      return (
+                        <React.Fragment key={groupKey}>
+                          {/* Group Header Row */}
+                          <TableRow 
+                            className="hover:bg-muted/50 transition-colors cursor-pointer" 
+                            onClick={() => toggleGroup(groupKey)}
+                            data-testid={`group-toggle-${group.registry}-${group.packageName}`}
                           >
-                            {pkg.registry.toUpperCase()}
-                          </Badge>
-                        </TableCell>
-                        
-                        <TableCell>
-                          <Badge 
-                            className={`text-xs flex items-center gap-1 w-fit ${getStatusColor(pkg.attestationStatus)}`}
-                            data-testid={`status-${pkg.attestationStatus}`}
-                          >
-                            {getStatusIcon(pkg.attestationStatus)}
-                            {pkg.attestationStatus}
-                          </Badge>
-                        </TableCell>
-                        
-                        <TableCell>
-                          <div className="max-w-[300px] truncate text-muted-foreground text-sm">
-                            {pkg.description || "-"}
-                          </div>
-                        </TableCell>
-                        
-                        <TableCell className="text-sm text-muted-foreground">
-                          {new Date(pkg.publishedAt).toLocaleDateString()}
-                        </TableCell>
-                        
-                        <TableCell className="text-sm text-muted-foreground">
-                          {pkg.maintainers.length > 0 ? pkg.maintainers[0] : "-"}
-                        </TableCell>
-                        
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-1">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              onClick={() => window.open(pkg.packageUrl, '_blank')}
-                              data-testid="button-package"
-                              className="h-8 w-8 p-0"
-                            >
-                              <ExternalLink className="h-3 w-3" />
-                            </Button>
+                            <TableCell className="font-medium">
+                              <div className="flex items-center gap-2">
+                                {isExpanded ? (
+                                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                                ) : (
+                                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                                )}
+                                <span className="text-foreground">{group.packageName}</span>
+                                {group.versions.length > 1 && (
+                                  <Badge variant="secondary" className="text-xs ml-2">
+                                    {group.versions.length} versions
+                                  </Badge>
+                                )}
+                              </div>
+                            </TableCell>
                             
-                            {pkg.attestationUrl && (
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                onClick={() => window.open(pkg.attestationUrl, '_blank')}
-                                data-testid="button-attestation"
-                                className="h-8 w-8 p-0"
+                            <TableCell>
+                              <Badge variant="outline" className="text-xs">
+                                {latestVersion.version}
+                              </Badge>
+                            </TableCell>
+                            
+                            <TableCell>
+                              <Badge 
+                                className={`text-xs ${getRegistryColor(group.registry)}`}
+                                data-testid={`registry-${group.registry}`}
                               >
-                                <Shield className="h-3 w-3" />
-                              </Button>
-                            )}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                                {group.registry.toUpperCase()}
+                              </Badge>
+                            </TableCell>
+                            
+                            <TableCell>
+                              <Badge 
+                                className={`text-xs flex items-center gap-1 w-fit ${getStatusColor(latestVersion.attestationStatus)}`}
+                                data-testid={`status-${latestVersion.attestationStatus}`}
+                              >
+                                {getStatusIcon(latestVersion.attestationStatus)}
+                                {latestVersion.attestationStatus}
+                              </Badge>
+                            </TableCell>
+                            
+                            <TableCell>
+                              <div className="max-w-[300px] truncate text-muted-foreground text-sm">
+                                {group.description || "-"}
+                              </div>
+                            </TableCell>
+                            
+                            <TableCell className="text-sm text-muted-foreground">
+                              {new Date(group.latestPublishedAt).toLocaleDateString()}
+                            </TableCell>
+                            
+                            <TableCell className="text-sm text-muted-foreground">
+                              {group.maintainers.length > 0 ? group.maintainers[0] : "-"}
+                            </TableCell>
+                            
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-1">
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    window.open(latestVersion.packageUrl, '_blank');
+                                  }}
+                                  data-testid="button-package"
+                                  className="h-8 w-8 p-0"
+                                >
+                                  <ExternalLink className="h-3 w-3" />
+                                </Button>
+                                
+                                {latestVersion.attestationUrl && (
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      window.open(latestVersion.attestationUrl, '_blank');
+                                    }}
+                                    data-testid="button-attestation"
+                                    className="h-8 w-8 p-0"
+                                  >
+                                    <Shield className="h-3 w-3" />
+                                  </Button>
+                                )}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                          
+                          {/* Expanded Version Rows */}
+                          {isExpanded && group.versions.map((version: PackageAttestation, index: number) => (
+                            <TableRow 
+                              key={version.id}
+                              className="bg-muted/20 border-l-4 border-l-primary/30"
+                              data-testid={`row-version-${version.packageName}-${version.version}`}
+                            >
+                              <TableCell className="pl-12 text-sm text-muted-foreground">
+                                <span className="text-xs">└ v{version.version}</span>
+                              </TableCell>
+                              
+                              <TableCell>
+                                <Badge variant="outline" className="text-xs">
+                                  {version.version}
+                                </Badge>
+                              </TableCell>
+                              
+                              <TableCell>
+                                <span className="text-xs text-muted-foreground">
+                                  {version.registry.toUpperCase()}
+                                </span>
+                              </TableCell>
+                              
+                              <TableCell>
+                                <Badge 
+                                  className={`text-xs flex items-center gap-1 w-fit ${getStatusColor(version.attestationStatus)}`}
+                                  data-testid={`status-${version.attestationStatus}`}
+                                >
+                                  {getStatusIcon(version.attestationStatus)}
+                                  {version.attestationStatus}
+                                </Badge>
+                              </TableCell>
+                              
+                              <TableCell>
+                                <div className="max-w-[300px] truncate text-muted-foreground text-xs">
+                                  {version.description || "-"}
+                                </div>
+                              </TableCell>
+                              
+                              <TableCell className="text-xs text-muted-foreground">
+                                {new Date(version.publishedAt).toLocaleDateString()}
+                              </TableCell>
+                              
+                              <TableCell className="text-xs text-muted-foreground">
+                                {version.maintainers.length > 0 ? version.maintainers[0] : "-"}
+                              </TableCell>
+                              
+                              <TableCell className="text-right">
+                                <div className="flex justify-end gap-1">
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    onClick={() => window.open(version.packageUrl, '_blank')}
+                                    data-testid={`button-package-${version.version}`}
+                                    className="h-8 w-8 p-0"
+                                  >
+                                    <ExternalLink className="h-3 w-3" />
+                                  </Button>
+                                  
+                                  {version.attestationUrl && (
+                                    <Button 
+                                      variant="ghost" 
+                                      size="sm" 
+                                      onClick={() => window.open(version.attestationUrl, '_blank')}
+                                      data-testid={`button-attestation-${version.version}`}
+                                      className="h-8 w-8 p-0"
+                                    >
+                                      <Shield className="h-3 w-3" />
+                                    </Button>
+                                  )}
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </React.Fragment>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </div>
@@ -286,27 +455,33 @@ export default function Attestations() {
         )}
 
         {/* Summary Stats */}
-        {!isLoading && !error && packages.length > 0 && (
+        {!isLoading && !error && filteredGroups.length > 0 && (
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
             <Card className="text-center p-4">
-              <div className="text-2xl font-bold text-foreground">{packages.length}</div>
+              <div className="text-2xl font-bold text-foreground">{filteredGroups.length}</div>
               <div className="text-sm text-muted-foreground">Total Packages</div>
             </Card>
             <Card className="text-center p-4">
               <div className="text-2xl font-bold text-green-600">
-                {packages.filter((p: PackageAttestation) => p.attestationStatus === 'verified').length}
+                {filteredGroups.filter((group: PackageGroup) => 
+                  group.versions.some(v => v.attestationStatus === 'verified')
+                ).length}
               </div>
               <div className="text-sm text-muted-foreground">Verified</div>
             </Card>
             <Card className="text-center p-4">
               <div className="text-2xl font-bold text-yellow-600">
-                {packages.filter((p: PackageAttestation) => p.attestationStatus === 'pending').length}
+                {filteredGroups.filter((group: PackageGroup) => 
+                  group.versions.some(v => v.attestationStatus === 'pending')
+                ).length}
               </div>
               <div className="text-sm text-muted-foreground">Pending</div>
             </Card>
             <Card className="text-center p-4">
               <div className="text-2xl font-bold text-red-600">
-                {packages.filter((p: PackageAttestation) => p.attestationStatus === 'unverified' || p.attestationStatus === 'error').length}
+                {filteredGroups.filter((group: PackageGroup) => 
+                  group.versions.some(v => v.attestationStatus === 'unverified' || v.attestationStatus === 'error')
+                ).length}
               </div>
               <div className="text-sm text-muted-foreground">Issues</div>
             </Card>
