@@ -240,6 +240,40 @@ export default function Attestations() {
           </div>
         )}
 
+        {/* Summary Stats */}
+        {!isLoading && !error && filteredGroups.length > 0 && (
+          <div className="mb-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Card className="text-center p-4">
+              <div className="text-2xl font-bold text-foreground">{filteredGroups.length}</div>
+              <div className="text-sm text-muted-foreground">Total Packages</div>
+            </Card>
+            <Card className="text-center p-4">
+              <div className="text-2xl font-bold text-green-600">
+                {filteredGroups.filter((group: PackageGroup) => 
+                  group.versions.some(v => v.attestationStatus === 'verified')
+                ).length}
+              </div>
+              <div className="text-sm text-muted-foreground">Verified</div>
+            </Card>
+            <Card className="text-center p-4">
+              <div className="text-2xl font-bold text-yellow-600">
+                {filteredGroups.filter((group: PackageGroup) => 
+                  group.versions.some(v => v.attestationStatus === 'pending')
+                ).length}
+              </div>
+              <div className="text-sm text-muted-foreground">Pending</div>
+            </Card>
+            <Card className="text-center p-4">
+              <div className="text-2xl font-bold text-red-600">
+                {filteredGroups.filter((group: PackageGroup) => 
+                  group.versions.some(v => v.attestationStatus === 'unverified' || v.attestationStatus === 'error')
+                ).length}
+              </div>
+              <div className="text-sm text-muted-foreground">Issues</div>
+            </Card>
+          </div>
+        )}
+
         {/* Packages Table */}
         {!isLoading && !error && (
           <>
@@ -454,39 +488,6 @@ export default function Attestations() {
           </>
         )}
 
-        {/* Summary Stats */}
-        {!isLoading && !error && filteredGroups.length > 0 && (
-          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card className="text-center p-4">
-              <div className="text-2xl font-bold text-foreground">{filteredGroups.length}</div>
-              <div className="text-sm text-muted-foreground">Total Packages</div>
-            </Card>
-            <Card className="text-center p-4">
-              <div className="text-2xl font-bold text-green-600">
-                {filteredGroups.filter((group: PackageGroup) => 
-                  group.versions.some(v => v.attestationStatus === 'verified')
-                ).length}
-              </div>
-              <div className="text-sm text-muted-foreground">Verified</div>
-            </Card>
-            <Card className="text-center p-4">
-              <div className="text-2xl font-bold text-yellow-600">
-                {filteredGroups.filter((group: PackageGroup) => 
-                  group.versions.some(v => v.attestationStatus === 'pending')
-                ).length}
-              </div>
-              <div className="text-sm text-muted-foreground">Pending</div>
-            </Card>
-            <Card className="text-center p-4">
-              <div className="text-2xl font-bold text-red-600">
-                {filteredGroups.filter((group: PackageGroup) => 
-                  group.versions.some(v => v.attestationStatus === 'unverified' || v.attestationStatus === 'error')
-                ).length}
-              </div>
-              <div className="text-sm text-muted-foreground">Issues</div>
-            </Card>
-          </div>
-        )}
       </div>
     </div>
   );
