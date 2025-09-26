@@ -32,21 +32,14 @@ export default function ProjectShowcase() {
     getConfig().then(setConfig);
   }, []);
 
-  // Get all unique technologies as filterable topics (since GitHub topics are empty)
+  // Get all unique GitHub repository topics for filtering
   const allTopics = useMemo(() => {
     const topics = new Set<string>();
     
-    // First try to get actual GitHub topics
+    // Only use actual GitHub repository topics
     projects.forEach(project => {
       project.topics?.forEach(topic => topics.add(topic));
     });
-    
-    // If no GitHub topics exist, use technologies as filterable topics
-    if (topics.size === 0) {
-      projects.forEach(project => {
-        project.technologies?.forEach(tech => topics.add(tech));
-      });
-    }
     
     return Array.from(topics).sort();
   }, [projects]);
@@ -68,12 +61,11 @@ export default function ProjectShowcase() {
       });
     }
     
-    // Apply topic filter (check both GitHub topics and technologies) - INTERSECTION (AND)
+    // Apply topic filter (only check GitHub repository topics) - INTERSECTION (AND)
     if (selectedTopics.length > 0) {
       filtered = filtered.filter((project) => {
         return selectedTopics.every(selectedTopic => 
-          project.topics?.includes(selectedTopic) ||
-          project.technologies?.includes(selectedTopic)
+          project.topics?.includes(selectedTopic)
         );
       });
     }
