@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { 
   Shield, 
   Search, 
@@ -172,9 +173,9 @@ export default function Attestations() {
           </div>
         )}
 
-        {/* Packages List */}
+        {/* Packages Table */}
         {!isLoading && !error && (
-          <div className="space-y-4">
+          <>
             {filteredPackages.length === 0 ? (
               <div className="text-center py-12">
                 <Package className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
@@ -186,108 +187,102 @@ export default function Attestations() {
                 </p>
               </div>
             ) : (
-              filteredPackages.map((pkg: PackageAttestation) => (
-                <Card 
-                  key={pkg.id} 
-                  className="hover-elevate transition-all duration-200" 
-                  data-testid={`package-${pkg.packageName}`}
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between gap-4">
-                      {/* Left side - Package info */}
-                      <div className="flex-1 space-y-3">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex items-center gap-3">
-                            <h3 className="text-xl font-semibold text-foreground">
-                              {pkg.packageName}
-                            </h3>
-                            <Badge variant="outline" className="text-xs">
-                              v{pkg.version}
-                            </Badge>
-                            <Badge 
-                              className={`text-xs ${getRegistryColor(pkg.registry)}`}
-                              data-testid={`registry-${pkg.registry}`}
-                            >
-                              {pkg.registry.toUpperCase()}
-                            </Badge>
-                          </div>
-                          
+              <div className="border rounded-lg overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[200px]">Package Name</TableHead>
+                      <TableHead className="w-[100px]">Version</TableHead>
+                      <TableHead className="w-[100px]">Registry</TableHead>
+                      <TableHead className="w-[120px]">Status</TableHead>
+                      <TableHead className="w-[300px]">Description</TableHead>
+                      <TableHead className="w-[120px]">Published</TableHead>
+                      <TableHead className="w-[120px]">Maintainer</TableHead>
+                      <TableHead className="w-[100px] text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredPackages.map((pkg: PackageAttestation) => (
+                      <TableRow 
+                        key={pkg.id} 
+                        className="hover:bg-muted/50 transition-colors" 
+                        data-testid={`package-${pkg.packageName}`}
+                      >
+                        <TableCell className="font-medium">
+                          <span className="text-foreground">{pkg.packageName}</span>
+                        </TableCell>
+                        
+                        <TableCell>
+                          <Badge variant="outline" className="text-xs">
+                            {pkg.version}
+                          </Badge>
+                        </TableCell>
+                        
+                        <TableCell>
                           <Badge 
-                            className={`text-xs flex items-center gap-1 ${getStatusColor(pkg.attestationStatus)}`}
+                            className={`text-xs ${getRegistryColor(pkg.registry)}`}
+                            data-testid={`registry-${pkg.registry}`}
+                          >
+                            {pkg.registry.toUpperCase()}
+                          </Badge>
+                        </TableCell>
+                        
+                        <TableCell>
+                          <Badge 
+                            className={`text-xs flex items-center gap-1 w-fit ${getStatusColor(pkg.attestationStatus)}`}
                             data-testid={`status-${pkg.attestationStatus}`}
                           >
                             {getStatusIcon(pkg.attestationStatus)}
                             {pkg.attestationStatus}
                           </Badge>
-                        </div>
+                        </TableCell>
                         
-                        {pkg.description && (
-                          <p className="text-muted-foreground text-sm leading-relaxed">
-                            {pkg.description}
-                          </p>
-                        )}
+                        <TableCell>
+                          <div className="max-w-[300px] truncate text-muted-foreground text-sm">
+                            {pkg.description || "-"}
+                          </div>
+                        </TableCell>
                         
-                        <div className="flex items-center justify-between text-xs text-muted-foreground">
-                          <div className="flex items-center gap-4">
-                            <div className="flex items-center gap-1">
-                              <Calendar className="h-3 w-3" />
-                              {new Date(pkg.publishedAt).toLocaleDateString()}
-                            </div>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {new Date(pkg.publishedAt).toLocaleDateString()}
+                        </TableCell>
+                        
+                        <TableCell className="text-sm text-muted-foreground">
+                          {pkg.maintainers.length > 0 ? pkg.maintainers[0] : "-"}
+                        </TableCell>
+                        
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-1">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={() => window.open(pkg.packageUrl, '_blank')}
+                              data-testid="button-package"
+                              className="h-8 w-8 p-0"
+                            >
+                              <ExternalLink className="h-3 w-3" />
+                            </Button>
                             
-                            {pkg.downloadCount && (
-                              <div className="flex items-center gap-1">
-                                <Download className="h-3 w-3" />
-                                {pkg.downloadCount.toLocaleString()} downloads
-                              </div>
-                            )}
-                            
-                            {pkg.license && (
-                              <div className="flex items-center gap-1">
-                                <span>{pkg.license}</span>
-                              </div>
+                            {pkg.attestationUrl && (
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={() => window.open(pkg.attestationUrl, '_blank')}
+                                data-testid="button-attestation"
+                                className="h-8 w-8 p-0"
+                              >
+                                <Shield className="h-3 w-3" />
+                              </Button>
                             )}
                           </div>
-                          
-                          {pkg.maintainers.length > 0 && (
-                            <div className="flex items-center gap-1">
-                              <User className="h-3 w-3" />
-                              {pkg.maintainers.slice(0, 2).join(", ")}
-                              {pkg.maintainers.length > 2 && ` +${pkg.maintainers.length - 2}`}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      
-                      {/* Right side - Action buttons */}
-                      <div className="flex gap-2">
-                        <Button 
-                          variant="secondary" 
-                          size="sm" 
-                          onClick={() => window.open(pkg.packageUrl, '_blank')}
-                          className="hover-elevate"
-                          data-testid="button-package"
-                        >
-                          <Package className="h-4 w-4" />
-                        </Button>
-                        
-                        {pkg.attestationUrl && (
-                          <Button 
-                            variant="default" 
-                            size="sm" 
-                            onClick={() => window.open(pkg.attestationUrl, '_blank')}
-                            className="hover-elevate"
-                            data-testid="button-attestation"
-                          >
-                            <Shield className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             )}
-          </div>
+          </>
         )}
 
         {/* Summary Stats */}
