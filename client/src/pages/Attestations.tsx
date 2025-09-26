@@ -3,6 +3,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
 import { 
   Shield, 
   Search, 
@@ -14,7 +17,9 @@ import {
   AlertTriangle,
   Download,
   Calendar,
-  User
+  User,
+  Filter,
+  X
 } from "lucide-react";
 import React, { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -31,10 +36,159 @@ interface PackageGroup {
   versions: PackageAttestation[];
 }
 
+// FilterDropdown component for Excel-style column filtering
+interface FilterDropdownProps {
+  title: string;
+  values: string[];
+  selectedValues: string[];
+  onSelectionChange: (selected: string[]) => void;
+  isActive: boolean;
+  isInitialized: boolean;
+}
+
+function FilterDropdown({ title, values, selectedValues, onSelectionChange, isActive, isInitialized }: FilterDropdownProps) {
+  const [searchFilter, setSearchFilter] = useState("");
+  
+  const filteredValues = values.filter(value => 
+    value.toLowerCase().includes(searchFilter.toLowerCase())
+  );
+  
+  // For Excel-style filtering: if not initialized, all values are considered selected
+  const effectiveSelectedValues = isInitialized ? selectedValues : values;
+  
+  const handleSelectAll = () => {
+    onSelectionChange(values);
+  };
+  
+  const handleClearAll = () => {
+    onSelectionChange([]);
+  };
+  
+  const handleValueToggle = (value: string) => {
+    // Initialize with all values if this is the first interaction
+    if (!isInitialized) {
+      // Remove the clicked value from all values
+      onSelectionChange(values.filter(v => v !== value));
+    } else {
+      if (selectedValues.includes(value)) {
+        onSelectionChange(selectedValues.filter(v => v !== value));
+      } else {
+        onSelectionChange([...selectedValues, value]);
+      }
+    }
+  };
+  
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost" 
+          size="sm"
+          className={`h-6 w-6 p-0 ${isActive ? 'bg-primary/10 text-primary' : ''}`}
+          data-testid={`filter-${title.toLowerCase().replace(' ', '-')}`}
+        >
+          <Filter className="h-3 w-3" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-64 p-0" align="start">
+        <div className="p-3">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="font-medium text-sm">Filter {title}</h4>
+            {isActive && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleClearAll}
+                className="h-6 px-2 text-xs"
+              >
+                <X className="h-3 w-3 mr-1" />
+                Clear
+              </Button>
+            )}
+          </div>
+          
+          <Input
+            placeholder="Search..."
+            value={searchFilter}
+            onChange={(e) => setSearchFilter(e.target.value)}
+            className="h-8 text-xs mb-3"
+          />
+          
+          <div className="flex items-center gap-2 mb-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSelectAll}
+              className="h-7 px-2 text-xs flex-1"
+            >
+              Select All
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleClearAll}
+              className="h-7 px-2 text-xs flex-1"
+            >
+              Clear All
+            </Button>
+          </div>
+          
+          <Separator className="mb-2" />
+          
+          <div className="max-h-48 overflow-y-auto space-y-1">
+            {filteredValues.map((value) => (
+              <div key={value} className="flex items-center space-x-2 p-1 hover:bg-muted/50 rounded">
+                <Checkbox
+                  id={`${title}-${value}`}
+                  checked={effectiveSelectedValues.includes(value)}
+                  onCheckedChange={(checked) => {
+                    console.log(`Filter ${title} - ${value}: ${checked}`);
+                    handleValueToggle(value);
+                  }}
+                  className="h-4 w-4"
+                />
+                <label
+                  htmlFor={`${title}-${value}`}
+                  className="text-xs cursor-pointer flex-1 truncate"
+                  title={value}
+                >
+                  {value}
+                </label>
+              </div>
+            ))}
+            {filteredValues.length === 0 && (
+              <div className="text-xs text-muted-foreground p-2 text-center">
+                No items found
+              </div>
+            )}
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 export default function Attestations() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRegistry, setSelectedRegistry] = useState<string>("all");
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
+  
+  // Column filters state - initialize with all values (Excel-style: all items checked initially)
+  const [columnFilters, setColumnFilters] = useState({
+    packageName: [] as string[],
+    version: [] as string[],
+    status: [] as string[],
+    maintainer: [] as string[],
+    publishedDateRange: null as { start: Date | null; end: Date | null } | null,
+  });
+  
+  // Track if filters have been initialized (to distinguish between "not initialized" and "empty selection")
+  const [filtersInitialized, setFiltersInitialized] = useState({
+    packageName: false,
+    version: false,
+    status: false,
+    maintainer: false,
+  });
   
   // Fetch packages and attestations data
   const { data: packages = [], isLoading, error } = useQuery<PackageAttestation[]>({
@@ -81,9 +235,34 @@ export default function Attestations() {
       .sort((a, b) => new Date(b.latestPublishedAt).getTime() - new Date(a.latestPublishedAt).getTime());
   }, [packages]);
 
+  // Extract unique values for column filters
+  const uniqueValues = useMemo(() => {
+    const packageNames = new Set<string>();
+    const versions = new Set<string>();
+    const statuses = new Set<string>();
+    const maintainers = new Set<string>();
+    
+    groupedPackages.forEach(group => {
+      packageNames.add(group.packageName);
+      group.versions.forEach(version => {
+        versions.add(version.version);
+        statuses.add(version.attestationStatus);
+        version.maintainers.forEach(maintainer => maintainers.add(maintainer));
+      });
+    });
+    
+    return {
+      packageNames: Array.from(packageNames).sort(),
+      versions: Array.from(versions).sort(),
+      statuses: Array.from(statuses).sort(),
+      maintainers: Array.from(maintainers).sort()
+    };
+  }, [groupedPackages]);
+
   // Apply filtering to groups
   const filteredGroups = useMemo(() => {
     return groupedPackages.filter((group: PackageGroup) => {
+      // Search term filter
       const matchesSearch = 
         group.packageName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         group.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -95,18 +274,72 @@ export default function Attestations() {
       
       const matchesRegistry = selectedRegistry === "all" || group.registry === selectedRegistry;
       
-      return matchesSearch && matchesRegistry;
+      // Excel-style column filters:
+      // - Not initialized = show all (user hasn't interacted with filter yet)
+      // - Initialized but empty = show none (user unchecked all items)
+      // - Initialized with items = show only those items
+      const matchesPackageName = !filtersInitialized.packageName || 
+        columnFilters.packageName.includes(group.packageName);
+      
+      const matchesVersion = !filtersInitialized.version ||
+        group.versions.some(version => columnFilters.version.includes(version.version));
+      
+      const matchesStatus = !filtersInitialized.status ||
+        group.versions.some(version => columnFilters.status.includes(version.attestationStatus));
+      
+      const matchesMaintainer = !filtersInitialized.maintainer ||
+        group.versions.some(version => 
+          version.maintainers.some(maintainer => columnFilters.maintainer.includes(maintainer))
+        );
+      
+      console.log('Filtering group:', group.packageName, {
+        matchesPackageName,
+        packageNameFilter: columnFilters.packageName,
+        matchesSearch,
+        matchesRegistry
+      });
+      
+      return matchesSearch && matchesRegistry && matchesPackageName && 
+             matchesVersion && matchesStatus && matchesMaintainer;
     });
-  }, [groupedPackages, searchTerm, selectedRegistry]);
+  }, [groupedPackages, searchTerm, selectedRegistry, columnFilters, filtersInitialized]);
 
   // Reset expanded group when filters change
   useEffect(() => {
     setExpandedGroup(null);
-  }, [searchTerm, selectedRegistry]);
+  }, [searchTerm, selectedRegistry, columnFilters]);
 
   const toggleGroup = (groupKey: string) => {
     setExpandedGroup(expandedGroup === groupKey ? null : groupKey);
   };
+
+  // Column filter handlers
+  const handleColumnFilterChange = (column: keyof typeof columnFilters, values: string[]) => {
+    console.log(`Column filter change: ${column}`, values);
+    
+    // Mark this filter as initialized when user first interacts with it
+    setFiltersInitialized(prev => ({
+      ...prev,
+      [column]: true
+    }));
+    
+    setColumnFilters(prev => {
+      const newFilters = {
+        ...prev,
+        [column]: values
+      };
+      console.log('New column filters:', newFilters);
+      return newFilters;
+    });
+  };
+
+  // Check if any column filters are active (properly accounting for initialization state)
+  const hasActiveFilters = (
+    (filtersInitialized.packageName && columnFilters.packageName.length !== uniqueValues.packageNames.length) ||
+    (filtersInitialized.version && columnFilters.version.length !== uniqueValues.versions.length) ||
+    (filtersInitialized.status && columnFilters.status.length !== uniqueValues.statuses.length) ||
+    (filtersInitialized.maintainer && columnFilters.maintainer.length !== uniqueValues.maintainers.length)
+  );
 
   const getStatusIcon = (status: PackageAttestation['attestationStatus']) => {
     switch (status) {
@@ -212,6 +445,37 @@ export default function Attestations() {
               ))}
             </div>
           </div>
+          
+          {/* Clear All Filters */}
+          {hasActiveFilters && (
+            <div className="flex justify-center">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setColumnFilters({
+                    packageName: [],
+                    version: [],
+                    status: [],
+                    maintainer: [],
+                    publishedDateRange: null,
+                  });
+                  // Reset initialization state to show all items again
+                  setFiltersInitialized({
+                    packageName: false,
+                    version: false,
+                    status: false,
+                    maintainer: false,
+                  });
+                }}
+                className="text-muted-foreground hover:text-foreground"
+                data-testid="button-clear-all-filters"
+              >
+                <X className="h-4 w-4 mr-2" />
+                Clear All Column Filters
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Loading State */}
@@ -292,13 +556,61 @@ export default function Attestations() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[200px]">Package Name</TableHead>
-                      <TableHead className="w-[100px]">Version</TableHead>
+                      <TableHead className="w-[200px]">
+                        <div className="flex items-center gap-2">
+                          <span>Package Name</span>
+                          <FilterDropdown
+                            title="Package Name"
+                            values={uniqueValues.packageNames}
+                            selectedValues={columnFilters.packageName}
+                            onSelectionChange={(values) => handleColumnFilterChange('packageName', values)}
+                            isActive={filtersInitialized.packageName && columnFilters.packageName.length !== uniqueValues.packageNames.length}
+                            isInitialized={filtersInitialized.packageName}
+                          />
+                        </div>
+                      </TableHead>
+                      <TableHead className="w-[100px]">
+                        <div className="flex items-center gap-2">
+                          <span>Version</span>
+                          <FilterDropdown
+                            title="Version"
+                            values={uniqueValues.versions}
+                            selectedValues={columnFilters.version}
+                            onSelectionChange={(values) => handleColumnFilterChange('version', values)}
+                            isActive={filtersInitialized.version && columnFilters.version.length !== uniqueValues.versions.length}
+                            isInitialized={filtersInitialized.version}
+                          />
+                        </div>
+                      </TableHead>
                       <TableHead className="w-[100px]">Registry</TableHead>
-                      <TableHead className="w-[120px]">Status</TableHead>
+                      <TableHead className="w-[120px]">
+                        <div className="flex items-center gap-2">
+                          <span>Status</span>
+                          <FilterDropdown
+                            title="Status"
+                            values={uniqueValues.statuses}
+                            selectedValues={columnFilters.status}
+                            onSelectionChange={(values) => handleColumnFilterChange('status', values)}
+                            isActive={filtersInitialized.status && columnFilters.status.length !== uniqueValues.statuses.length}
+                            isInitialized={filtersInitialized.status}
+                          />
+                        </div>
+                      </TableHead>
                       <TableHead className="w-[300px]">Description</TableHead>
                       <TableHead className="w-[120px]">Published</TableHead>
-                      <TableHead className="w-[120px]">Maintainer</TableHead>
+                      <TableHead className="w-[120px]">
+                        <div className="flex items-center gap-2">
+                          <span>Maintainer</span>
+                          <FilterDropdown
+                            title="Maintainer"
+                            values={uniqueValues.maintainers}
+                            selectedValues={columnFilters.maintainer}
+                            onSelectionChange={(values) => handleColumnFilterChange('maintainer', values)}
+                            isActive={filtersInitialized.maintainer && columnFilters.maintainer.length !== uniqueValues.maintainers.length}
+                            isInitialized={filtersInitialized.maintainer}
+                          />
+                        </div>
+                      </TableHead>
                       <TableHead className="w-[100px] text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
