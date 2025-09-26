@@ -53,7 +53,7 @@ export const PackageAttestationSchema = z.object({
   id: z.string(),
   packageName: z.string(),
   version: z.string(),
-  registry: z.enum(["npm", "pypi", "cargo", "nuget", "maven"]),
+  registry: z.enum(["npm", "pypi", "github", "cargo", "nuget", "maven"]),
   publishedAt: z.string(),
   attestationUrl: z.string().optional(),
   attestationStatus: z.enum(["verified", "unverified", "pending", "error"]),
