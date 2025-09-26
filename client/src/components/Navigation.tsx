@@ -8,13 +8,13 @@ export default function Navigation() {
 
   return (
     <div className="w-full flex justify-center pt-4 px-2 sm:px-4">
-      <nav id="site-nav" className="w-full max-w-[95%] sm:max-w-[85%] lg:max-w-[60%] border border-border rounded-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <nav id="site-nav" className="w-full max-w-[95%] sm:max-w-[85%] md:max-w-[90%] lg:max-w-[70%] xl:max-w-[60%] border border-border rounded-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="px-3 sm:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-1 sm:space-x-2">
               <Sprout className="h-5 w-5 sm:h-6 sm:w-6 text-green-500" />
-              <h1 className="text-lg sm:text-xl font-semibold text-foreground hidden sm:block">Digital Garden</h1>
-              <h1 className="text-sm font-semibold text-foreground sm:hidden">Garden</h1>
+              <h1 className="text-lg sm:text-xl font-semibold text-foreground hidden lg:block">Digital Garden</h1>
+              <h1 className="text-sm sm:text-base font-semibold text-foreground lg:hidden">Garden</h1>
             </div>
             
             <div className="flex items-center space-x-1 sm:space-x-2">
@@ -22,11 +22,11 @@ export default function Navigation() {
               <Button 
                 variant={location === "/" ? "default" : "ghost"}
                 size="sm"
-                className="hover-elevate px-2 sm:px-3"
+                className="hover-elevate"
                 data-testid="nav-portfolio"
               >
-                <Sprout className="h-4 w-4 sm:mr-2 text-green-500" />
-                <span className="hidden sm:inline">Portfolio</span>
+                <Sprout className="h-4 w-4 lg:mr-2 text-green-500" />
+                <span className="hidden lg:inline">Portfolio</span>
               </Button>
             </Link>
             
@@ -34,11 +34,11 @@ export default function Navigation() {
               <Button 
                 variant={location === "/research" ? "default" : "ghost"}
                 size="sm"
-                className="hover-elevate px-2 sm:px-3"
+                className="hover-elevate"
                 data-testid="nav-research"
               >
-                <FileText className="h-4 w-4 sm:mr-2" />
-                <span className="hidden sm:inline">Research</span>
+                <FileText className="h-4 w-4 lg:mr-2" />
+                <span className="hidden lg:inline">Research</span>
               </Button>
             </Link>
             
@@ -46,11 +46,11 @@ export default function Navigation() {
               <Button 
                 variant={location === "/graph" ? "default" : "ghost"}
                 size="sm"
-                className="hover-elevate px-2 sm:px-3"
+                className="hover-elevate"
                 data-testid="nav-graph"
               >
-                <Network className="h-4 w-4 sm:mr-2" />
-                <span className="hidden sm:inline">Graph</span>
+                <Network className="h-4 w-4 lg:mr-2" />
+                <span className="hidden lg:inline">Graph</span>
               </Button>
             </Link>
             
@@ -58,11 +58,11 @@ export default function Navigation() {
               <Button 
                 variant={location === "/attestations" ? "default" : "ghost"}
                 size="sm"
-                className="hover-elevate px-2 sm:px-3"
+                className="hover-elevate"
                 data-testid="nav-attestations"
               >
-                <Shield className="h-4 w-4 sm:mr-2" />
-                <span className="hidden sm:inline">Attestations</span>
+                <Shield className="h-4 w-4 lg:mr-2" />
+                <span className="hidden lg:inline">Attestations</span>
               </Button>
             </Link>
             
@@ -70,11 +70,11 @@ export default function Navigation() {
               <Button 
                 variant={location === "/sponsor" ? "default" : "ghost"}
                 size="sm"
-                className="hover-elevate px-2 sm:px-3"
+                className="hover-elevate"
                 data-testid="nav-sponsor"
               >
-                <Heart className="h-4 w-4 sm:mr-2 text-pink-500" />
-                <span className="hidden sm:inline">Sponsor</span>
+                <Heart className="h-4 w-4 lg:mr-2 text-pink-500" />
+                <span className="hidden lg:inline">Sponsor</span>
               </Button>
             </Link>
             
