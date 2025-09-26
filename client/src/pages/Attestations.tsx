@@ -179,6 +179,7 @@ export default function Attestations() {
     version: [] as string[],
     status: [] as string[],
     maintainer: [] as string[],
+    license: [] as string[],
     publishedDateRange: null as { start: Date | null; end: Date | null } | null,
   });
   
@@ -188,6 +189,7 @@ export default function Attestations() {
     version: false,
     status: false,
     maintainer: false,
+    license: false,
   });
   
   // Fetch packages and attestations data
@@ -241,6 +243,7 @@ export default function Attestations() {
     const versions = new Set<string>();
     const statuses = new Set<string>();
     const maintainers = new Set<string>();
+    const licenses = new Set<string>();
     
     groupedPackages.forEach(group => {
       packageNames.add(group.packageName);
@@ -248,6 +251,9 @@ export default function Attestations() {
         versions.add(version.version);
         statuses.add(version.attestationStatus);
         version.maintainers.forEach(maintainer => maintainers.add(maintainer));
+        if (version.license) {
+          licenses.add(version.license);
+        }
       });
     });
     
@@ -255,7 +261,8 @@ export default function Attestations() {
       packageNames: Array.from(packageNames).sort(),
       versions: Array.from(versions).sort(),
       statuses: Array.from(statuses).sort(),
-      maintainers: Array.from(maintainers).sort()
+      maintainers: Array.from(maintainers).sort(),
+      licenses: Array.from(licenses).sort()
     };
   }, [groupedPackages]);
 
@@ -292,6 +299,11 @@ export default function Attestations() {
           version.maintainers.some(maintainer => columnFilters.maintainer.includes(maintainer))
         );
       
+      const matchesLicense = !filtersInitialized.license ||
+        group.versions.some(version => 
+          version.license && columnFilters.license.includes(version.license)
+        );
+      
       console.log('Filtering group:', group.packageName, {
         matchesPackageName,
         packageNameFilter: columnFilters.packageName,
@@ -300,7 +312,7 @@ export default function Attestations() {
       });
       
       return matchesSearch && matchesRegistry && matchesPackageName && 
-             matchesVersion && matchesStatus && matchesMaintainer;
+             matchesVersion && matchesStatus && matchesMaintainer && matchesLicense;
     });
   }, [groupedPackages, searchTerm, selectedRegistry, columnFilters, filtersInitialized]);
 
@@ -338,7 +350,8 @@ export default function Attestations() {
     (filtersInitialized.packageName && columnFilters.packageName.length !== uniqueValues.packageNames.length) ||
     (filtersInitialized.version && columnFilters.version.length !== uniqueValues.versions.length) ||
     (filtersInitialized.status && columnFilters.status.length !== uniqueValues.statuses.length) ||
-    (filtersInitialized.maintainer && columnFilters.maintainer.length !== uniqueValues.maintainers.length)
+    (filtersInitialized.maintainer && columnFilters.maintainer.length !== uniqueValues.maintainers.length) ||
+    (filtersInitialized.license && columnFilters.license.length !== uniqueValues.licenses.length)
   );
 
   const getStatusIcon = (status: PackageAttestation['attestationStatus']) => {
@@ -458,6 +471,7 @@ export default function Attestations() {
                     version: [],
                     status: [],
                     maintainer: [],
+                    license: [],
                     publishedDateRange: null,
                   });
                   // Reset initialization state to show all items again
@@ -466,6 +480,7 @@ export default function Attestations() {
                     version: false,
                     status: false,
                     maintainer: false,
+                    license: false,
                   });
                 }}
                 className="text-muted-foreground hover:text-foreground"
@@ -611,6 +626,19 @@ export default function Attestations() {
                           />
                         </div>
                       </TableHead>
+                      <TableHead className="w-[120px]">
+                        <div className="flex items-center gap-2">
+                          <span>License</span>
+                          <FilterDropdown
+                            title="License"
+                            values={uniqueValues.licenses}
+                            selectedValues={columnFilters.license}
+                            onSelectionChange={(values) => handleColumnFilterChange('license', values)}
+                            isActive={filtersInitialized.license && columnFilters.license.length !== uniqueValues.licenses.length}
+                            isInitialized={filtersInitialized.license}
+                          />
+                        </div>
+                      </TableHead>
                       <TableHead className="w-[100px] text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -681,6 +709,10 @@ export default function Attestations() {
                             
                             <TableCell className="text-sm text-muted-foreground">
                               {group.maintainers.length > 0 ? group.maintainers[0] : "-"}
+                            </TableCell>
+                            
+                            <TableCell className="text-sm text-muted-foreground">
+                              {latestVersion.license || "-"}
                             </TableCell>
                             
                             <TableCell className="text-right">
@@ -761,6 +793,10 @@ export default function Attestations() {
                               
                               <TableCell className="text-xs text-muted-foreground">
                                 {version.maintainers.length > 0 ? version.maintainers[0] : "-"}
+                              </TableCell>
+                              
+                              <TableCell className="text-xs text-muted-foreground">
+                                {version.license || "-"}
                               </TableCell>
                               
                               <TableCell className="text-right">
