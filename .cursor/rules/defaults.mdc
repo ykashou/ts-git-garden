@@ -1,0 +1,46 @@
+---
+description: Default repository settings and configurations
+alwaysApply: true
+---
+
+# Repository Defaults for ts-git-garden
+
+## CODEOWNERS
+
+Must exist at: `.github/CODEOWNERS`
+
+```
+# All files require review from @ykashou
+* @ykashou
+```
+
+**Simple and complete** - All PRs automatically request review from @ykashou
+
+## Branch Protection (master)
+
+Required settings in GitHub repository:
+- ✅ Require pull request before merging
+- ✅ Require approvals: 1
+- ✅ Require review from Code Owners
+- ✅ Require status checks to pass: build, test, lint
+- ✅ Require branches to be up to date before merging
+- ❌ Allow force pushes
+- ❌ Allow deletions
+
+## Project Board Columns
+
+Standard workflow:
+- **Backlog** - Issues not yet planned for current phase
+- **Ready** - Issues defined in current phase, ready to work
+- **In Progress** - Actively being worked on
+- **In Review** - Pull request open, awaiting review
+- **Done** - Completed and merged
+
+## Repository Settings
+
+- ✅ Issues enabled
+- ✅ Projects enabled
+- ✅ Automatically delete head branches after merge
+- ✅ Allow squash merging
+- ❌ Allow merge commits
+- ❌ Allow rebase merging
