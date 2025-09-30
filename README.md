@@ -4,11 +4,10 @@
 
 Developer portfolio showcase with 3D visualization of GitHub repositories
 
-[![Build Status](https://github.com/ykashou/ts-git-garden/workflows/Build/badge.svg)](https://github.com/ykashou/ts-git-garden/actions)
-[![License: ACE](https://img.shields.io/badge/License-ACE-yellow.svg)](./LICENSE)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D23.0.0-brightgreen.svg)](https://nodejs.org/)
 [![React Version](https://img.shields.io/badge/react-18.3.1-blue.svg)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/typescript-5.6.3-blue.svg)](https://www.typescriptlang.org/)
+[![Vitest](https://img.shields.io/badge/tested%20with-vitest-6E9F18.svg)](https://vitest.dev/)
 
 [Demo](https://git-garden.example.com) • [Documentation](./docs) • [Report Bug](https://github.com/ykashou/ts-git-garden/issues) • [Request Feature](https://github.com/ykashou/ts-git-garden/issues)
 
@@ -272,7 +271,10 @@ This project is licensed under the ACE License - see the [LICENSE](LICENSE) file
 - [3D Knowledge Graph Documentation](docs/3d-knowledge-graph.md)
 - [Research Page Upgrade](docs/research-page-upgrade.md)
 - [Build Operations](ops/build/README.md)
-- [Design Guidelines](design_guidelines.md)
+- [Design Guidelines](docs/design_guidelines.md)
+- [Dual Mode Architecture](docs/DUAL_MODE_ARCHITECTURE.md)
+- [Replit Integration](docs/replit.md)
+- [Testing Setup](test/README.md)
 
 ## 🔗 Links
 
