@@ -1,0 +1,81 @@
+---
+description: Rules for keeping replit.md synchronized with project changes
+alwaysApply: true
+---
+
+# Replit Sync Rules for ts-git-garden
+
+## When replit.md Exists
+
+### MUST Update replit.md When:
+- ✅ Dependencies change (`package.json` updates)
+- ✅ Build commands change (`vite.config.ts`, scripts)
+- ✅ Project structure changes (new directories, major refactors)
+- ✅ Node/TypeScript version changes
+- ✅ Major features added/removed
+- ✅ Environment variables change
+
+### Update Sections in replit.md:
+
+**System Architecture:**
+```markdown
+### Core Implementation
+- **Framework**: React 19 + TypeScript 5.8
+- **Build Tool**: Vite 6.0
+- **3D Graphics**: Three.js + React Three Fiber
+```
+
+**Dependencies:**
+```markdown
+### External Dependencies
+- React 19.0.0
+- Three.js 0.x.x
+- React Three Fiber
+- Zustand (state management)
+```
+
+**Recent Changes:**
+```markdown
+**[Date]**
+- Added 3D repository visualization
+- Implemented GitHub API integration
+- Created RepoCard component
+```
+
+### Update .replit When:
+- ✅ Node version changes
+- ✅ Build/run commands change
+- ✅ Port changes (5173 for Vite)
+
+**.replit format:**
+```toml
+modules = ["nodejs-23"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install && npm run dev"
+```
+
+## What NOT to Update
+
+❌ Don't update for:
+- Minor code refactoring
+- CSS changes
+- Component renames
+- Bug fixes (unless architectural)
+
+## Sync Checklist
+
+When making major changes:
+- [ ] Update replit.md **Overview** section
+- [ ] Update replit.md **System Architecture** 
+- [ ] Update replit.md **Dependencies**
+- [ ] Add entry to **Recent Changes**
+- [ ] Update .replit if build commands changed
+- [ ] Test in Replit (if possible) before committing

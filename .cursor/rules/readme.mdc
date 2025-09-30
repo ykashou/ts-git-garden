@@ -1,0 +1,231 @@
+---
+description: README structure and content requirements for ts-git-garden
+alwaysApply: true
+---
+
+# README Requirements for ts-git-garden
+
+## Required Structure:
+
+```markdown
+<div align="center">
+
+# Git Garden
+
+Developer portfolio showcase with 3D visualization of GitHub repositories
+
+[![Build Status](https://github.com/ykashou/ts-git-garden/workflows/Build/badge.svg)](https://github.com/ykashou/ts-git-garden/actions)
+[![License: ACE](https://img.shields.io/badge/License-ACE-yellow.svg)](./LICENSE)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D23.0.0-brightgreen.svg)](https://nodejs.org/)
+[![React Version](https://img.shields.io/badge/react-19.0.0-blue.svg)](https://reactjs.org/)
+
+[Demo](https://git-garden.example.com) • [Documentation](./docs) • [Report Bug](https://github.com/ykashou/ts-git-garden/issues) • [Request Feature](https://github.com/ykashou/ts-git-garden/issues)
+
+</div>
+
+## 🚀 Features
+
+- ✅ **3D Visualization**: Beautiful Three.js visualization of GitHub repositories
+- ✅ **GitHub Integration**: Real-time data from GitHub API
+- ✅ **Interactive Portfolio**: Showcase your projects in an engaging way
+- ✅ **Nord Theme**: Beautiful Nord Light/Dark theme support
+- ✅ **Responsive Design**: Works on desktop and mobile
+- ✅ **Performance Optimized**: Fast loading with Vite
+
+## 🛠 Tech Stack
+
+- **Framework**: React 19 + TypeScript 5.8
+- **Build Tool**: Vite 6.0
+- **3D Graphics**: Three.js + React Three Fiber
+- **Styling**: Tailwind CSS 4.0 + Nord Theme
+- **State Management**: Zustand
+- **Testing**: Vitest + React Testing Library
+- **Containerization**: Podman with nginx
+
+## 📋 Prerequisites
+
+- Node.js >= 23.0.0
+- npm >= 10.0.0
+- Podman >= 4.0 (for containerized deployment)
+
+## 🚦 Quick Start
+
+### Using Container (Recommended)
+
+```bash
+# Clone repository
+git clone https://github.com/ykashou/ts-git-garden.git
+cd ts-git-garden
+
+# Run with podman
+podman build -f ops/build/development.Containerfile -t git-garden:dev .
+podman run --rm -p 5173:5173 git-garden:dev
+```
+
+Visit http://localhost:5173
+
+### Local Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
+
+# Open browser to http://localhost:5173
+```
+
+## 📁 Project Structure
+
+```
+ts-git-garden/
+├── src/
+│   ├── components/       # React components
+│   │   ├── ui/          # Reusable UI components
+│   │   ├── layout/      # Layout components
+│   │   └── features/    # Feature components
+│   ├── hooks/           # Custom React hooks
+│   ├── pages/           # Route pages
+│   ├── services/        # API services
+│   ├── store/           # Zustand store
+│   ├── types/           # TypeScript types
+│   ├── utils/           # Utility functions
+│   ├── assets/          # Static assets
+│   ├── App.tsx
+│   └── main.tsx
+├── public/              # Public static files
+├── ops/                 # Operations (build, test, release)
+├── index.html
+└── package.json
+```
+
+## 🧪 Testing
+
+```bash
+# Run unit tests
+npm test
+
+# With coverage
+npm test -- --coverage
+
+# Run linting
+npm run lint
+
+# Type checking
+npm run type-check
+```
+
+## 🐳 Containerization
+
+### Development
+
+```bash
+podman build -f ops/build/development.Containerfile -t git-garden:dev .
+podman run --rm -p 5173:5173 -v $(pwd):/app git-garden:dev
+```
+
+### Production
+
+```bash
+podman build -f ops/build/master.Containerfile -t git-garden:latest .
+podman run --rm -p 8080:80 git-garden:latest
+```
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Create `.env.local`:
+
+```env
+VITE_GITHUB_TOKEN=your_github_token
+VITE_API_BASE_URL=https://api.github.com
+```
+
+### GitHub Token
+
+Generate a personal access token with `repo` scope for higher API rate limits.
+
+## 🎨 Customization
+
+### Theming
+
+Edit `src/assets/styles/nord-theme.css` to customize colors.
+
+### 3D Configuration
+
+Modify `src/components/3D/config.ts` for visualization settings.
+
+## 🚀 Deployment
+
+### Container Registry
+
+```bash
+# Tag for registry
+podman tag git-garden:latest ghcr.io/ykashou/git-garden:latest
+
+# Push to registry
+podman push ghcr.io/ykashou/git-garden:latest
+```
+
+### Static Hosting
+
+Build and deploy the dist/ folder:
+
+```bash
+npm run build
+# Upload dist/ to your hosting provider
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+## 📄 License
+
+This project is licensed under the ACE License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Three.js community for 3D graphics
+- GitHub API for repository data
+- Nord theme for beautiful colors
+
+---
+
+<div align="center">
+Made with ❤️ by <a href="https://github.com/ykashou">ykashou</a>
+</div>
+```
+
+## Required Sections:
+
+1. ✅ **Centered header** with project name and description
+2. ✅ **Badges** (build status, license, versions)
+3. ✅ **Demo and links** (demo, docs, issues)
+4. ✅ **Features** with checkmarks
+5. ✅ **Tech stack** breakdown
+6. ✅ **Prerequisites** with versions
+7. ✅ **Quick start** (container-first, then local)
+8. ✅ **Project structure** visual tree
+9. ✅ **Testing** instructions
+10. ✅ **Containerization** (podman commands)
+11. ✅ **Configuration** (env vars)
+12. ✅ **Deployment** instructions
+13. ✅ **Contributing** guidelines
+14. ✅ **License** (ACE)
+15. ✅ **Acknowledgments**
+
+## Key Points:
+
+- **Container-first approach** - Show podman commands first
+- **Actual versions** - Node 23.0.0, React 19.0.0, Vite 6.0.0
+- **No docker** - Always use podman
+- **Nord theme** mention - It's a key feature
+- **3D visualization** - Highlight this unique feature
+- **GitHub API** - Explain integration
