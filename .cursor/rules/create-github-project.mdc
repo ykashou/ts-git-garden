@@ -1,0 +1,109 @@
+---
+description: How to create GitHub Project board when none exists
+alwaysApply: false
+---
+
+# Create GitHub Project for ts-git-garden
+
+## When to Create
+
+Only if repository has no linked GitHub Project.
+
+## Check for Existing Project
+
+```bash
+# List projects for user
+gh project list --owner ykashou
+
+# Check if ts-git-garden project exists
+gh project list --owner ykashou | grep -i "git garden"
+```
+
+## Create New Project
+
+```bash
+# Copy from template project (ID: PVT_kwHOAIOPOc4BEbpH)
+gh api graphql -f query='
+  mutation {
+    copyProjectV2(input: {
+      projectId: "PVT_kwHOAIOPOc4BEbpH"
+      ownerId: "ykashou"
+      title: "Git Garden Development"
+    }) {
+      projectV2 {
+        id
+        number
+      }
+    }
+  }
+'
+
+# Returns: PROJECT_NUMBER
+```
+
+## Template Includes
+
+Copying the template gives you:
+- **Status**: Backlog → Ready → In Progress → In Review → Done
+- **Iteration**: For phase planning
+- **Priority**: P0, P1, P2
+- **Energy**: Effort estimates (optional)
+- All field configurations
+- All views and automations
+
+## Link to Repository
+
+```bash
+# Link project to repository in GitHub web UI:
+# Repository → Projects → Link a project → Select your project
+```
+
+## Add Issues to Project
+
+```bash
+# Manually add issue to project
+gh project item-add 1 --owner ykashou --url "https://github.com/ykashou/ts-git-garden/issues/42"
+
+# Or add when creating issue
+gh issue create --title "Task" --label "phase-2" | \
+    xargs -I {} gh project item-add 1 --owner ykashou --url {}
+```
+
+## Map Issues to Status
+
+After adding issues, update based on TASKLIST.md status:
+
+```bash
+# Status mapping based on TASKLIST.md markers
+
+# Backlog (default for new issues) - [ ]
+# Issues start here when created
+
+# Ready - [ ] (defined in current phase)
+gh project item-edit --id ITEM_ID --field-id STATUS_FIELD_ID --project-id PROJECT_ID --single-select-option-id "Ready"
+
+# In Progress - [ ] 🔄
+gh project item-edit --id ITEM_ID --field-id STATUS_FIELD_ID --project-id PROJECT_ID --single-select-option-id "In Progress"
+
+# In Review - [ ] ⚠️ (PR open)
+gh project item-edit --id ITEM_ID --field-id STATUS_FIELD_ID --project-id PROJECT_ID --single-select-option-id "In Review"
+
+# Done - [x] ✅
+gh project item-edit --id ITEM_ID --field-id STATUS_FIELD_ID --project-id PROJECT_ID --single-select-option-id "Done"
+```
+
+Issues will auto-add to board. Workflow: Backlog → Ready → In Progress → In Review → Done
+
+## Verification
+
+```bash
+# View project
+gh project view 1 --owner ykashou --web
+
+# List project items
+gh project item-list 1 --owner ykashou
+```
+
+## That's It
+
+Project is now ready. Issues will auto-add to board.

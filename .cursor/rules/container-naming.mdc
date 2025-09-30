@@ -1,0 +1,205 @@
+---
+description: Container naming and tagging conventions for ts-git-garden
+alwaysApply: true
+---
+
+# Container Naming and Tagging for ts-git-garden
+
+## Container Naming Rules
+
+### Project Name: `git-garden`
+- Short, descriptive, lowercase
+- No `ts-` prefix in container name
+- Hyphen-separated words
+
+### Full Container Names:
+
+**Local development:**
+```
+git-garden:dev
+git-garden:latest
+```
+
+**Registry (GitHub Container Registry):**
+```
+ghcr.io/ykashou/git-garden:latest
+ghcr.io/ykashou/git-garden:v1.0.0
+ghcr.io/ykashou/git-garden:1.0
+ghcr.io/ykashou/git-garden:1
+```
+
+## Tagging Strategy
+
+### Development Tags:
+```bash
+podman build -f ops/build/development.Containerfile -t git-garden:dev .
+```
+
+### Production Tags (Multi-tag):
+```bash
+podman build -f ops/build/master.Containerfile \
+  -t git-garden:latest \
+  -t git-garden:v1.0.0 \
+  -t git-garden:1.0 \
+  -t git-garden:1 .
+```
+
+### Registry Tags:
+```bash
+# Tag for registry
+podman tag git-garden:v1.0.0 ghcr.io/ykashou/git-garden:v1.0.0
+podman tag git-garden:v1.0.0 ghcr.io/ykashou/git-garden:1.0
+podman tag git-garden:v1.0.0 ghcr.io/ykashou/git-garden:1
+podman tag git-garden:latest ghcr.io/ykashou/git-garden:latest
+
+# Push to registry
+podman push ghcr.io/ykashou/git-garden:v1.0.0
+podman push ghcr.io/ykashou/git-garden:1.0
+podman push ghcr.io/ykashou/git-garden:1
+podman push ghcr.io/ykashou/git-garden:latest
+```
+
+## Tag Categories
+
+### Version Tags:
+- `v1.0.0` - Full semantic version
+- `1.0` - Major.minor version
+- `1` - Major version only
+- `latest` - Always points to latest stable
+
+### Environment Tags:
+- `dev` - Development build
+- `staging` - Staging environment (if used)
+- `latest` - Production
+
+### Special Tags:
+- `sha-abc1234` - Git commit SHA
+- `pr-123` - Pull request builds
+- `branch-feature-name` - Branch builds
+
+## Build Command Examples
+
+### Local Development:
+```bash
+podman build -f ops/build/development.Containerfile -t git-garden:dev .
+podman run --rm -p 5173:5173 -v $(pwd):/app git-garden:dev
+```
+
+### Production Build:
+```bash
+podman build -f ops/build/master.Containerfile -t git-garden:latest .
+podman run --rm -p 8080:80 git-garden:latest
+```
+
+### Multi-platform Build:
+```bash
+podman build \
+  --platform linux/amd64,linux/arm64 \
+  -f ops/build/master.Containerfile \
+  -t ghcr.io/ykashou/git-garden:latest \
+  --push .
+```
+
+### Release Build:
+```bash
+VERSION=v1.2.0
+
+podman build -f ops/build/master.Containerfile \
+  -t git-garden:${VERSION} \
+  -t git-garden:1.2 \
+  -t git-garden:1 \
+  -t git-garden:latest .
+
+# Tag for registry
+podman tag git-garden:${VERSION} ghcr.io/ykashou/git-garden:${VERSION}
+podman tag git-garden:${VERSION} ghcr.io/ykashou/git-garden:1.2
+podman tag git-garden:${VERSION} ghcr.io/ykashou/git-garden:1
+podman tag git-garden:${VERSION} ghcr.io/ykashou/git-garden:latest
+
+# Push all tags
+podman push ghcr.io/ykashou/git-garden:${VERSION}
+podman push ghcr.io/ykashou/git-garden:1.2
+podman push ghcr.io/ykashou/git-garden:1
+podman push ghcr.io/ykashou/git-garden:latest
+```
+
+## GitHub Actions Integration
+
+### Build Workflow Tagging:
+```yaml
+- name: Build and tag containers
+  run: |
+    # Development build
+    podman build -f ops/build/development.Containerfile -t git-garden:dev .
+    
+    # Production build with multiple tags
+    podman build -f ops/build/master.Containerfile \
+      -t git-garden:${{ github.sha }} \
+      -t git-garden:latest .
+    
+    # If tagged release
+    if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+      VERSION=${GITHUB_REF#refs/tags/}
+      podman tag git-garden:latest git-garden:${VERSION}
+    fi
+```
+
+## Container Naming Conventions
+
+### ✅ Correct:
+```
+git-garden:dev
+git-garden:latest
+git-garden:v1.0.0
+ghcr.io/ykashou/git-garden:latest
+```
+
+### ❌ Incorrect:
+```
+ts-git-garden:latest          # Don't include ts- prefix
+git_garden:latest             # Use hyphens, not underscores
+GitGarden:latest              # Use lowercase
+docker.io/git-garden:latest   # Use ghcr.io for GitHub
+```
+
+## Registry Organization
+
+```
+ghcr.io/ykashou/
+├── git-garden:latest
+├── git-garden:v1.0.0
+├── git-garden:v1.0.1
+├── git-garden:1.0
+└── git-garden:1
+```
+
+## Cleanup and Maintenance
+
+### Remove old tags locally:
+```bash
+podman rmi git-garden:old-tag
+```
+
+### List all tags:
+```bash
+podman images git-garden
+```
+
+### Prune unused images:
+```bash
+podman image prune -a
+```
+
+## Security Considerations
+
+- **Always scan before pushing:**
+  ```bash
+  trivy image git-garden:latest
+  ```
+
+- **Sign images:**
+  ```bash
+  cosign sign ghcr.io/ykashou/git-garden:v1.0.0
+  ```
+
+- **Use specific versions in production**, not `latest`
