@@ -272,8 +272,8 @@ This project is licensed under the ACE License - see the [LICENSE](LICENSE) file
 - [Research Page Upgrade](docs/research-page-upgrade.md)
 - [Build Operations](ops/build/README.md)
 - [Design Guidelines](docs/design_guidelines.md)
-- [Dual Mode Architecture](docs/DUAL_MODE_ARCHITECTURE.md)
-- [Replit Integration](docs/replit.md)
+- [Dual Mode Architecture](docs/dual-mode-architecture.md)
+- [Replit Integration](replit.md)
 - [Testing Setup](test/README.md)
 
 ## 🔗 Links
