@@ -12,6 +12,7 @@ export const ProjectSchema = z.object({
   status: z.enum(["blooming", "growing", "mature"]).default("growing"),
   lastUpdated: z.string(),
   createdAt: z.string(),
+  license: z.string().optional(),
 });
 
 export const ResearchPaperSchema = z.object({
@@ -49,11 +50,36 @@ export const SponsorshipTierSchema = z.object({
   githubSponsorsUrl: z.string().optional(),
 });
 
+export const PackageAttestationSchema = z.object({
+  id: z.string(),
+  packageName: z.string(),
+  version: z.string(),
+  registry: z.enum(["npm", "pypi", "github", "cargo", "nuget", "maven"]),
+  publishedAt: z.string(),
+  attestationUrl: z.string().optional(),
+  attestationStatus: z.enum(["verified", "unverified", "pending", "error"]),
+  attestationDetails: z.object({
+    issuer: z.string().optional(),
+    subject: z.string().optional(),
+    predicate: z.object({
+      type: z.string(),
+      params: z.record(z.any()).optional(),
+    }).optional(),
+    verificationTimestamp: z.string().optional(),
+  }).optional(),
+  packageUrl: z.string(),
+  downloadCount: z.number().optional(),
+  description: z.string().optional(),
+  license: z.string().optional(),
+  maintainers: z.array(z.string()).default([]),
+});
+
 // Types
 export type Project = z.infer<typeof ProjectSchema>;
 export type ResearchPaper = z.infer<typeof ResearchPaperSchema>;
 export type PortfolioConfig = z.infer<typeof PortfolioConfigSchema>;
 export type SponsorshipTier = z.infer<typeof SponsorshipTierSchema>;
+export type PackageAttestation = z.infer<typeof PackageAttestationSchema>;
 
 // Insert types (same as regular types for static site)
 export type InsertProject = Omit<Project, "id" | "createdAt" | "lastUpdated">;

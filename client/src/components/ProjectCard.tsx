@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Github, ExternalLink, Calendar } from "lucide-react";
+import { Github, ExternalLink, Calendar, FileText } from "lucide-react";
 
 interface ProjectCardProps {
   title: string;
@@ -11,6 +11,7 @@ interface ProjectCardProps {
   liveUrl?: string;
   status: "blooming" | "growing" | "mature";
   lastUpdated: string;
+  license?: string;
 }
 
 const statusColors = {
@@ -32,7 +33,8 @@ export default function ProjectCard({
   githubUrl, 
   liveUrl, 
   status,
-  lastUpdated 
+  lastUpdated,
+  license
 }: ProjectCardProps) {
   const handleGithubClick = () => {
     console.log(`Opening GitHub for ${title}`);
@@ -76,6 +78,19 @@ export default function ProjectCard({
               </Badge>
             ))}
           </div>
+          
+          {license && (
+            <div className="mt-2">
+              <Badge 
+                variant="outline" 
+                className="text-xs text-muted-foreground flex items-center gap-1 w-fit"
+                data-testid={`license-${license.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`}
+              >
+                <FileText className="h-3 w-3" />
+                {license}
+              </Badge>
+            </div>
+          )}
         </div>
         
         <div className="space-y-3">
