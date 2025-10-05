@@ -40,7 +40,7 @@ Developer portfolio showcase with 3D visualization of GitHub repositories
 - **Styling**: Tailwind CSS 4.0 + Nord Theme
 - **State Management**: Zustand
 - **Testing**: Vitest + React Testing Library
-- **Containerization**: Podman with nginx
+- **Containerization**: Podman with distroless Node.js (FROM scratch)
 
 ## 📋 Prerequisites
 
@@ -129,7 +129,7 @@ podman run --rm -p 5173:5173 -v $(pwd):/app git-garden:dev
 
 ```bash
 podman build -f ops/build/master.Containerfile -t git-garden:latest .
-podman run --rm -p 8080:80 git-garden:latest
+podman run --rm -p 5000:5000 git-garden:latest
 ```
 
 ## 🔧 Configuration

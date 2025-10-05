@@ -94,3 +94,5 @@ temp/
 
 # Cursor specific
 .cursor/
+!.cursor/rules/
+!.cursor/rules/*.mdc
