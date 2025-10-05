@@ -18,7 +18,6 @@ jobs:
   validate-tag:
     name: Validate Release Tag
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'push' }}
     
     steps:
       - name: Validate version tag format
@@ -26,12 +25,13 @@ jobs:
           TAG="${GITHUB_REF#refs/tags/}"
           echo "Release tag: $TAG"
           
-          if ! echo "$TAG" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
-            echo "❌ Invalid version tag format. Expected: v1.0.0"
+          # Allow v1.0.0, v1.0.0-alpha, v1.0.0-beta.1, v1.0.0-rc.1, etc.
+          if ! echo "$TAG" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+(-[a-z0-9]+(\.[0-9]+)?)?$'; then
+            echo "❌ Invalid version tag format. Expected: v1.0.0 or v1.0.0-alpha"
             exit 1
           fi
           
-          echo "✅ Valid version tag"
+          echo "✅ Valid version tag: $TAG"
           echo "TAG=$TAG" >> $GITHUB_ENV
 
   test-and-build:
