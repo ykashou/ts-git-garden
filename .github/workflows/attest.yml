@@ -1,4 +1,4 @@
-name: Attestation
+name: Attest
 
 on:
   release:
@@ -206,7 +206,7 @@ jobs:
           
           echo "✅ Verification complete"
       
-      - name: Attestation summary
+      - name: Attest summary
         run: |
           echo "## 🔐 Container Attestation Complete" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -268,7 +268,7 @@ jobs:
           retention-days: 90
 
   attestation-summary:
-    name: Attestation Summary
+    name: Attest Summary
     runs-on: ubuntu-latest
     needs: [generate-sbom, attest-container, security-scan]
     if: always()
