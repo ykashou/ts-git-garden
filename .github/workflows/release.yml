@@ -1,6 +1,12 @@
 name: Release
 
 on:
+  workflow_run:
+    workflows: ["Test"]
+    types:
+      - completed
+    branches:
+      - master
   push:
     tags:
       - 'v*.*.*'
@@ -18,6 +24,7 @@ jobs:
   validate-tag:
     name: Validate Release Tag
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'push' }}
     
     steps:
       - name: Validate version tag format

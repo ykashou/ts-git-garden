@@ -1,6 +1,12 @@
 name: Attest
 
 on:
+  workflow_run:
+    workflows: ["Release"]
+    types:
+      - completed
+    branches:
+      - master
   release:
     types: [published]
   schedule:
@@ -28,6 +34,7 @@ jobs:
   generate-sbom:
     name: Generate SBOM
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'release' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
     
     steps:
       - name: Checkout code
