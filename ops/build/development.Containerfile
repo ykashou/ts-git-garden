@@ -2,9 +2,12 @@ FROM node:23.0.0-alpine AS development
 
 WORKDIR /app
 
+# Upgrade npm to latest version
+RUN npm install -g npm@latest
+
 # Install dependencies
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
 # Copy source
 COPY . .

@@ -3,11 +3,14 @@ FROM node:23.0.0-alpine AS builder
 
 WORKDIR /app
 
+# Upgrade npm to latest version
+RUN npm install -g npm@latest
+
 # Copy package files
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
 # Copy source code
 COPY . .
