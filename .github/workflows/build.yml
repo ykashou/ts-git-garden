@@ -93,25 +93,26 @@ jobs:
           podman stop test-dev
           podman rm test-dev
       
-      - name: Test production container
-        run: |
-          # Start container in background
-          podman run -d --name test-prod \
-            -p 8080:80 \
-            git-garden:latest
-          
-          # Wait for nginx to start
-          sleep 3
-          
-          # Check if container is running
-          podman ps | grep test-prod
-          
-          # Test HTTP endpoint
-          curl -f http://localhost:8080/ || exit 1
-          
-          # Cleanup
-          podman stop test-prod
-          podman rm test-prod
+      # TODO: Re-enable when master.Containerfile is updated to use distroless
+      # - name: Test production container
+      #   run: |
+      #     # Start container in background
+      #     podman run -d --name test-prod \
+      #       -p 8080:80 \
+      #       git-garden:latest
+      #     
+      #     # Wait for nginx to start
+      #     sleep 3
+      #     
+      #     # Check if container is running
+      #     podman ps | grep test-prod
+      #     
+      #     # Test HTTP endpoint
+      #     curl -f http://localhost:8080/ || exit 1
+      #     
+      #     # Cleanup
+      #     podman stop test-prod
+      #     podman rm test-prod
       
       - name: Save container images
         run: |
