@@ -12,7 +12,7 @@
 | **Phase 6** | 🔄 In Progress | Testing & Quality Assurance |
 | **Phase 7** | 🔄 In Progress | Deployment & CI/CD |
 
-**Last Updated**: September 30, 2025 - Phase 7 started! GitHub workflows being created. Issues #4-#17 (Phase 6), #21-#24 (Phase 7) active.
+**Last Updated**: October 5, 2025 - Phase 7 core workflows complete! Build, test, release, and attest workflows implemented and tested. Issues #21-#24, #26 closed. Container publishing configured for releases only.
 
 ---
 
@@ -130,13 +130,13 @@
 
 ## Phase 7: Deployment & CI/CD 🔄
 
-**Status**: IN PROGRESS (4/14 tasks - Core workflows)
+**Status**: IN PROGRESS (4/14 tasks completed)
 
 #### Tasks:
-- [ ] Create GitHub Actions workflow (build.yml) (Issue #21) 🔄
-- [ ] Create GitHub Actions workflow (test.yml) (Issue #22)
-- [ ] Create GitHub Actions workflow (release.yml) (Issue #23)
-- [ ] Create GitHub Actions workflow (attest.yml) (Issue #24)
+- [x] Create GitHub Actions workflow (build.yml) (Issue #21) ✅
+- [x] Create GitHub Actions workflow (test.yml) (Issue #22) ✅
+- [x] Create GitHub Actions workflow (release.yml) (Issue #23) ✅
+- [x] Create GitHub Actions workflow (attest.yml) (Issue #24) ✅
 - [ ] Set up container signing with cosign
 - [ ] Generate SBOM (Software Bill of Materials)
 - [ ] Configure automatic container builds
@@ -148,7 +148,7 @@
 - [ ] Configure Dependabot for dependency updates
 - [ ] Set up semantic versioning workflow
 
-**Current Focus**: Creating core GitHub workflows (Issues #21-#24)
+**Current Focus**: Core CI/CD workflows complete! Container publishing set up for releases.
 
 ---
 
@@ -161,9 +161,9 @@
 - Phase 4: 8 tasks ✅ **COMPLETED (8/8)**
 - Phase 5: 11 tasks ✅ **COMPLETED (11/11)**
 - Phase 6: 12 tasks 🔄 **IN PROGRESS (1/12)** - Issues #4-#15 created
-- Phase 7: 14 tasks 🔄 **IN PROGRESS (0/14)** - Issues #21-#24 created for workflows
+- Phase 7: 14 tasks 🔄 **IN PROGRESS (4/14)** - Core workflows complete (Issues #21-#24, #26)
 
-**Progress: 59/72 defined tasks completed (81.9%)**
+**Progress: 63/72 defined tasks completed (87.5%)**
 
 ---
 
@@ -171,21 +171,23 @@
 
 **Current Phases**: Phase 6 (Testing) & Phase 7 (CI/CD) - Running in parallel
 
-**Current Branch**: `master` (about to create feature branch)
+**Current Branch**: `master`
 
 **Active Issues**: 
 - Phase 6: #5 - Create test utilities and mock data
-- Phase 7: #21 - Create build.yml workflow (STARTING NOW)
 
 **Recently Completed**: 
-- ✅ Issue #4 - Vitest setup complete (PR #16 awaiting review)
-- ✅ Issues #21-#24 created for Phase 7 workflows
+- ✅ Issue #21 - build.yml workflow (PR #25)
+- ✅ Issue #22 - test.yml workflow (PR #25)
+- ✅ Issue #23 - release.yml workflow (PR #25)
+- ✅ Issue #24 - attest.yml workflow (PR #25)
+- ✅ Issue #26 - Remove GHCR publishing from build.yml (PR #27)
 
 **Next Steps**:
-1. Create branch `feature/21-build-workflow`
-2. Create build.yml workflow with podman
-3. Test build workflow
-4. Continue with test.yml (Issue #22)
+1. Test release workflow by creating a version tag
+2. Verify container publishing to GHCR
+3. Continue Phase 6 testing tasks
+4. Or continue Phase 7 with remaining CI/CD tasks
 
 ---
 
