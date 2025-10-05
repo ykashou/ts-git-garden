@@ -1,0 +1,154 @@
+---
+description: TASKLIST.md structure and maintenance rules for TypeScript/React projects
+alwaysApply: true
+---
+
+# TASKLIST.md Rules for ts-git-garden
+
+## File Location
+
+Must exist at project root: `TASKLIST.md`
+
+## Required Structure
+
+### 1. Header and Current Status Table
+
+```markdown
+## Complete Actionable Task List for Git Garden
+
+### 📊 Current Status
+
+| Phase | Status | Description |
+|-------|--------|-------------|
+| **Phase 1** | ✅ Complete | Feature name/description |
+| **Phase 2** | 🔄 In Progress | Feature name/description |
+| **Phase 3** | 🔲 Pending | Feature name/description |
+
+**Last Updated**: [Date and brief summary of current state]
+```
+
+### 2. Status Indicators
+
+Use these consistently:
+- ✅ **Complete** - Phase finished and tested
+- 🔄 **In Progress** - Currently working on
+- 🔲 **Pending** - Not started yet
+- ❌ **Blocked** - Cannot proceed (specify why)
+- ⚠️ **Needs Review** - Completed but requires review
+
+### 3. Phase Structure
+
+Each phase follows this format:
+
+```markdown
+### Phase X: [Phase Name] [Status Emoji]
+
+#### Tasks:
+- [ ] Task description (Issue #42)
+- [ ] Another task (Issue #43)
+  - [ ] Subtask (Issue #44)
+- [x] Completed task (Issue #45) ✅
+```
+
+## Per-Phase Issue Creation (REQUIRED)
+
+### Incremental Planning Workflow:
+
+**ONE PHASE at a time** - Never define all phases upfront.
+
+```bash
+# Starting Phase 2:
+# 1. Define Phase 2 tasks in TASKLIST.md (no issue numbers yet)
+# 2. Create ALL Phase 2 issues
+for task in "Create Button" "Add Card" "Setup Form"; do
+    gh issue create --title "$task" --label "phase-2,component"
+done
+
+# 3. Update TASKLIST.md with Phase 2 issue numbers
+# 4. Commit TASKLIST.md to master
+# 5. Work through Phase 2 (one issue = one branch each)
+# 6. Phase 2 complete → Update to ✅
+# 7. Then define Phase 3 tasks
+# 8. Repeat cycle
+```
+
+❌ **WRONG**: Define Phases 1-10 all at project start
+✅ **CORRECT**: Define Phase 1 → Complete → Define Phase 2 → Complete → etc.
+
+## Phase Categories for UI Projects
+
+1. **Setup & Configuration**
+2. **Component Development**
+3. **State Management**
+4. **Styling & Theming**
+5. **API Integration**
+6. **Testing**
+7. **Build & Deployment**
+
+## Task Format Examples
+
+### Component Development:
+```markdown
+#### Create Button Component:
+- [ ] Create `src/components/ui/Button/Button.tsx` (Issue #42)
+- [ ] Create `src/components/ui/Button/Button.module.css` (Issue #43)
+- [ ] Create `src/components/ui/Button/Button.test.tsx` (Issue #44)
+- [ ] Add prop types (Issue #45)
+```
+
+### 3D Visualization:
+```markdown
+#### Implement Repository Graph:
+- [ ] Create RepoVisualization component (Issue #50)
+- [ ] Set up Three.js scene (Issue #51)
+- [ ] Add orbit controls (Issue #52)
+```
+
+## Summary Section
+
+```markdown
+## Summary
+
+**Total Tasks: XXX**
+- Phase 1: XX tasks ✅ **COMPLETED (XX/XX)**
+- Phase 2: XX tasks 🔄 **IN PROGRESS (XX/XX)**
+- Phase 3: Not yet defined
+
+**Progress: XX/XXX tasks completed (XX.X%)**
+
+**Current Phase**: Phase 2
+**Current Branch**: `feature/42-create-button`
+**Next Step**: Complete Button component
+```
+
+## Maintenance Rules
+
+### When to Update:
+
+1. **Start of new phase** - Define THIS phase tasks, create issues, update TASKLIST.md
+2. **After completing tasks** - Check off, update progress
+3. **When phase complete** - Mark phase ✅, THEN define next phase
+4. **When blocked** - Add ❌ status
+5. **End of work session** - Update "Last Updated"
+
+### Incremental Phase Planning:
+
+```
+Phase 1 Defined → Issues Created → Work Done → Phase 1 Complete ✅
+    ↓
+Phase 2 Defined → Issues Created → Work Started 🔄
+    ↓
+(Later) Phase 2 Complete ✅
+    ↓
+Phase 3 Defined → Issues Created → ...
+```
+
+**Never plan more than 1 phase ahead**
+
+## Best Practices
+
+1. **Be Specific** - Include file paths
+2. **Break Down Large Tasks** - If >4 hours, create subtasks
+3. **Keep Updated** - Update frequently during active work
+4. **One Phase at a Time** - Don't overwhelm with 100+ issues
+5. **Celebrate Progress** - Update percentages regularly

@@ -1,3 +1,13 @@
+---
+description: Standard .gitignore patterns for TypeScript/Vite/React projects
+alwaysApply: true
+---
+
+# .gitignore Rules for TypeScript/Vite/React Projects
+
+## Required Patterns:
+
+```gitignore
 # Dependencies
 node_modules/
 .pnp
@@ -6,7 +16,6 @@ node_modules/
 # Production builds
 /dist
 /build
-dist-ssr
 *.tsbuildinfo
 
 # Environment files
@@ -30,8 +39,8 @@ pnpm-debug.log*
 
 # Editor directories and files
 .vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
+.vscode/extensions.json
+.vscode/settings.json
 .idea
 *.suo
 *.ntvs*
@@ -41,6 +50,10 @@ pnpm-debug.log*
 *.swp
 *.swo
 *~
+
+# Cursor rules
+!.cursor/rules/
+!.cursor/rules/*.mdc
 
 # OS files
 .DS_Store
@@ -72,7 +85,8 @@ vite.config.ts.timestamp-*
 .pnp.*
 
 # Build artifacts
-server/public
+/dist-ssr
+*.local
 
 # Cache directories
 .cache/
@@ -84,10 +98,22 @@ temp/
 *.tmp
 *.temp
 
-# Container artifacts
+# Container artifacts (if building containers)
 *.tar
 *.tar.gz
+```
 
-# Replit specific
-.replit
-.upm
+## Must NOT Ignore:
+
+```gitignore
+# Keep these committed
+!.vscode/extensions.json
+!.vscode/settings.json
+!.github/
+!.cursor/rules/
+!.cursor/rules/*.mdc
+```
+
+## Project-Specific Additions:
+
+If your project has specific build outputs or generated files, add them to `.gitignore` and document why in comments.

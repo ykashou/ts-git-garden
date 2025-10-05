@@ -1,0 +1,112 @@
+---
+description: TypeScript/Vite project directory structure rules - DO NOT restructure, Vite is fragile
+alwaysApply: true
+---
+
+# Directory Structure Rules for TypeScript/Vite Projects
+
+## CRITICAL: Vite Configuration Fragility
+
+⚠️ **DO NOT move files to `src/` or restructure directories** ⚠️
+
+Vite projects are preconfigured and moving files WILL break the build system.
+
+## What You CAN Do:
+- ✅ Trim unused files
+- ✅ Remove code duplication
+- ✅ Modularize components within existing structure
+- ✅ Extract utilities into separate files in same directory
+- ✅ Create new subdirectories under existing structure
+
+## What You CANNOT Do:
+- ❌ Move everything under `src/`
+- ❌ Reorganize top-level directories
+- ❌ Change import paths that affect Vite resolution
+- ❌ Modify `vite.config.ts` structure without testing
+
+## Existing Structure (DO NOT CHANGE):
+
+```
+${PROJECT_NAME}/
+├── src/                      # Already under src/ - leave as-is
+│   ├── components/           # React components
+│   ├── pages/                # Route pages
+│   ├── hooks/                # Custom hooks
+│   ├── services/             # API services
+│   ├── store/                # State management
+│   ├── types/                # TypeScript types
+│   ├── utils/                # Utility functions
+│   ├── assets/               # Static assets
+│   ├── App.tsx
+│   └── main.tsx
+├── ops/                      # If exists
+│   ├── build/
+│   ├── test/
+│   ├── release/
+│   └── attest/               # Supply chain attestation
+├── public/                   # Public static files
+├── index.html                # Vite entry point (MUST stay at root)
+├── vite.config.ts            # Vite config (DO NOT move)
+├── tsconfig.json
+├── package.json
+└── README.md
+```
+
+## Safe Modularization Patterns:
+
+### Within components/:
+```
+src/components/
+├── ui/                       # Reusable UI components
+│   ├── Button/
+│   │   ├── Button.tsx
+│   │   ├── Button.module.css
+│   │   └── index.ts          # Re-export
+│   └── Card/
+├── layout/                   # Layout components
+└── features/                 # Feature-specific components
+```
+
+### Within utils/:
+```
+src/utils/
+├── api/                      # API utilities
+├── formatting/               # Formatters
+├── validation/               # Validators
+└── constants/                # Constants
+```
+
+## Import Path Rules:
+
+✅ **Allowed:**
+```typescript
+import { Button } from './components/ui/Button';
+import { formatDate } from './utils/formatting';
+```
+
+❌ **Forbidden (will break Vite):**
+```typescript
+// Don't create these paths without updating vite.config.ts aliases
+import { Button } from '@/components/ui/Button';
+import { formatDate } from '~/utils/formatting';
+```
+
+## When Suggesting Refactoring:
+
+1. **Always** preserve existing import paths
+2. **Always** keep files in their current directories
+3. **Only** create new subdirectories, don't move existing ones
+4. **Test** imports after any file creation
+5. **Warn** user if structural change is necessary
+
+## File Organization Within Existing Structure:
+
+✅ **Good:**
+- Group related components in subdirectories
+- Extract shared logic into utils in same level
+- Create index.ts for cleaner imports
+
+❌ **Bad:**
+- Moving src/ contents up a level
+- Changing vite.config.ts paths
+- Reorganizing public/ directory
