@@ -1,0 +1,137 @@
+---
+description: Project-specific configuration for ts-git-garden
+alwaysApply: true
+---
+
+# Git Garden Project Configuration
+
+This file contains all project-specific values referenced in the implicit rules.
+
+## Project Identity
+
+```
+PROJECT_NAME=ts-git-garden
+PROJECT_DISPLAY_NAME=Git Garden
+CONTAINER_NAME=git-garden
+REPO_NAME=ts-git-garden
+```
+
+**Description:**
+```
+PROJECT_DESCRIPTION=Developer portfolio showcase with 3D visualization of GitHub repositories
+```
+
+## Ownership & Registry
+
+```
+GITHUB_OWNER=ykashou
+REGISTRY=ghcr.io
+```
+
+**Full Registry Path:**
+```
+ghcr.io/ykashou/git-garden
+```
+
+## Tech Stack Versions
+
+```
+NODE_VERSION=23.0.0
+NPM_VERSION=10.0.0
+REACT_VERSION=19.0.0
+TYPESCRIPT_VERSION=5.8.0
+VITE_VERSION=6.0.0
+```
+
+## Network Ports
+
+```
+PORT_DEV=5173      # Vite development server
+PORT_PROD=5000     # Production Node.js backend
+```
+
+## License
+
+```
+LICENSE=ACE
+```
+
+## Project Features
+
+```markdown
+- ✅ **3D Visualization**: Beautiful Three.js visualization of GitHub repositories
+- ✅ **GitHub Integration**: Real-time data from GitHub API
+- ✅ **Interactive Portfolio**: Showcase your projects in an engaging way
+- ✅ **Nord Theme**: Beautiful Nord Light/Dark theme support
+- ✅ **Responsive Design**: Works on desktop and mobile
+- ✅ **Performance Optimized**: Fast loading with Vite
+```
+
+## Tech Stack Description
+
+```markdown
+- **Framework**: React 19 + TypeScript 5.8
+- **Build Tool**: Vite 6.0
+- **3D Graphics**: Three.js + React Three Fiber
+- **Styling**: Tailwind CSS 4.0 + Nord Theme
+- **State Management**: Zustand
+- **Testing**: Vitest + React Testing Library
+- **Containerization**: Podman with distroless Node.js (FROM scratch)
+```
+
+## Custom Labels (GitHub Issues)
+
+```
+Standard Labels: phase-1, phase-2, feature, bug, component, api, ui
+Custom Labels: 3d-viz, visualization, portfolio, nord-theme
+```
+
+## GitHub Project Template
+
+```
+PROJECT_TEMPLATE_ID=PVT_kwHOAIOPOc4BEbpH
+```
+
+## Container Settings
+
+```
+REMOVE_LANGUAGE_PREFIX=true
+```
+
+*Note: Container name is `git-garden`, not `ts-git-garden` (removes "ts-" prefix)*
+
+## Demo URL
+
+```
+DEMO_URL=git-garden.example.com
+```
+
+*(Update with actual demo URL when deployed)*
+
+## Acknowledgments
+
+```markdown
+- Three.js community for 3D graphics
+- GitHub API for repository data
+- Nord theme for beautiful colors
+```
+
+## Usage
+
+When following implicit rules, replace placeholders with these values:
+
+```bash
+# Example from implicit rules:
+podman build -t ${CONTAINER_NAME}:latest .
+
+# Becomes:
+podman build -t git-garden:latest .
+```
+
+```yaml
+# Example from implicit rules:
+registry: ${REGISTRY}/${GITHUB_OWNER}
+
+# Becomes:
+registry: ghcr.io/ykashou
+```
