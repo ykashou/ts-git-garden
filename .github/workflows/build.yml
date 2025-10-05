@@ -125,22 +125,7 @@ jobs:
           path: /tmp/container-images/
           retention-days: 7
       
-      - name: Log in to Container Registry
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | \
-            podman login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
-      
-      - name: Tag and push to registry
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: |
-          # Tag for registry
-          podman tag git-garden:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          podman tag git-garden:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          
-          # Push to registry
-          podman push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          podman push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      # NOTE: Container publishing only happens on releases via release.yml
   
   build-summary:
     name: Build Summary
