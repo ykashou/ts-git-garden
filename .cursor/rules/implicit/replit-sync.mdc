@@ -3,7 +3,7 @@ description: Rules for keeping replit.md synchronized with project changes
 alwaysApply: true
 ---
 
-# Replit Sync Rules for ts-git-garden
+# Replit Sync Rules for TypeScript Projects
 
 ## When replit.md Exists
 
@@ -20,36 +20,34 @@ alwaysApply: true
 **System Architecture:**
 ```markdown
 ### Core Implementation
-- **Framework**: React 19 + TypeScript 5.8
-- **Build Tool**: Vite 6.0
-- **3D Graphics**: Three.js + React Three Fiber
+- **Framework**: React ${REACT_VERSION} + TypeScript ${TYPESCRIPT_VERSION}
+- **Build Tool**: Vite ${VITE_VERSION}
+- **Additional Libraries**: [Your key libraries]
 ```
 
 **Dependencies:**
 ```markdown
 ### External Dependencies
-- React 19.0.0
-- Three.js 0.x.x
-- React Three Fiber
-- Zustand (state management)
+- React ${REACT_VERSION}
+- [Your key dependencies with versions]
 ```
 
 **Recent Changes:**
 ```markdown
 **[Date]**
-- Added 3D repository visualization
-- Implemented GitHub API integration
-- Created RepoCard component
+- [List of recent architectural changes]
+- [New features added]
+- [Major components created]
 ```
 
 ### Update .replit When:
 - ✅ Node version changes
 - ✅ Build/run commands change
-- ✅ Port changes (5173 for Vite)
+- ✅ Port changes (${PORT_DEV} for Vite by default)
 
 **.replit format:**
 ```toml
-modules = ["nodejs-23"]
+modules = ["nodejs-${NODE_VERSION}"]
 
 [workflows]
 runButton = "Project"

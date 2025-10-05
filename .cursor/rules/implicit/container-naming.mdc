@@ -1,0 +1,205 @@
+---
+description: Container naming and tagging conventions for TypeScript projects
+alwaysApply: true
+---
+
+# Container Naming and Tagging for TypeScript Projects
+
+## Container Naming Rules
+
+### Project Name: `${CONTAINER_NAME}`
+- Short, descriptive, lowercase
+- Optional: Remove language prefix (e.g., `ts-`) from container name
+- Hyphen-separated words
+
+### Full Container Names:
+
+**Local development:**
+```
+${CONTAINER_NAME}:dev
+${CONTAINER_NAME}:latest
+```
+
+**Registry (GitHub Container Registry):**
+```
+${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:latest
+${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:v1.0.0
+${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:1.0
+${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:1
+```
+
+## Tagging Strategy
+
+### Development Tags:
+```bash
+podman build -f ops/build/development.Containerfile -t ${CONTAINER_NAME}:dev .
+```
+
+### Production Tags (Multi-tag):
+```bash
+podman build -f ops/build/master.Containerfile \
+  -t ${CONTAINER_NAME}:latest \
+  -t ${CONTAINER_NAME}:v1.0.0 \
+  -t ${CONTAINER_NAME}:1.0 \
+  -t ${CONTAINER_NAME}:1 .
+```
+
+### Registry Tags:
+```bash
+# Tag for registry
+podman tag ${CONTAINER_NAME}:v1.0.0 ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:v1.0.0
+podman tag ${CONTAINER_NAME}:v1.0.0 ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:1.0
+podman tag ${CONTAINER_NAME}:v1.0.0 ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:1
+podman tag ${CONTAINER_NAME}:latest ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:latest
+
+# Push to registry
+podman push ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:v1.0.0
+podman push ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:1.0
+podman push ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:1
+podman push ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:latest
+```
+
+## Tag Categories
+
+### Version Tags:
+- `v1.0.0` - Full semantic version
+- `1.0` - Major.minor version
+- `1` - Major version only
+- `latest` - Always points to latest stable
+
+### Environment Tags:
+- `dev` - Development build
+- `staging` - Staging environment (if used)
+- `latest` - Production
+
+### Special Tags:
+- `sha-abc1234` - Git commit SHA
+- `pr-123` - Pull request builds
+- `branch-feature-name` - Branch builds
+
+## Build Command Examples
+
+### Local Development:
+```bash
+podman build -f ops/build/development.Containerfile -t ${CONTAINER_NAME}:dev .
+podman run --rm -p ${PORT_DEV}:${PORT_DEV} -v $(pwd):/app ${CONTAINER_NAME}:dev
+```
+
+### Production Build:
+```bash
+podman build -f ops/build/master.Containerfile -t ${CONTAINER_NAME}:latest .
+podman run --rm -p ${PORT_PROD}:${PORT_PROD} ${CONTAINER_NAME}:latest
+```
+
+### Multi-platform Build:
+```bash
+podman build \
+  --platform linux/amd64,linux/arm64 \
+  -f ops/build/master.Containerfile \
+  -t ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:latest \
+  --push .
+```
+
+### Release Build:
+```bash
+VERSION=v1.2.0
+
+podman build -f ops/build/master.Containerfile \
+  -t ${CONTAINER_NAME}:${VERSION} \
+  -t ${CONTAINER_NAME}:1.2 \
+  -t ${CONTAINER_NAME}:1 \
+  -t ${CONTAINER_NAME}:latest .
+
+# Tag for registry
+podman tag ${CONTAINER_NAME}:${VERSION} ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:${VERSION}
+podman tag ${CONTAINER_NAME}:${VERSION} ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:1.2
+podman tag ${CONTAINER_NAME}:${VERSION} ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:1
+podman tag ${CONTAINER_NAME}:${VERSION} ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:latest
+
+# Push all tags
+podman push ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:${VERSION}
+podman push ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:1.2
+podman push ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:1
+podman push ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:latest
+```
+
+## GitHub Actions Integration
+
+### Build Workflow Tagging:
+```yaml
+- name: Build and tag containers
+  run: |
+    # Development build
+    podman build -f ops/build/development.Containerfile -t ${CONTAINER_NAME}:dev .
+    
+    # Production build with multiple tags
+    podman build -f ops/build/master.Containerfile \
+      -t ${CONTAINER_NAME}:${{ github.sha }} \
+      -t ${CONTAINER_NAME}:latest .
+    
+    # If tagged release
+    if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+      VERSION=${GITHUB_REF#refs/tags/}
+      podman tag ${CONTAINER_NAME}:latest ${CONTAINER_NAME}:${VERSION}
+    fi
+```
+
+## Container Naming Conventions
+
+### ✅ Correct:
+```
+${CONTAINER_NAME}:dev
+${CONTAINER_NAME}:latest
+${CONTAINER_NAME}:v1.0.0
+${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:latest
+```
+
+### ❌ Incorrect:
+```
+${PROJECT_NAME}:latest          # Don't include language prefix if removed
+project_name:latest             # Use hyphens, not underscores
+ProjectName:latest              # Use lowercase
+docker.io/${CONTAINER_NAME}:latest   # Use ghcr.io for GitHub
+```
+
+## Registry Organization
+
+```
+${REGISTRY}/${GITHUB_OWNER}/
+├── ${CONTAINER_NAME}:latest
+├── ${CONTAINER_NAME}:v1.0.0
+├── ${CONTAINER_NAME}:v1.0.1
+├── ${CONTAINER_NAME}:1.0
+└── ${CONTAINER_NAME}:1
+```
+
+## Cleanup and Maintenance
+
+### Remove old tags locally:
+```bash
+podman rmi ${CONTAINER_NAME}:old-tag
+```
+
+### List all tags:
+```bash
+podman images ${CONTAINER_NAME}
+```
+
+### Prune unused images:
+```bash
+podman image prune -a
+```
+
+## Security Considerations
+
+- **Always scan before pushing:**
+  ```bash
+  trivy image ${CONTAINER_NAME}:latest
+  ```
+
+- **Sign images:**
+  ```bash
+  cosign sign ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:v1.0.0
+  ```
+
+- **Use specific versions in production**, not `latest`

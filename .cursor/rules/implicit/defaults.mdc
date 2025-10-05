@@ -3,18 +3,18 @@ description: Default repository settings and configurations
 alwaysApply: true
 ---
 
-# Repository Defaults for ts-git-garden
+# Repository Defaults for TypeScript Projects
 
 ## CODEOWNERS
 
 Must exist at: `.github/CODEOWNERS`
 
 ```
-# All files require review from @ykashou
-* @ykashou
+# All files require review from owner
+* @${GITHUB_OWNER}
 ```
 
-**Simple and complete** - All PRs automatically request review from @ykashou
+**Simple and complete** - All PRs automatically request review from repository owner
 
 ## Branch Protection (master)
 
