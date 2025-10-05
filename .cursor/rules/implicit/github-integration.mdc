@@ -3,7 +3,7 @@ description: GitHub Issues and Projects sync rules for TASKLIST.md
 alwaysApply: true
 ---
 
-# GitHub Integration for ts-git-garden
+# GitHub Integration for TypeScript Projects
 
 ## Core Sync Rules
 
@@ -31,7 +31,7 @@ Every task MUST include issue number (added at phase start):
 
 ### Labels Required:
 - Phase: `phase-1`, `phase-2`, `phase-3`, etc.
-- Type: `feature`, `bug`, `component`, `3d-viz`, `api`
+- Type: `feature`, `bug`, `component`, `api`, `ui`
 - Status: `in-progress`, `blocked`, `needs-review`
 
 ## Commands

@@ -1,51 +1,40 @@
 ---
-description: README structure and content requirements for ts-git-garden
+description: README structure and content requirements for TypeScript projects
 alwaysApply: true
 ---
 
-# README Requirements for ts-git-garden
+# README Requirements for TypeScript Projects
 
 ## Required Structure:
 
 ```markdown
 <div align="center">
 
-# Git Garden
+# ${PROJECT_DISPLAY_NAME}
 
-Developer portfolio showcase with 3D visualization of GitHub repositories
+${PROJECT_DESCRIPTION}
 
-[![Build Status](https://github.com/ykashou/ts-git-garden/workflows/Build/badge.svg)](https://github.com/ykashou/ts-git-garden/actions)
-[![License: ACE](https://img.shields.io/badge/License-ACE-yellow.svg)](./LICENSE)
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D23.0.0-brightgreen.svg)](https://nodejs.org/)
-[![React Version](https://img.shields.io/badge/react-19.0.0-blue.svg)](https://reactjs.org/)
+[![Build Status](https://github.com/${GITHUB_OWNER}/${REPO_NAME}/workflows/Build/badge.svg)](https://github.com/${GITHUB_OWNER}/${REPO_NAME}/actions)
+[![License: ${LICENSE}](https://img.shields.io/badge/License-${LICENSE}-yellow.svg)](./LICENSE)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D${NODE_VERSION}-brightgreen.svg)](https://nodejs.org/)
+[![React Version](https://img.shields.io/badge/react-${REACT_VERSION}-blue.svg)](https://reactjs.org/)
 
-[Demo](https://git-garden.example.com) • [Documentation](./docs) • [Report Bug](https://github.com/ykashou/ts-git-garden/issues) • [Request Feature](https://github.com/ykashou/ts-git-garden/issues)
+[Demo](https://${DEMO_URL}) • [Documentation](./docs) • [Report Bug](https://github.com/${GITHUB_OWNER}/${REPO_NAME}/issues) • [Request Feature](https://github.com/${GITHUB_OWNER}/${REPO_NAME}/issues)
 
 </div>
 
 ## 🚀 Features
 
-- ✅ **3D Visualization**: Beautiful Three.js visualization of GitHub repositories
-- ✅ **GitHub Integration**: Real-time data from GitHub API
-- ✅ **Interactive Portfolio**: Showcase your projects in an engaging way
-- ✅ **Nord Theme**: Beautiful Nord Light/Dark theme support
-- ✅ **Responsive Design**: Works on desktop and mobile
-- ✅ **Performance Optimized**: Fast loading with Vite
+${PROJECT_FEATURES}
 
 ## 🛠 Tech Stack
 
-- **Framework**: React 19 + TypeScript 5.8
-- **Build Tool**: Vite 6.0
-- **3D Graphics**: Three.js + React Three Fiber
-- **Styling**: Tailwind CSS 4.0 + Nord Theme
-- **State Management**: Zustand
-- **Testing**: Vitest + React Testing Library
-- **Containerization**: Podman with distroless Node.js (FROM scratch)
+${PROJECT_TECH_STACK}
 
 ## 📋 Prerequisites
 
-- Node.js >= 23.0.0
-- npm >= 10.0.0
+- Node.js >= ${NODE_VERSION}
+- npm >= ${NPM_VERSION}
 - Podman >= 4.0 (for containerized deployment)
 
 ## 🚦 Quick Start
@@ -54,15 +43,15 @@ Developer portfolio showcase with 3D visualization of GitHub repositories
 
 ```bash
 # Clone repository
-git clone https://github.com/ykashou/ts-git-garden.git
-cd ts-git-garden
+git clone https://github.com/${GITHUB_OWNER}/${REPO_NAME}.git
+cd ${REPO_NAME}
 
 # Run with podman
-podman build -f ops/build/development.Containerfile -t git-garden:dev .
-podman run --rm -p 5173:5173 git-garden:dev
+podman build -f ops/build/development.Containerfile -t ${CONTAINER_NAME}:dev .
+podman run --rm -p ${PORT_DEV}:${PORT_DEV} ${CONTAINER_NAME}:dev
 ```
 
-Visit http://localhost:5173
+Visit http://localhost:${PORT_DEV}
 
 ### Local Development
 
@@ -79,7 +68,7 @@ npm run dev
 ## 📁 Project Structure
 
 ```
-ts-git-garden/
+${PROJECT_NAME}/
 ├── src/
 │   ├── components/       # React components
 │   │   ├── ui/          # Reusable UI components
@@ -121,15 +110,15 @@ npm run type-check
 ### Development
 
 ```bash
-podman build -f ops/build/development.Containerfile -t git-garden:dev .
-podman run --rm -p 5173:5173 -v $(pwd):/app git-garden:dev
+podman build -f ops/build/development.Containerfile -t ${CONTAINER_NAME}:dev .
+podman run --rm -p ${PORT_DEV}:${PORT_DEV} -v $(pwd):/app ${CONTAINER_NAME}:dev
 ```
 
 ### Production
 
 ```bash
-podman build -f ops/build/master.Containerfile -t git-garden:latest .
-podman run --rm -p 5000:5000 git-garden:latest
+podman build -f ops/build/master.Containerfile -t ${CONTAINER_NAME}:latest .
+podman run --rm -p ${PORT_PROD}:${PORT_PROD} ${CONTAINER_NAME}:latest
 ```
 
 ## 🔧 Configuration
@@ -151,11 +140,11 @@ Generate a personal access token with `repo` scope for higher API rate limits.
 
 ### Theming
 
-Edit `src/assets/styles/nord-theme.css` to customize colors.
+Customize styles in `src/assets/styles/` directory.
 
-### 3D Configuration
+### Configuration
 
-Modify `src/components/3D/config.ts` for visualization settings.
+Modify component configuration files as needed for your project.
 
 ## 🚀 Deployment
 
@@ -163,10 +152,10 @@ Modify `src/components/3D/config.ts` for visualization settings.
 
 ```bash
 # Tag for registry
-podman tag git-garden:latest ghcr.io/ykashou/git-garden:latest
+podman tag ${CONTAINER_NAME}:latest ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:latest
 
 # Push to registry
-podman push ghcr.io/ykashou/git-garden:latest
+podman push ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:latest
 ```
 
 ### Static Hosting
@@ -188,18 +177,16 @@ npm run build
 
 ## 📄 License
 
-This project is licensed under the ACE License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the ${LICENSE} License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- Three.js community for 3D graphics
-- GitHub API for repository data
-- Nord theme for beautiful colors
+${PROJECT_ACKNOWLEDGMENTS}
 
 ---
 
 <div align="center">
-Made with ❤️ by <a href="https://github.com/ykashou">ykashou</a>
+Made with ❤️ by <a href="https://github.com/${GITHUB_OWNER}">${GITHUB_OWNER}</a>
 </div>
 ```
 
@@ -224,8 +211,7 @@ Made with ❤️ by <a href="https://github.com/ykashou">ykashou</a>
 ## Key Points:
 
 - **Container-first approach** - Show podman commands first
-- **Actual versions** - Node 23.0.0, React 19.0.0, Vite 6.0.0
+- **Use actual versions** - Refer to explicit/project-config.mdc for versions
 - **No docker** - Always use podman
-- **Nord theme** mention - It's a key feature
-- **3D visualization** - Highlight this unique feature
-- **GitHub API** - Explain integration
+- **Highlight unique features** - Showcase what makes your project special
+- **Explain integrations** - Document API usage and dependencies

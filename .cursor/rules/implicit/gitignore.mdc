@@ -3,7 +3,7 @@ description: Standard .gitignore patterns for TypeScript/Vite/React projects
 alwaysApply: true
 ---
 
-# .gitignore Rules for ts-git-garden
+# .gitignore Rules for TypeScript/Vite/React Projects
 
 ## Required Patterns:
 
@@ -116,4 +116,4 @@ temp/
 
 ## Project-Specific Additions:
 
-If ts-git-garden has specific build outputs or generated files, add them but document why.
+If your project has specific build outputs or generated files, add them to `.gitignore` and document why in comments.

@@ -1,9 +1,9 @@
 ---
-description: React/TypeScript patterns and best practices for ts-git-garden
+description: React/TypeScript patterns and best practices
 alwaysApply: true
 ---
 
-# Code Patterns for ts-git-garden
+# Code Patterns for React/TypeScript Projects
 
 ## Component Patterns
 

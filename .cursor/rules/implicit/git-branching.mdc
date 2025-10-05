@@ -1,9 +1,9 @@
 ---
-description: Git branching model and conventions for ts-git-garden
+description: Git branching model and conventions for TypeScript projects
 alwaysApply: true
 ---
 
-# Git Branching Model for ts-git-garden
+# Git Branching Model for TypeScript Projects
 
 ## Main Branch
 
@@ -20,10 +20,10 @@ feature/{issue-num}-{descriptive-name}
 ```
 
 Examples:
-- `feature/42-3d-visualization`
-- `feature/43-github-integration`
-- `feature/44-user-authentication`
-- `feature/45-dark-mode-toggle`
+- `feature/42-add-dashboard-component`
+- `feature/43-implement-api-integration`
+- `feature/44-add-user-authentication`
+- `feature/45-add-theme-toggle`
 
 **REQUIRED**: Every branch MUST link to an issue for provenance
 
@@ -33,8 +33,8 @@ bugfix/{issue-num}-{issue-description}
 ```
 
 Examples:
-- `bugfix/46-repo-card-alignment`
-- `bugfix/47-api-rate-limit`
+- `bugfix/46-component-alignment`
+- `bugfix/47-api-error-handling`
 - `bugfix/48-mobile-responsive`
 
 ### Hotfix Branches (Critical Production Fixes)
@@ -81,7 +81,7 @@ Examples:
 ### Creating Feature Branch (LINKED TO ISSUE):
 ```bash
 # 1. Create issue FIRST on GitHub
-gh issue create --title "Add 3D visualization" --label "feature,phase-3"
+gh issue create --title "Add dashboard component" --label "feature,phase-3"
 # Returns: Created issue #42
 
 # 2. Ensure master is up to date
@@ -89,19 +89,19 @@ git checkout master
 git pull origin master
 
 # 3. Create branch with issue number
-git checkout -b feature/42-3d-visualization
+git checkout -b feature/42-add-dashboard-component
 
 # 4. Work on feature
 # ... make changes ...
 
 # 5. Commit with issue reference
-git commit -m "feat: add 3D repository visualization (#42)"
+git commit -m "feat: add dashboard component (#42)"
 
 # 6. Push to remote
-git push -u origin feature/42-3d-visualization
+git push -u origin feature/42-add-dashboard-component
 
 # 7. Create PR that closes issue
-gh pr create --title "Add 3D visualization" --body "Closes #42"
+gh pr create --title "Add dashboard component" --body "Closes #42"
 ```
 
 ### Creating Bugfix Branch:
@@ -148,8 +148,8 @@ ci: add container build to GitHub workflow
 
 ### Scope (optional):
 ```bash
-feat(visualization): add 3D graph rendering
-fix(api): handle rate limit errors
+feat(component): add dashboard widget
+fix(api): handle error responses
 docs(readme): add deployment instructions
 ```
 
@@ -170,7 +170,7 @@ docs(readme): add deployment instructions
 
 ### PR Title Format:
 ```
-feat: Add 3D visualization for repositories
+feat: Add dashboard component
 fix: Resolve mobile responsive issues
 docs: Update deployment documentation
 ```
