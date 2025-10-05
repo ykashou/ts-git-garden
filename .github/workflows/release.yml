@@ -64,7 +64,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: release-dist
-          path: dist/
+          path: dist/public/
           retention-days: 30
 
   build-and-publish-containers:
@@ -174,13 +174,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: release-dist
-          path: dist/
+          path: dist/public/
       
       - name: Create release archive
         run: |
           TAG="${GITHUB_REF#refs/tags/}"
-          tar -czf git-garden-${TAG}-dist.tar.gz dist/
-          zip -r git-garden-${TAG}-dist.zip dist/
+          tar -czf git-garden-${TAG}-dist.tar.gz -C dist/public .
+          cd dist/public && zip -r ../../git-garden-${TAG}-dist.zip . && cd ../..
       
       - name: Generate changelog
         id: changelog
