@@ -110,25 +110,24 @@ jobs:
             -t git-garden:latest \
             .
       
-      # TODO: Re-enable when master.Containerfile is updated to use distroless
-      # - name: Test container
-      #   run: |
-      #     # Start container
-      #     podman run -d --name release-test \
-      #       -p 8080:80 \
-      #       git-garden:${{ steps.version.outputs.tag }}
-      #     
-      #     # Wait for nginx
-      #     sleep 3
-      #     
-      #     # Test endpoint
-      #     curl -f http://localhost:8080/ || exit 1
-      #     
-      #     echo "✅ Container test passed"
-      #     
-      #     # Cleanup
-      #     podman stop release-test
-      #     podman rm release-test
+      - name: Test container
+        run: |
+          # Start container
+          podman run -d --name release-test \
+            -p 8080:80 \
+            git-garden:${{ steps.version.outputs.tag }}
+          
+          # Wait for nginx
+          sleep 3
+          
+          # Test endpoint (force IPv4 to avoid localhost resolution issues)
+          curl -4 -f http://127.0.0.1:8080/ || exit 1
+          
+          echo "✅ Container test passed"
+          
+          # Cleanup
+          podman stop release-test
+          podman rm release-test
       
       - name: Log in to Container Registry
         run: |

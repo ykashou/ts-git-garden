@@ -21,8 +21,8 @@ RUN npm run build
 # Production stage
 FROM nginx:alpine
 
-# Copy built assets from builder
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Copy built assets from builder (vite outputs to dist/public/)
+COPY --from=builder /app/dist/public /usr/share/nginx/html
 
 # Create custom nginx config for SPA routing
 RUN echo 'server { \
@@ -33,14 +33,7 @@ RUN echo 'server { \
     location / { \
         try_files $uri $uri/ /index.html; \
     } \
-    location /api { \
-        proxy_pass http://backend:3000; \
-        proxy_http_version 1.1; \
-        proxy_set_header Upgrade $http_upgrade; \
-        proxy_set_header Connection "upgrade"; \
-        proxy_set_header Host $host; \
-        proxy_cache_bypass $http_upgrade; \
-    } \
+    error_page 404 /index.html; \
 }' > /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
