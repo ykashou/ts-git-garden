@@ -1,0 +1,79 @@
+---
+description: Rules for keeping replit.md synchronized with project changes
+alwaysApply: true
+---
+
+# Replit Sync Rules for TypeScript Projects
+
+## When replit.md Exists
+
+### MUST Update replit.md When:
+- ✅ Dependencies change (`package.json` updates)
+- ✅ Build commands change (`vite.config.ts`, scripts)
+- ✅ Project structure changes (new directories, major refactors)
+- ✅ Node/TypeScript version changes
+- ✅ Major features added/removed
+- ✅ Environment variables change
+
+### Update Sections in replit.md:
+
+**System Architecture:**
+```markdown
+### Core Implementation
+- **Framework**: React ${REACT_VERSION} + TypeScript ${TYPESCRIPT_VERSION}
+- **Build Tool**: Vite ${VITE_VERSION}
+- **Additional Libraries**: [Your key libraries]
+```
+
+**Dependencies:**
+```markdown
+### External Dependencies
+- React ${REACT_VERSION}
+- [Your key dependencies with versions]
+```
+
+**Recent Changes:**
+```markdown
+**[Date]**
+- [List of recent architectural changes]
+- [New features added]
+- [Major components created]
+```
+
+### Update .replit When:
+- ✅ Node version changes
+- ✅ Build/run commands change
+- ✅ Port changes (${PORT_DEV} for Vite by default)
+
+**.replit format:**
+```toml
+modules = ["nodejs-${NODE_VERSION}"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install && npm run dev"
+```
+
+## What NOT to Update
+
+❌ Don't update for:
+- Minor code refactoring
+- CSS changes
+- Component renames
+- Bug fixes (unless architectural)
+
+## Sync Checklist
+
+When making major changes:
+- [ ] Update replit.md **Overview** section
+- [ ] Update replit.md **System Architecture** 
+- [ ] Update replit.md **Dependencies**
+- [ ] Add entry to **Recent Changes**
+- [ ] Update .replit if build commands changed
+- [ ] Test in Replit (if possible) before committing
