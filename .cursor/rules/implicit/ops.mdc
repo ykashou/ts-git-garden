@@ -3,12 +3,12 @@ description: Ops structure for TypeScript/React/Vite UI applications - container
 alwaysApply: true
 ---
 
-# Ops Structure for ts-git-garden
+# Ops Structure for TypeScript/React/Vite Projects
 
 ## Directory Structure:
 
 ```
-ts-git-garden/
+${PROJECT_NAME}/
 ├── ops/
 │   ├── build/
 │   │   ├── development.Containerfile
@@ -38,7 +38,7 @@ ts-git-garden/
 
 ### development.Containerfile:
 ```dockerfile
-FROM node:23.0.0-alpine AS development
+FROM node:${NODE_VERSION}-alpine AS development
 
 WORKDIR /app
 
@@ -50,7 +50,7 @@ RUN npm install
 COPY . .
 
 # Expose Vite dev server port
-EXPOSE 5173
+EXPOSE ${PORT_DEV}
 
 # Run dev server
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
@@ -59,7 +59,7 @@ CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 ### master.Containerfile (Multi-stage Production):
 ```dockerfile
 # Build stage
-FROM node:23.0.0-alpine AS builder
+FROM node:${NODE_VERSION}-alpine AS builder
 
 WORKDIR /app
 
@@ -93,9 +93,9 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/public ./public
 
 ENV NODE_ENV=production
-ENV PORT=5000
+ENV PORT=${PORT_PROD}
 
-EXPOSE 5000
+EXPOSE ${PORT_PROD}
 
 # Run Node.js backend (serves both API and static frontend)
 ENTRYPOINT ["/usr/local/bin/node"]
@@ -105,12 +105,12 @@ CMD ["dist/index.js"]
 ### Build Commands (ALWAYS use podman):
 ```bash
 # Development
-podman build -f ops/build/development.Containerfile -t git-garden:dev .
-podman run --rm -p 5173:5173 -v $(pwd):/app git-garden:dev
+podman build -f ops/build/development.Containerfile -t ${CONTAINER_NAME}:dev .
+podman run --rm -p ${PORT_DEV}:${PORT_DEV} -v $(pwd):/app ${CONTAINER_NAME}:dev
 
 # Production
-podman build -f ops/build/master.Containerfile -t git-garden:latest .
-podman run --rm -p 5000:5000 git-garden:latest
+podman build -f ops/build/master.Containerfile -t ${CONTAINER_NAME}:latest .
+podman run --rm -p ${PORT_PROD}:${PORT_PROD} ${CONTAINER_NAME}:latest
 ```
 
 ## Test Operations
@@ -134,7 +134,7 @@ npm run test:e2e
 
 ### Test in Container:
 ```bash
-podman run --rm git-garden:dev npm test
+podman run --rm ${CONTAINER_NAME}:dev npm test
 ```
 
 ## Release Operations
@@ -142,12 +142,12 @@ podman run --rm git-garden:dev npm test
 ### release-config.yaml:
 ```yaml
 version: 1.0.0
-project_name: git-garden
-description: Developer portfolio showcase with 3D GitHub visualization
+project_name: ${CONTAINER_NAME}
+description: ${PROJECT_DESCRIPTION}
 
 container:
-  registry: ghcr.io/ykashou
-  namespace: git-garden
+  registry: ${REGISTRY}/${GITHUB_OWNER}
+  namespace: ${CONTAINER_NAME}
   tags:
     - latest
     - "{{ .Version }}"
@@ -159,9 +159,9 @@ platforms:
 
 metadata:
   authors:
-    - ykashou
-  license: ACE
-  homepage: https://github.com/ykashou/ts-git-garden
+    - ${GITHUB_OWNER}
+  license: ${LICENSE}
+  homepage: https://github.com/${GITHUB_OWNER}/${REPO_NAME}
 ```
 
 ### release.sh (Shell Script - NO Python):
@@ -189,19 +189,19 @@ npm run build
 
 # Build container
 podman build -f ops/build/master.Containerfile \
-    -t git-garden:${VERSION} \
-    -t git-garden:latest .
+    -t ${CONTAINER_NAME}:${VERSION} \
+    -t ${CONTAINER_NAME}:latest .
 
 # Tag for registry
-podman tag git-garden:${VERSION} ghcr.io/ykashou/git-garden:${VERSION}
-podman tag git-garden:latest ghcr.io/ykashou/git-garden:latest
+podman tag ${CONTAINER_NAME}:${VERSION} ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:${VERSION}
+podman tag ${CONTAINER_NAME}:latest ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:latest
 
 # Create git tag
 git tag -a "${VERSION}" -m "Release ${VERSION}"
 
 echo "✅ Release ${VERSION} complete"
-echo "Next: podman push ghcr.io/ykashou/git-garden:${VERSION}"
-echo "Next: podman push ghcr.io/ykashou/git-garden:latest"
+echo "Next: podman push ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:${VERSION}"
+echo "Next: podman push ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:latest"
 ```
 
 ## Attest Operations
@@ -220,14 +220,14 @@ npx @cyclonedx/cyclonedx-npm --output-file ops/attest/sbom/sbom.cyclonedx.json
 #### Container Attestation:
 ```bash
 # Sign container image
-cosign sign ghcr.io/ykashou/git-garden:v1.0.0
+cosign sign ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:v1.0.0
 
 # Generate provenance
 cosign attest --predicate ops/attest/provenance/provenance.json \
-    ghcr.io/ykashou/git-garden:v1.0.0
+    ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:v1.0.0
 
 # Verify signature
-cosign verify ghcr.io/ykashou/git-garden:v1.0.0
+cosign verify ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:v1.0.0
 ```
 
 #### Dependency Attestation:
@@ -245,13 +245,13 @@ gpg --detach-sign --armor package-lock.json
 #### GitHub Attestations:
 ```bash
 # Attest build provenance (GitHub CLI)
-gh attestation verify oci://ghcr.io/ykashou/git-garden:v1.0.0
+gh attestation verify oci://${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:v1.0.0
 ```
 
 ## GitHub Workflows
 
 ### build.yml Requirements:
-- Node.js version: 23.0.0
+- Node.js version: ${NODE_VERSION}
 - Cache npm dependencies
 - Run `npm ci` for workflow installs
 - Build production: `npm run build`
@@ -285,13 +285,13 @@ gh attestation verify oci://ghcr.io/ykashou/git-garden:v1.0.0
   run: npm sbom --output-format spdx > sbom.spdx.json
 
 - name: Sign container
-  run: cosign sign ghcr.io/ykashou/git-garden:${{ github.sha }}
+  run: cosign sign ${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:${{ github.sha }}
 
 - name: Attest provenance
   run: |
     gh attestation attest \
       --predicate-type https://slsa.dev/provenance/v1 \
-      oci://ghcr.io/ykashou/git-garden:${{ github.sha }}
+      oci://${REGISTRY}/${GITHUB_OWNER}/${CONTAINER_NAME}:${{ github.sha }}
 ```
 
 ### Key Differences from Go Projects:
@@ -299,5 +299,5 @@ gh attestation verify oci://ghcr.io/ykashou/git-garden:v1.0.0
 - ✅ Container-only builds
 - ✅ Distroless Node.js runtime (FROM scratch)
 - ✅ Multi-stage build (node builder + distroless runtime)
-- ✅ Port exposure: 5173 (dev), 5000 (prod)
+- ✅ Port exposure: ${PORT_DEV} (dev), ${PORT_PROD} (prod)
 - ✅ SBOM from npm packages (not Go modules)

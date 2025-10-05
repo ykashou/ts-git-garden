@@ -3,7 +3,7 @@ description: How to create GitHub Project board when none exists
 alwaysApply: false
 ---
 
-# Create GitHub Project for ts-git-garden
+# Create GitHub Project for TypeScript Projects
 
 ## When to Create
 
@@ -13,22 +13,22 @@ Only if repository has no linked GitHub Project.
 
 ```bash
 # List projects for user
-gh project list --owner ykashou
+gh project list --owner ${GITHUB_OWNER}
 
-# Check if ts-git-garden project exists
-gh project list --owner ykashou | grep -i "git garden"
+# Check if project exists
+gh project list --owner ${GITHUB_OWNER} | grep -i "${PROJECT_DISPLAY_NAME}"
 ```
 
 ## Create New Project
 
 ```bash
-# Copy from template project (ID: PVT_kwHOAIOPOc4BEbpH)
+# Copy from template project
 gh api graphql -f query='
   mutation {
     copyProjectV2(input: {
-      projectId: "PVT_kwHOAIOPOc4BEbpH"
-      ownerId: "ykashou"
-      title: "Git Garden Development"
+      projectId: "${PROJECT_TEMPLATE_ID}"
+      ownerId: "${GITHUB_OWNER}"
+      title: "${PROJECT_DISPLAY_NAME} Development"
     }) {
       projectV2 {
         id
@@ -62,11 +62,11 @@ Copying the template gives you:
 
 ```bash
 # Manually add issue to project
-gh project item-add 1 --owner ykashou --url "https://github.com/ykashou/ts-git-garden/issues/42"
+gh project item-add 1 --owner ${GITHUB_OWNER} --url "https://github.com/${GITHUB_OWNER}/${REPO_NAME}/issues/42"
 
 # Or add when creating issue
 gh issue create --title "Task" --label "phase-2" | \
-    xargs -I {} gh project item-add 1 --owner ykashou --url {}
+    xargs -I {} gh project item-add 1 --owner ${GITHUB_OWNER} --url {}
 ```
 
 ## Map Issues to Status
@@ -98,10 +98,10 @@ Issues will auto-add to board. Workflow: Backlog → Ready → In Progress → I
 
 ```bash
 # View project
-gh project view 1 --owner ykashou --web
+gh project view 1 --owner ${GITHUB_OWNER} --web
 
 # List project items
-gh project item-list 1 --owner ykashou
+gh project item-list 1 --owner ${GITHUB_OWNER}
 ```
 
 ## That's It

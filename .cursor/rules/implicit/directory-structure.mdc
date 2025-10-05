@@ -3,7 +3,7 @@ description: TypeScript/Vite project directory structure rules - DO NOT restruct
 alwaysApply: true
 ---
 
-# Directory Structure Rules for ts-git-garden
+# Directory Structure Rules for TypeScript/Vite Projects
 
 ## CRITICAL: Vite Configuration Fragility
 
@@ -27,7 +27,7 @@ Vite projects are preconfigured and moving files WILL break the build system.
 ## Existing Structure (DO NOT CHANGE):
 
 ```
-ts-git-garden/
+${PROJECT_NAME}/
 ├── src/                      # Already under src/ - leave as-is
 │   ├── components/           # React components
 │   ├── pages/                # Route pages
