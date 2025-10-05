@@ -95,17 +95,17 @@ jobs:
         run: |
           # Start container in background
           podman run -d --name test-prod \
-            -p 8080:80 \
+            -p 5000:5000 \
             git-garden:latest
           
-          # Wait for nginx to start
-          sleep 3
+          # Wait for Node.js backend to start
+          sleep 5
           
           # Check if container is running
           podman ps | grep test-prod
           
           # Test HTTP endpoint (force IPv4 to avoid localhost resolution issues)
-          curl -4 -f http://127.0.0.1:8080/ || exit 1
+          curl -4 -f http://127.0.0.1:5000/ || exit 1
           
           # Cleanup
           podman stop test-prod
