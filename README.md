@@ -285,6 +285,6 @@ This project is licensed under the ACE License - see the [LICENSE](LICENSE) file
 ---
 
 <div align="center">
-Made with ❤️ by <a href="https://github.com/ykashou">ykashou</a>
+Made with ❤️ by <a href="https://github.com/ykashou">Yanal the Mage</a>
 </div>
 
